@@ -1108,7 +1108,7 @@ function render(hits){
   let h='<p class="hint">'+hits.length+' stops in '+order.length+(order.length===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of you, nearest state first':', in route order')
     +'</p>'
-    +'<div class="expandallrow"><button id="expandall" class="seebtn" onclick="toggleAllStates()">Expand all</button></div>';
+    +'<div class="expandallrow"><button id="expandall" class="seebtn" onclick="event.stopPropagation();toggleAllStates()">Expand all</button></div>';
   if(hits.length>1){
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
