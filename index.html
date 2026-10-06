@@ -103,10 +103,15 @@
   /* brand accents */
   /* See details button on each card */
   .cardhead{display:flex;align-items:center;flex-wrap:nowrap;gap:6px;min-width:0}
+  .cardhead .cardtown{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cardhead .brandtag{flex:none}
+  .cardhead .besttag{flex:none}
+  .cardhead > b{flex:none}
   .cardhead .headroads{display:inline-flex;align-items:center;gap:10px;flex:none;margin-left:auto;flex-wrap:nowrap}
   .cardhead .headroads .maplink{padding:5px 12px;font-size:13px;flex:none}
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .priceline .seebtn{margin-left:auto}
   .priceline .pdate{margin-top:0;margin-left:auto}
   .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid var(--orange);color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
@@ -116,7 +121,7 @@
   .seebtn,.gobtn{padding:7px 14px;font-size:14px;font-weight:bold;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}
   .seebtn{background:none;border:1px solid #4a7fb5;color:#9fc0e8}
   .gobtn{background:#bfe6cf;border:1px solid #bfe6cf;color:#14543a}
-  .gobtn::before,.drive::before{content:'';display:inline-block;width:0;height:0;margin-right:7px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #14543a;vertical-align:1px}
+  .gobtn::before,.drive::before{display:none !important;content:none !important}
   /* services screen */
   #svc{display:none}
   body.on-svc #svc{display:block}
@@ -157,8 +162,7 @@
   .brk .row.save .v{color:#3ab54a}
   .brk .row.pre{font-size:18px}
   .brk .row.pre .v{color:var(--orange);font-size:20px}
-  .drive{display:block;text-align:center;padding:12px;border-radius:11px;border:1px solid #bfe6cf;background:#bfe6cf;
-         color:#14543a;text-decoration:none;font-weight:bold;font-size:16px}
+  .drive{display:block;text-align:center;padding:12px;border-radius:11px;border:1.5px solid var(--orange);background:#17304f;color:#9fc0e8;text-decoration:none;font-weight:bold}
   .dnote{color:#9fb4ce;font-size:14px;margin:0 0 14px;text-align:center}
   .brandtag{display:inline-block;font-size:14px;font-weight:bold;padding:3px 10px;border-radius:12px;margin:0 6px;color:#0c1a30;min-width:74px;text-align:center}
   .brandtag.loves{background:#FFD400}
@@ -1128,7 +1132,7 @@ function render(hits){
     const g=encodeURIComponent(s.c+', '+s.st);
     const bc=brandClass(s.b);
     h+='<div class="card '+bc+(i===0?' top':'')+'">'
-      +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> '+s.c
+      +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
       +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
       +'<span class="headroads">'+roadsHTML(s,22)+'</span>'
       +'</div>'
