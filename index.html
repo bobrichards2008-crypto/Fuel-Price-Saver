@@ -1189,7 +1189,7 @@ function openDetail(i){
     +'<a class="drive" target="_blank" rel="noopener" href="'+maps+'">Map</a>'
     +'</div>';
   document.body.classList.add('on-detail');
-  window.scrollTo(0,0);
+  requestAnimationFrame(function(){ window.scrollTo(0,0); });
 }
 function closeDetail(){ document.body.classList.remove('on-detail'); CUR_DETAIL=null; }
 
