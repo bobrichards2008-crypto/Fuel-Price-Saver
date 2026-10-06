@@ -102,8 +102,8 @@
 
   /* brand accents */
   /* See details button on each card */
-  .cardhead{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
-  .cardhead .headroads{display:inline-flex;align-items:center;gap:10px;flex:none;margin-left:20px;flex-wrap:nowrap}
+  .cardhead{display:flex;align-items:center;flex-wrap:nowrap;gap:6px;min-width:0}
+  .cardhead .headroads{display:inline-flex;align-items:center;gap:10px;flex:none;margin-left:auto;flex-wrap:nowrap}
   .cardhead .headroads .maplink{padding:5px 12px;font-size:13px;flex:none}
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
@@ -1128,7 +1128,7 @@ function render(hits){
     const g=encodeURIComponent(s.c+', '+s.st);
     const bc=brandClass(s.b);
     h+='<div class="card '+bc+(i===0?' top':'')+'">'
-      +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> '+s.c+', '+s.st
+      +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> '+s.c
       +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
       +'<span class="headroads">'+roadsHTML(s,22)+'</span>'
       +'</div>'
