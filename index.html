@@ -42,11 +42,11 @@
      display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;border-radius:10px;
      text-decoration:none;cursor:pointer;white-space:nowrap}
   #gmaps.off{opacity:.4}
-  .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--orange)}
+  .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
   .sthead b{font-size:17px;letter-spacing:.5px;text-transform:uppercase}
   .sthead small{margin-left:auto;color:#9fb4ce;font-size:12px}
-  button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--orange);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
+  button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--line);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
   button.sthead small{margin-left:8px}
   .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid var(--orange);border-radius:6px;color:var(--orange)}
   .stx svg{width:20px;height:20px;display:block;transition:transform .7s cubic-bezier(.2,.75,.2,1)}
@@ -110,6 +110,67 @@
   .cardhead .brandtag{flex:none}
   .cardhead .besttag{flex:none}
   .cardhead > b{flex:none}
+
+  .wx{flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:5px;cursor:pointer;background:#17304f;border:1.5px solid var(--line);border-radius:999px;padding:5px 11px;-webkit-tap-highlight-color:transparent}
+  .wx .ico{font-size:16px;line-height:1}
+  .wx .temp{font-weight:bold;font-size:14px;color:#cfe0f5}
+  .wx.wait .ico{color:#7f97b5;font-size:14px}
+  .wx.fail{display:none}
+  #wxpop{position:fixed;inset:0;z-index:9999;display:none;background:rgba(4,10,22,.6);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 30px}
+  #wxpop.on{display:block}
+  #wxpop .wxbox{max-width:420px;margin:0 auto;background:#13273f;border:2px solid var(--orange);border-radius:16px;padding:16px 16px 14px;box-shadow:0 10px 40px #000a;color:#e8eef7}
+  #wxpop .wxt{display:flex;align-items:center;gap:8px}
+  #wxpop .wxt b{font-size:17px}
+  #wxpop .wxt small{color:#9fb4ce;font-size:12px;margin-left:auto}
+  #wxpop .wxnow{padding:10px 2px 12px;border-bottom:1px solid var(--line);margin-bottom:4px}
+  #wxpop .wxnowtop{display:flex;align-items:center;gap:12px}
+  #wxpop .wxbig{font-size:40px;line-height:1}
+  #wxpop .wxnt{font-size:34px;font-weight:bold;color:#fff;line-height:1.1}
+  #wxpop .wxnowbody{display:flex;align-items:flex-end;gap:12px;margin-top:6px}
+  #wxpop .wxnowtxt{flex:1;min-width:0}
+  #wxpop .wxc{color:#cfe0f5;font-size:14px}
+  #wxpop .wxm{color:#9fb4ce;font-size:12px;margin-top:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  #wxpop .wxradar{flex:none;display:flex;align-items:center;justify-content:center;background:#17304f;border:1.5px solid #4f7bb0;border-radius:12px;padding:8px;text-decoration:none;-webkit-tap-highlight-color:transparent}
+  #wxpop .wxradar svg{display:block}
+  .wxarw{display:inline-block;flex:none;vertical-align:-2px;margin-left:2px}
+  #wxpop .wxcolh{display:flex;justify-content:flex-end;padding:4px 102px 0 2px;font-size:10.5px;color:#7f97b5;white-space:nowrap}
+  #wxpop .wxr{display:flex;align-items:center;padding:9px 2px;border-bottom:1px solid #1b3350}
+  #wxpop .wxr.tap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  #wxpop .wxd{width:44px;flex:none;font-weight:bold;color:#cfe0f5;font-size:13px}
+  #wxpop .wxi{font-size:19px;width:26px;flex:none;text-align:center}
+  #wxpop .wxdd{flex:1;min-width:0;margin-left:6px}
+  #wxpop .wxtop{display:flex;align-items:center;gap:10px}
+  #wxpop .wxs{flex:1;min-width:0;color:#cfe0f5;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #wxpop .wxp{width:40px;flex:none;text-align:right;color:#6fb3e0;font-size:12.5px}
+  #wxpop .wxh{width:32px;flex:none;text-align:right;font-weight:bold;color:#fff;font-size:14px}
+  #wxpop .wxl{width:30px;flex:none;text-align:right;color:#8fa6c2;font-size:13px}
+  #wxpop .wxwind{color:#9fb4ce;font-size:12px;margin-top:2px;display:flex;align-items:center;gap:3px;white-space:nowrap}
+  #wxpop .wxchev{width:14px;margin-left:6px;flex:none;text-align:center;color:#6f8caf;font-size:18px;transition:transform .25s}
+  #wxpop .wxr.open .wxchev{transform:rotate(90deg)}
+  #wxpop .wxr.open{border-bottom:none}
+  #wxpop .wxhp{display:none;margin:0 0 4px;padding:4px 8px 8px;background:#0f2238;border-radius:8px;border-bottom:1px solid #1b3350}
+  #wxpop .wxr.open + .wxhp{display:block}
+  .wxhph{display:flex;justify-content:space-between;gap:8px;padding:2px 2px 4px;font-size:10.5px;color:#7f97b5;white-space:nowrap}
+  .wxhr{display:flex;align-items:center;gap:10px;padding:4px 2px;font-size:12.5px;color:#9fb4ce}
+  .wxhr .ht{width:46px;flex:none;color:#cfe0f5}
+  .wxhr .htp{width:32px;flex:none;color:#fff;font-weight:bold;text-align:right}
+  .wxhr .hw{flex:1;min-width:0;display:flex;align-items:center;gap:3px;white-space:nowrap;overflow:hidden}
+  .wxhr .hrn{width:40px;flex:none;color:#6fb3e0;text-align:right}
+  #wxpop .wxhbar{display:block;width:100%;margin-top:8px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;font-weight:bold;font-size:13px;padding:10px 12px;border-radius:8px;cursor:pointer}
+  #wxhr{position:fixed;inset:0;z-index:10000;display:none;background:rgba(4,10,22,.6);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 30px}
+  #wxhr.on{display:block}
+  #wxhr .wxbox{max-width:420px;margin:0 auto;background:#13273f;border:2px solid var(--orange);border-radius:16px;padding:16px 16px 14px;box-shadow:0 10px 40px #000a;color:#e8eef7}
+  #wxhr .wxt{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  #wxhr .wxt b{font-size:16px}
+  #wxhr .wxt small{color:#9fb4ce;font-size:12px;margin-left:auto}
+  #wxhr .wxhph{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px}
+  #wxhr .wxhr{border-bottom:1px solid #1b3350;padding:6px 2px}
+  #wxhr .wxhh{font-size:10.5px;color:#7f97b5;border-bottom:1px solid var(--line);padding:2px 2px 6px}
+  #wxhr .wxhh span{color:#7f97b5;font-weight:normal}
+  #wxhr .wxhh .hrn{width:auto;white-space:nowrap}
+  #wxhr .wxgot{display:block;margin:12px 0 0 auto;background:var(--orange);border:none;color:#fff;font-weight:bold;font-size:14px;padding:9px 20px;border-radius:9px;cursor:pointer}
+  #wxpop .wxmsg{color:#9fb4ce;font-size:14px;text-align:center;padding:24px 0}
+  #wxpop .wxgot{display:block;margin:12px 0 0 auto;background:var(--orange);border:none;color:#fff;font-weight:bold;font-size:14px;padding:9px 20px;border-radius:9px;cursor:pointer}
   .cardhead .headroads{display:inline-flex;align-items:center;gap:10px;flex:none;margin-left:auto;flex-wrap:nowrap}
   .cardhead .headroads .maplink{padding:5px 12px;font-size:13px;flex:none}
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
@@ -1085,7 +1146,7 @@ function flagBestPrice(){
   if(BESTFLAG_TIMER){ clearTimeout(BESTFLAG_TIMER); BESTFLAG_TIMER=null; }
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   if(!reduce){ el.classList.remove('twist'); void el.offsetWidth; el.classList.add('twist'); }
-  BESTFLAG_TIMER=setTimeout(dismissBestFlag, 15000);
+  BESTFLAG_TIMER=setTimeout(dismissBestFlag, 10000);
 }
 function dismissBestFlag(){
   const el=document.getElementById('bestflag'); if(!el) return;
@@ -1138,7 +1199,7 @@ function render(hits){
     h+='<div class="card '+bc+(i===0?' top':'')+'">'
       +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
       +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
-      +'<span class="headroads">'+roadsHTML(s,22)+'</span>'
+      +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
       +'<div class="priceline">'
       +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> $'+fmt(dOn?s.disc:s.pre)+'</span>'
@@ -1156,7 +1217,178 @@ function render(hits){
   const firstHead=res.querySelector('.stgrp button.sthead'), firstStx=firstHead?firstHead.querySelector('.stx'):null;
   if(xr&&btn&&firstHead&&firstStx){ firstHead.insertBefore(btn, firstStx); if(xr.parentNode) xr.parentNode.removeChild(xr); }
   syncExpandAllBtn();
+  wxFillCards(hits);
 }
+
+/* ---- Weather (US National Weather Service, free, no key) ---- */
+const WX_PT={}, WX_NOW={}, WX_WEEK={}; let WX_GEN=0;
+function wxKey(la,lo){ return (+la).toFixed(3)+','+(+lo).toFixed(3); }
+function wxJSON(u){ return fetch(u,{headers:{'Accept':'application/geo+json'}}).then(r=>{ if(!r.ok) throw new Error('wx '+r.status); return r.json(); }); }
+function wxPoint(la,lo){
+  const k=wxKey(la,lo);
+  if(!WX_PT[k]) WX_PT[k]=wxJSON('https://api.weather.gov/points/'+(+la).toFixed(4)+','+(+lo).toFixed(4)).then(j=>j.properties).catch(e=>{ delete WX_PT[k]; throw e; });
+  return WX_PT[k];
+}
+const WX_HR={};
+const WX_DIRS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+function wxArrow(dir,sz){
+  const i=WX_DIRS.indexOf((dir||'').trim().toUpperCase()); if(i<0) return '';
+  const to=i*22.5+180;
+  return '<svg class="wxarw" width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="transform:rotate('+(to-90)+'deg)"><path d="M2 8h9M8 4l4 4-4 4" stroke="#9fc0e8" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function wxWind(pre,dir,spd,sz){
+  const t=((dir||'')+' '+(spd||'')).trim();
+  return '\uD83D\uDEA9 '+pre+(t||'calm')+' '+wxArrow(dir,sz);
+}
+function wxPopOf(x){ return (x&&x.probabilityOfPrecipitation&&x.probabilityOfPrecipitation.value!=null)?x.probabilityOfPrecipitation.value:null; }
+function wxGetHourly(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_HR[k]) WX_HR[k]=wxPoint(s.la,s.lo).then(p=>wxJSON(p.forecastHourly)).then(j=>(j.properties.periods||[]).map(q=>({
+      iso:q.startTime||'', t:q.temperature, txt:q.shortForecast, day:q.isDaytime,
+      dir:q.windDirection||'', spd:(q.windSpeed||'').replace(' to ','-'), pop:wxPopOf(q),
+      hum:(q.relativeHumidity&&q.relativeHumidity.value!=null)?q.relativeHumidity.value:null
+    }))).catch(e=>{ delete WX_HR[k]; throw e; });
+  return WX_HR[k];
+}
+function wxGetNow(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_NOW[k]) WX_NOW[k]=wxGetHourly(s).then(H=>{
+      const q=H[0]; if(!q) throw new Error('no hourly');
+      return {t:q.t, txt:q.txt, day:q.day, dir:q.dir, spd:q.spd, wind:(q.dir+' '+q.spd).trim(), pop:q.pop, hum:q.hum};
+    }).catch(e=>{ delete WX_NOW[k]; throw e; });
+  return WX_NOW[k];
+}
+function wxGetWeek(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_WEEK[k]) WX_WEEK[k]=wxPoint(s.la,s.lo).then(p=>wxJSON(p.forecast)).then(j=>{
+      const P=j.properties.periods||[], rows=[];
+      const pop=x=>(x&&x.probabilityOfPrecipitation&&x.probabilityOfPrecipitation.value!=null)?x.probabilityOfPrecipitation.value:null;
+      const wnd=x=>((x&&x.windDirection)||'')+' '+((x&&x.windSpeed)||'').replace(' to ','-');
+      for(let n=0;n<P.length && rows.length<7;n++){
+        const a=P[n];
+        if(a.isDaytime){ const b=P[n+1]&&!P[n+1].isDaytime?P[n+1]:null;
+          rows.push({d:a.startTime,hi:a.temperature,lo:b?b.temperature:null,txt:a.shortForecast,day:true,
+            wind:wnd(a).trim(),dir:a.windDirection||'',spd:(a.windSpeed||'').replace(' to ','-'),pop:pop(a)}); if(b) n++; }
+        else rows.push({d:a.startTime,hi:null,lo:a.temperature,txt:a.shortForecast,day:false,night:true,
+            wind:wnd(a).trim(),dir:a.windDirection||'',spd:(a.windSpeed||'').replace(' to ','-'),pop:pop(a)});
+      }
+      return rows;
+    }).catch(e=>{ delete WX_WEEK[k]; throw e; });
+  return WX_WEEK[k];
+}
+function wxIcon(txt,day){
+  const t=(txt||'').toLowerCase();
+  if(/thunder|t-storm/.test(t)) return '\u26C8\uFE0F';
+  if(/snow|blizzard|flurr/.test(t)) return '\u2744\uFE0F';
+  if(/sleet|freezing|ice/.test(t)) return '\uD83C\uDF28\uFE0F';
+  if(/rain|shower|drizzle/.test(t)) return '\uD83C\uDF27\uFE0F';
+  if(/fog|haze|smoke|dust/.test(t)) return '\uD83C\uDF2B\uFE0F';
+  if(/partly|mostly sunny|mostly clear/.test(t)) return day===false?'\u2601\uFE0F':'\u26C5';
+  if(/cloud|overcast/.test(t)) return '\u2601\uFE0F';
+  if(/wind|breez/.test(t)) return '\uD83D\uDCA8';
+  return day===false?'\uD83C\uDF19':'\u2600\uFE0F';
+}
+function wxFillCards(hits){
+  const gen=++WX_GEN;
+  const pills=[].slice.call(document.querySelectorAll('#results .wx[data-i]'));
+  let n=0;
+  function next(){
+    if(gen!==WX_GEN || n>=pills.length) return;
+    const el=pills[n++], s=hits[+el.getAttribute('data-i')];
+    if(!s||s.la==null){ el.classList.add('fail'); return next(); }
+    wxGetNow(s).then(w=>{
+      if(gen!==WX_GEN) return;
+      el.classList.remove('wait');
+      el.querySelector('.ico').textContent=wxIcon(w.txt,w.day);
+      el.querySelector('.temp').innerHTML=w.t+'&deg;';
+      el.setAttribute('aria-label','Weather '+w.t+' degrees, '+w.txt+'. Tap for 7-day forecast');
+    }).catch(()=>{ el.classList.add('fail'); }).then(next);
+  }
+  for(let k=0;k<4;k++) next();
+}
+function wxDayName(iso,first){
+  if(first) return 'Today';
+  const d=new Date(iso); return isNaN(d)?'':['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+}
+let WX_CUR=null;
+function wxHrLabel(iso){ const h=+iso.slice(11,13); return isNaN(h)?'':(h%12||12)+' '+(h<12?'AM':'PM'); }
+function wxFullDay(date){ const d=new Date(date+'T12:00:00'); return isNaN(d)?'':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]; }
+function wxHrRow(q){
+  return '<div class="wxhr"><span class="ht">'+wxHrLabel(q.iso)+'</span><span class="htp">'+q.t+'&deg;</span>'
+    +'<span class="hw">'+wxWind('',q.dir,q.spd,12)+'</span><span class="hrn">'+(q.pop!=null?q.pop+'%':'')+'</span></div>';
+}
+function wxRadarBtn(s){
+  const u='https://www.rainviewer.com/map.html?loc='+(+s.la).toFixed(4)+','+(+s.lo).toFixed(4)+',7&oAP=1&layer=radar&sm=1&sn=1';
+  return '<a class="wxradar" href="'+u+'" target="_blank" rel="noopener" aria-label="Open radar map">'
+    +'<svg width="52" height="52" viewBox="0 0 40 40">'
+    +'<defs><linearGradient id="wxsw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3ab54a" stop-opacity="0"/><stop offset="1" stop-color="#3ab54a" stop-opacity="0.75"/></linearGradient></defs>'
+    +'<circle cx="20" cy="20" r="18" fill="#0b1b30" stroke="#2f557f" stroke-width="1.5"/>'
+    +'<circle cx="20" cy="20" r="12" fill="none" stroke="#24456b" stroke-width="1"/>'
+    +'<circle cx="20" cy="20" r="6" fill="none" stroke="#24456b" stroke-width="1"/>'
+    +'<g><path d="M20 20 L38 20 A18 18 0 0 0 29 4.6 Z" fill="url(#wxsw)"/><line x1="20" y1="20" x2="38" y2="20" stroke="#5fe06f" stroke-width="1.6"/>'
+    +'<animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="9.6s" repeatCount="indefinite"/></g>'
+    +'<circle cx="20" cy="20" r="2" fill="#5fe06f"/></svg></a>';
+}
+function openWx(i){
+  const s=LASTHITS[i]; if(!s) return;
+  let pop=document.getElementById('wxpop');
+  if(!pop){ pop=document.createElement('div'); pop.id='wxpop'; pop.addEventListener('click',function(e){ if(e.target===pop) closeWx(); }); document.body.appendChild(pop); }
+  const head='<div class="wxt"><b>'+s.c+', '+s.st+'</b><small>7-day forecast</small></div>';
+  const got='<button class="wxgot" onclick="closeWx()">Got it</button>';
+  pop.innerHTML='<div class="wxbox">'+head+'<div class="wxmsg">Getting the weather\u2026</div>'+got+'</div>';
+  pop.classList.add('on'); pop.scrollTop=0;
+  Promise.all([wxGetNow(s),wxGetWeek(s),wxGetHourly(s).catch(()=>[])]).then(r=>{
+    if(!pop.classList.contains('on')) return;
+    const w=r[0], wk=r[1], H=r[2]||[];
+    WX_CUR={s:s, days:[]};
+    const rain=(w.pop!=null?w.pop+'% chance of rain':''), hum=(w.hum!=null?'Humidity '+w.hum+'%':'');
+    let h='<div class="wxbox">'+head
+      +'<div class="wxnow"><div class="wxnowtop"><span class="wxbig">'+wxIcon(w.txt,w.day)+'</span><span class="wxnt">'+w.t+'&deg;</span></div>'
+      +'<div class="wxnowbody"><div class="wxnowtxt"><div class="wxc">'+w.txt+'</div>'
+      +'<div class="wxm">'+wxWind('Wind ',w.dir,w.spd,14)+'</div>'
+      +((rain||hum)?'<div class="wxm">'+rain+(rain&&hum?' &middot; ':'')+hum+'</div>':'')
+      +'</div>'+(s.la!=null?wxRadarBtn(s):'')+'</div></div>'
+      +'<div class="wxcolh"><span>Chance of rain</span></div>';
+    wk.forEach((d,k)=>{
+      const date=(d.d||'').slice(0,10);
+      const hrs=H.filter(q=>q.iso.slice(0,10)===date);
+      const tap=k<3 && hrs.length>0;
+      WX_CUR.days[k]={date:date, hrs:hrs};
+      const name=(d.night&&k===0?'Tonight':wxDayName(d.d,k===0));
+      h+='<div class="wxr'+(tap?' tap':'')+'" id="wxr_'+k+'"'+(tap?' role="button" onclick="wxDay('+k+')"':'')+'>'
+        +'<span class="wxd">'+name+'</span><span class="wxi">'+wxIcon(d.txt,d.day)+'</span>'
+        +'<div class="wxdd"><div class="wxtop"><span class="wxs">'+d.txt+'</span>'
+        +'<span class="wxp">'+(d.pop!=null?d.pop+'%':'')+'</span>'
+        +'<span class="wxh">'+(d.hi!=null?d.hi+'&deg;':'')+'</span><span class="wxl">'+(d.lo!=null?d.lo+'&deg;':'')+'</span></div>'
+        +((d.dir||d.spd)?'<div class="wxwind">'+wxWind('',d.dir,d.spd,14)+'</div>':'')+'</div>'
+        +'<span class="wxchev">'+(tap?'\u203A':'')+'</span></div>';
+      if(tap){
+        const full=(k===0?'Today':wxFullDay(date));
+        h+='<div class="wxhp"><div class="wxhph"><span>'+full+', every 2 hours</span><span>Chance of rain</span></div>'
+          +hrs.filter((q,j)=>j%2===0).map(wxHrRow).join('')
+          +'<button class="wxhbar" onclick="wxHourly('+k+')">For an hour-by-hour view, tap here</button></div>';
+      }
+    });
+    pop.innerHTML=h+got+'</div>';
+  }).catch(()=>{
+    if(pop.classList.contains('on')) pop.innerHTML='<div class="wxbox">'+head+'<div class="wxmsg">Weather isn\u2019t available right now. Try again in a minute.</div>'+got+'</div>';
+  });
+}
+function wxDay(k){ const r=document.getElementById('wxr_'+k); if(r) r.classList.toggle('open'); }
+function wxHourly(k){
+  if(!WX_CUR||!WX_CUR.days[k]) return;
+  const s=WX_CUR.s, d=WX_CUR.days[k];
+  let el=document.getElementById('wxhr');
+  if(!el){ el=document.createElement('div'); el.id='wxhr'; el.addEventListener('click',function(e){ if(e.target===el) closeWxHr(); }); document.body.appendChild(el); }
+  const full=(k===0?'Today':wxFullDay(d.date));
+  el.innerHTML='<div class="wxbox"><div class="wxt"><b>'+full+' &middot; '+s.c+', '+s.st+'</b><small>Hour-by-hour</small></div>'
+    +'<div class="wxhr wxhh"><span class="ht">Time</span><span class="htp">Temp</span><span class="hw">Wind</span><span class="hrn">Chance of rain</span></div>'
+    +d.hrs.map(wxHrRow).join('')
+    +'<button class="wxgot" onclick="closeWxHr()">Got it</button></div>';
+  el.classList.add('on'); el.scrollTop=0;
+}
+function closeWxHr(){ const el=document.getElementById('wxhr'); if(el) el.classList.remove('on'); }
+function closeWx(){ closeWxHr(); const pop=document.getElementById('wxpop'); if(pop) pop.classList.remove('on'); }
 function toggleState(st){
   const g=document.getElementById('stg_'+st); if(!g) return;
   const open=g.classList.toggle('open');
