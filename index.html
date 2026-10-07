@@ -38,17 +38,67 @@
   /* main six buttons: all the same size */
   #mainbtns{margin-top:26px}
   #mainbtns .btnrow{margin:0 0 12px}
-  #mainbtns .btnrow > *{flex:1 1 0;min-width:0;height:52px;margin:0;padding:0 8px;box-sizing:border-box;
-     display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;border-radius:10px;
+  #mainbtns .btnrow > *{flex:1 1 0;min-width:0;height:64px;margin:0;padding:0 6px;box-sizing:border-box;
+     display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:bold;border-radius:10px;
      text-decoration:none;cursor:pointer;white-space:nowrap}
-  #gmaps.off{opacity:.4}
+  #mainbtns .bluebtn{background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;padding:0}
+
+  #planbtn{display:block;width:100%;height:64px;margin:0 0 12px;border-radius:10px;font-size:17px;font-weight:bold;
+     background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;cursor:pointer}
+  #planpop{position:fixed;inset:0;z-index:9400;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #planpop.show{display:block}
+  #planintro{position:fixed;inset:0;z-index:9450;display:none;align-items:center;justify-content:center;background:rgba(5,12,24,.72);padding:20px}
+  #planintro.show{display:flex}
+  #planintro .pibox{width:100%;max-width:340px;background:#17304f;border:1.5px solid #4f7bb0;border-radius:14px;padding:22px 18px 18px;text-align:center}
+  #planintro .pitext{color:#fff;font-size:18px;font-weight:bold;line-height:1.45}
+  #planintro .picheck{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 0 16px;color:#9fc0e8;font-size:15px}
+  #planintro .picheck input{width:22px;height:22px;accent-color:#f26a21}
+  #planintro .pigot{width:100%;height:50px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-size:16px;font-weight:bold}
+  .plwrap{max-width:560px;margin:0 auto;padding:18px 16px 110px;color:#fff}
+  .plwrap h2{margin:0;font-size:24px}
+  .plsub{color:#9fb4ce;font-size:14px;margin:4px 0 16px}
+  #planpop .btnrow{display:flex;gap:10px;margin:14px 0 0}
+  #planpop .btnrow > button{flex:1;height:52px;border-radius:10px;font-size:15px;font-weight:bold}
+  #planpop .plgo{background:var(--orange);border:none;color:#fff}
+  #planpop .pladd{background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8}
+  #planmsg .hint{margin-top:12px}
+  #trippop{position:fixed;inset:0;z-index:9500;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #trippop.show{display:block}
+  .trwrap{max-width:560px;margin:0 auto;padding:18px 16px 110px;color:#fff}
+  .trwrap h2{margin:0;font-size:24px}
+  .trsub{color:#9fb4ce;font-size:14px;margin:4px 0 16px}
+  .trhead,.trstop{display:grid;grid-template-columns:26px 1fr 44px 62px 66px;gap:6px;align-items:baseline}
+  .trhead{font-size:12px;color:#9fb4ce;padding:0 2px 6px;border-bottom:2px solid var(--line)}
+  .trhead span:nth-child(n+3),.trstop span:nth-child(n+3){text-align:right}
+  .trstop{padding:10px 2px 4px;font-size:15px}
+  .trstop .n{color:var(--orange);font-weight:bold}
+  .trstop .c{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .trstop .t{color:#9fc0e8}
+  .trroads{margin:0 0 0 32px;padding:0 2px 10px;font-size:13px;color:#b9c8da;border-bottom:1px solid #1f3a5c}
+  .trroads b{color:#fff;font-weight:600}
+  .trtotal{display:flex;justify-content:space-between;padding:12px 2px;font-weight:bold;font-size:16px;border-top:2px solid var(--line)}
+  .trbar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid var(--line)}
+  .trbar button{flex:1;height:50px;border-radius:10px;font-size:15px;font-weight:bold;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8}
+  .trbar button.back{background:var(--orange);border:none;color:#fff}
+  .trmsg{color:#b9c8da;padding:20px 2px;font-size:15px}
+  @media print{
+    html,body{background:#fff !important;padding:0 !important}
+    body > *:not(#trippop){display:none !important}
+    #planpop{display:none !important}
+    #trippop{position:static;display:block;background:#fff;overflow:visible}
+    .trwrap{color:#000;padding:0}
+    .trsub,.trhead,.trstop .t,.trroads{color:#333}
+    .trroads b,.trstop .c{color:#000}
+    .trstop .n{color:#000}
+    .trbar{display:none}
+  }
   .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
   .sthead b{font-size:17px;letter-spacing:.5px;text-transform:uppercase}
   .sthead small{margin-left:auto;color:#9fb4ce;font-size:12px}
   button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--line);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
   button.sthead small{margin-left:8px}
-  .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid var(--orange);border-radius:6px;color:var(--orange)}
+  .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid #4f7bb0;border-radius:6px;color:#9fc0e8}
   .stx svg{width:20px;height:20px;display:block;transition:transform .7s cubic-bezier(.2,.75,.2,1)}
   @media (prefers-reduced-motion:reduce){.stx svg{transition:none}}
   button.sthead:focus-visible{outline:2px solid #fff;outline-offset:3px}
@@ -83,7 +133,7 @@
   #results > .hint{margin-top:4px;margin-bottom:10px}
   .expandallrow{display:flex;justify-content:flex-end;margin:0 0 8px}
   .sthead #expandall{margin-left:auto;margin-right:auto}
-  #expandall{box-sizing:border-box;height:34px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:104px;background:#17304f;border:1.5px solid var(--orange);color:#9fc0e8;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer}
+  #expandall{box-sizing:border-box;height:34px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:104px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer}
   #results .stgrp:first-of-type .sthead{margin-top:6px}
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
@@ -113,6 +163,10 @@
 
   .wx{flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:5px;cursor:pointer;background:#17304f;border:1.5px solid var(--line);border-radius:999px;padding:5px 11px;-webkit-tap-highlight-color:transparent}
   .wx .ico{font-size:16px;line-height:1}
+  .wxsvg{width:1.2em;height:1.2em;display:block;overflow:visible}
+  .wx .ico .wxsvg{width:20px;height:20px}
+  #wxpop .wxbig .wxsvg{width:48px;height:48px}
+  #wxpop .wxi .wxsvg{width:24px;height:24px;margin:0 auto}
   .wx .temp{font-weight:bold;font-size:14px;color:#cfe0f5}
   .wx.wait .ico{color:#7f97b5;font-size:14px}
   .wx.fail{display:none}
@@ -177,7 +231,7 @@
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .priceline .seebtn{margin-left:auto}
   .priceline .pdate{margin-top:0;margin-left:auto}
-  .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid var(--orange);color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
+  .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
   .priceline .onep .plabel{color:#3ab54a;font-weight:normal;font-size:12px}
@@ -468,10 +522,17 @@
   <div class="btnrow">
     <button class="go" onclick="addStop()">+ Add stop</button>
     <button class="go" onclick="findFuel()">Find fuel</button>
+    <button class="bluebtn" onclick="optimizeStops()">Optimize</button>
   </div>
   <div class="btnrow">
-    <button class="addbtn" style="border-color:#3ab54a;color:#9fe0a8" onclick="askNear()">⛽ Fuel near me</button>
-    <a id="gmaps" class="addbtn off" target="_blank" rel="noopener" onclick="return gmapsTap()">🗺 Map full route</a>
+    <button class="bluebtn" onclick="askNear()" aria-label="Fuel near me" title="Fuel near me"><svg viewBox="0 0 44 44" width="50" height="50"><circle cx="22" cy="22" r="20" fill="none" stroke="#f26a21" stroke-width="2.6"/>
+<rect x="14" y="12" width="12" height="20" rx="2" fill="#3ab54a"/><rect x="16.5" y="15" width="7" height="5" rx="1" fill="#0c1a30"/>
+<rect x="12.5" y="31" width="15" height="2.6" rx="1" fill="#3ab54a"/>
+<path d="M26 17 h2.5 a2 2 0 0 1 2 2 v8 a1.6 1.6 0 0 0 3.2 0 v-9 l-2.6-3" fill="none" stroke="#3ab54a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a id="gmaps" class="bluebtn off" target="_blank" rel="noopener" onclick="return gmapsTap()" aria-label="Map" title="Map"><svg viewBox="0 0 40 40" width="48" height="48"><path d="M6 11 l9-3 l10 3 l9-3 v21 l-9 3 l-10-3 l-9 3 z" fill="none" stroke="#9fc0e8" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M15 8 v21 M25 11 v21" stroke="#9fc0e8" stroke-width="1.6"/>
+<path d="M20 26 c-4-5-6-7.5-6-10.5 a6 6 0 0 1 12 0 c0 3-2 5.5-6 10.5z" fill="#f26a21" stroke="#0c1a30" stroke-width="1.2"/><circle cx="20" cy="15.5" r="2.2" fill="#0c1a30"/></svg></a>
+    <button class="bluebtn" style="color:#ff2a2a;font-weight:800;border-color:#d11f1f" onclick="askClear()">Clear</button>
   </div>
   <div id="nearpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNear()">
     <div class="popbox">
@@ -481,10 +542,6 @@
       <div class="btnrow"><button class="go" onclick="fuelNear(15)">15 mi</button><button class="go" onclick="fuelNear(25)">25 mi</button></div>
       <button class="addbtn" style="margin:0" onclick="closeNear()">Cancel</button>
     </div>
-  </div>
-  <div class="btnrow">
-    <button class="addbtn" style="border-color:#4a7fb5;color:#9fc0e8" onclick="optimizeStops()">⇅ Optimize route</button>
-    <button class="addbtn" style="border-color:#b55a4a;color:#e8a99f" onclick="askClear()">✕ Clear data</button>
   </div>
   <div id="clearpop" class="popwrap" style="display:none">
     <div class="popbox">
@@ -496,6 +553,7 @@
       </div>
     </div>
   </div>
+  <button id="planbtn" onclick="openPlan()">Plan the stops on your load</button>
   </div>
   <div id="opthint"></div>
 </div>
@@ -1276,17 +1334,30 @@ function wxGetWeek(s){
     }).catch(e=>{ delete WX_WEEK[k]; throw e; });
   return WX_WEEK[k];
 }
+const WXI_CLOUD='M9.5 26h14a5.5 5.5 0 0 0 .7-10.95A7.5 7.5 0 0 0 10 14.2 5.9 5.9 0 0 0 9.5 26z';
+function wxSun(cx,cy,r){
+  let g='<g stroke="#ffc94a" stroke-width="2" stroke-linecap="round">';
+  for(let k=0;k<8;k++){ const t=k*Math.PI/4, c=Math.cos(t), n=Math.sin(t);
+    g+='<line x1="'+(cx+c*(r+2.5)).toFixed(1)+'" y1="'+(cy+n*(r+2.5)).toFixed(1)+'" x2="'+(cx+c*(r+5)).toFixed(1)+'" y2="'+(cy+n*(r+5)).toFixed(1)+'"/>'; }
+  return g+'</g><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#ffc94a"/>';
+}
+function wxMoon(cx,cy,r){ return '<path d="M'+(cx+r*0.35)+' '+(cy-r)+'a'+r+' '+r+' 0 1 0 '+(r*0.65)+' '+(r*1.75)+'A'+(r*0.85)+' '+(r*0.85)+' 0 0 1 '+(cx+r*0.35)+' '+(cy-r)+'z" fill="#f3e7a8"/>'; }
+function wxCloud(dx,dy,sc,fill){ return '<path d="'+WXI_CLOUD+'" fill="'+fill+'" transform="translate('+dx+' '+dy+') scale('+sc+')"/>'; }
+function wxSvg(inner){ return '<svg class="wxsvg" viewBox="0 0 32 32" aria-hidden="true">'+inner+'</svg>'; }
 function wxIcon(txt,day){
-  const t=(txt||'').toLowerCase();
-  if(/thunder|t-storm/.test(t)) return '\u26C8\uFE0F';
-  if(/snow|blizzard|flurr/.test(t)) return '\u2744\uFE0F';
-  if(/sleet|freezing|ice/.test(t)) return '\uD83C\uDF28\uFE0F';
-  if(/rain|shower|drizzle/.test(t)) return '\uD83C\uDF27\uFE0F';
-  if(/fog|haze|smoke|dust/.test(t)) return '\uD83C\uDF2B\uFE0F';
-  if(/partly|mostly sunny|mostly clear/.test(t)) return day===false?'\u2601\uFE0F':'\u26C5';
-  if(/cloud|overcast/.test(t)) return '\u2601\uFE0F';
-  if(/wind|breez/.test(t)) return '\uD83D\uDCA8';
-  return day===false?'\uD83C\uDF19':'\u2600\uFE0F';
+  const t=(txt||'').toLowerCase(), night=(day===false);
+  const lit='#e9eff6', grey='#b4c3d4';
+  const drops=c=>'<g stroke="'+c+'" stroke-width="2" stroke-linecap="round"><line x1="11" y1="25" x2="9.5" y2="29"/><line x1="16.5" y1="25" x2="15" y2="29"/><line x1="22" y1="25" x2="20.5" y2="29"/></g>';
+  const top=(x,y)=>wxCloud(x,y,1,grey);
+  if(/thunder|t-storm/.test(t)) return wxSvg(top(0,-6)+'<path d="M17 18l-5 7h4l-2 6 7-9h-4l2-4z" fill="#ffd23f"/>');
+  if(/snow|blizzard|flurr/.test(t)) return wxSvg(top(0,-6)+'<g fill="#fff"><circle cx="10.5" cy="25" r="1.6"/><circle cx="16" cy="28" r="1.6"/><circle cx="21.5" cy="25" r="1.6"/></g>');
+  if(/sleet|freezing|ice/.test(t)) return wxSvg(top(0,-6)+'<g stroke="#5fb0ff" stroke-width="2" stroke-linecap="round"><line x1="11" y1="24" x2="9.5" y2="28"/><line x1="21" y1="24" x2="19.5" y2="28"/></g><circle cx="15.5" cy="27" r="1.6" fill="#fff"/>');
+  if(/rain|shower|drizzle/.test(t)) return wxSvg(top(0,-6)+drops('#5fb0ff'));
+  if(/fog|haze|smoke|dust/.test(t)) return wxSvg(wxCloud(0,-5,1,grey)+'<g stroke="#9fb4ce" stroke-width="2" stroke-linecap="round"><line x1="6" y1="24" x2="26" y2="24"/><line x1="9" y1="28" x2="23" y2="28"/></g>');
+  if(/partly|mostly sunny|mostly clear/.test(t)) return wxSvg((night?wxMoon(12,11,8.5):wxSun(11,11,5.5))+wxCloud(2,1,0.95,lit));
+  if(/cloud|overcast/.test(t)) return wxSvg(wxCloud(-4,-4,0.85,grey)+wxCloud(2,1,0.95,lit));
+  if(/wind|breez/.test(t)) return wxSvg('<g stroke="#cfe0f5" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M4 12h15a3.5 3.5 0 1 0-3.5-3.5"/><path d="M4 18h20a3.5 3.5 0 1 1-3.5 3.5"/><path d="M4 24h10"/></g>');
+  return wxSvg(night?wxMoon(16,16,9):wxSun(16,16,7));
 }
 function wxFillCards(hits){
   const gen=++WX_GEN;
@@ -1299,7 +1370,7 @@ function wxFillCards(hits){
     wxGetNow(s).then(w=>{
       if(gen!==WX_GEN) return;
       el.classList.remove('wait');
-      el.querySelector('.ico').textContent=wxIcon(w.txt,w.day);
+      el.querySelector('.ico').innerHTML=wxIcon(w.txt,w.day);
       el.querySelector('.temp').innerHTML=w.t+'&deg;';
       el.setAttribute('aria-label','Weather '+w.t+' degrees, '+w.txt+'. Tap for 7-day forecast');
     }).catch(()=>{ el.classList.add('fail'); }).then(next);
@@ -1658,6 +1729,16 @@ function openNews(){
   if(seen!==APP_VER) document.body.classList.add('has-new');
 })();
 function stepBack(){
+  if(document.body.classList.contains('on-trip')){
+    document.body.classList.remove('on-trip');
+    document.getElementById('trippop').classList.remove('show');
+    return true;
+  }
+  if(document.body.classList.contains('on-plan')){
+    document.body.classList.remove('on-plan');
+    document.getElementById('planpop').classList.remove('show');
+    return true;
+  }
   if(document.body.classList.contains('on-news')){
     document.body.classList.remove('on-news');
     return true;
@@ -1714,6 +1795,175 @@ window.addEventListener('popstate', function(){
 });
 history.replaceState({app:0}, '');
 
+// ---------- Trip Summary ----------
+function roadName(r){
+  return r.replace(/^I\s+/,'I-').replace(/;\s*I\s+/g,' / I-').replace(/;\s*/g,' / ');
+}
+function legRoads(lg){
+  // add up miles on each road in this leg, keep the roads in driving order
+  const order=[], miles={};
+  (lg.steps||[]).forEach(st=>{
+    const r=(st.ref||'').trim(); if(!r) return;
+    const k=roadName(r);
+    if(!(k in miles)){ miles[k]=0; order.push(k); }
+    miles[k]+=st.distance/1609;
+  });
+  let out=order.filter(k=>miles[k]>=5);
+  if(!out.length && lg.summary) out=lg.summary.split(',').map(x=>x.trim()).filter(Boolean);
+  return out.map(k=>'<b>'+esc(k)+'</b>'+(miles[k]?' '+Math.round(miles[k])+' mi':'')).join(' \u2192 ');
+}
+function splitPlace(name){
+  const m=name.match(/^(.*),\s*([A-Z]{2})$/);
+  return m?[m[1],m[2]]:[name,''];
+}
+// ---------- Trip planner (its own drop list; shares only the routing engine) ----------
+Object.defineProperty(window,'planEl',{get:()=>document.getElementById('planstops')});
+function planRow(value){
+  const box=document.createElement('div');
+  box.className='stop';
+  box.innerHTML =
+    '<div class="arrows"><button class="up">\u25b2</button><button class="dn">\u25bc</button></div>'+
+    '<div class="fieldwrap"><input type="text" autocomplete="off">'+
+    '<div class="suggest" style="display:none"></div><div class="legmi"></div></div>'+
+    '<button class="remove">\u00d7</button>';
+  const input=box.querySelector('input'), sug=box.querySelector('.suggest');
+  if(value) input.value=value;
+  let timer;
+  input.addEventListener('input',()=>{
+    clearTimeout(timer); planSave();
+    const q=input.value.trim();
+    if(q.length<2){ sug.style.display='none'; return; }
+    timer=setTimeout(()=>lookup(q,sug,input),180);
+  });
+  input.addEventListener('change',planSave);
+  box.querySelector('.remove').onclick=()=>{ if(planEl.children.length>2){ box.remove(); } else { input.value=''; } planLabel(); planSave(); };
+  box.querySelector('.up').onclick=()=>{ const p=box.previousElementSibling; if(p) planEl.insertBefore(box,p); planLabel(); planSave(); };
+  box.querySelector('.dn').onclick=()=>{ const nx=box.nextElementSibling; if(nx) planEl.insertBefore(nx,box); planLabel(); planSave(); };
+  return box;
+}
+function planLabel(){
+  const rows=[...planEl.children];
+  rows.forEach((r,i)=>{
+    r.querySelector('input').placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : 'Drop '+i;
+    r.querySelector('.up').disabled=(i===0);
+    r.querySelector('.dn').disabled=(i===rows.length-1);
+  });
+}
+function planVals(){ return [...planEl.querySelectorAll('input')].map(i=>i.value.trim()); }
+function planSave(){ try{ localStorage.setItem('fps_plan', JSON.stringify(planVals())); }catch(e){} }
+function planFill(vals){
+  planEl.innerHTML='';
+  vals.forEach(v=>planEl.appendChild(planRow(v)));
+  while(planEl.children.length<2) planEl.appendChild(planRow(''));
+  planLabel();
+}
+function openPlan(){
+  if(!planEl.children.length){
+    let v=[]; try{ v=JSON.parse(localStorage.getItem('fps_plan')||'[]'); }catch(e){}
+    planFill(Array.isArray(v)?v:[]);
+  }
+  document.getElementById('planmsg').innerHTML='';
+  let hideIntro=false; try{ hideIntro=localStorage.getItem('fps_plan_intro_hide')==='1'; }catch(e){}
+  document.getElementById('pihide').checked=false;
+  document.getElementById('planintro').classList.toggle('show',!hideIntro);
+  enterScreen(); document.getElementById('planpop').classList.add('show'); document.body.classList.add('on-plan');
+  document.getElementById('planpop').scrollTop=0;
+}
+function closePlanIntro(){
+  if(document.getElementById('pihide').checked){ try{ localStorage.setItem('fps_plan_intro_hide','1'); }catch(e){} }
+  document.getElementById('planintro').classList.remove('show');
+}
+function planAdd(){ const r=planRow(''); planEl.appendChild(r); planLabel(); r.querySelector('input').focus(); }
+function planInputs(){
+  const raw=planVals(), out=raw.filter(x=>x);
+  if(!raw[0] && out.length>=1) out.unshift(HERE);
+  return out;
+}
+function planMsg(t){ document.getElementById('planmsg').innerHTML=t?'<p class="hint">'+t+'</p>':''; }
+// Best drop order: start stays put, every drop (including the last) can move.
+function bestOrder(D){
+  const n=D.length, drops=[]; for(let i=1;i<n;i++) drops.push(i);
+  const cost=ord=>{ let c=0,prev=0; for(const k of ord){ c+=D[prev][k]; prev=k; } return c; };
+  if(drops.length<=8){
+    let best=null,bc=1e18;
+    const perm=(a,l)=>{ if(l===a.length){ const c=cost(a); if(c<bc){bc=c;best=a.slice();} return; }
+      for(let i=l;i<a.length;i++){ [a[l],a[i]]=[a[i],a[l]]; perm(a,l+1); [a[l],a[i]]=[a[i],a[l]]; } };
+    perm(drops.slice(),0); return best;
+  }
+  // many drops: nearest-next, then untangle with 2-opt
+  let ord=[], left=new Set(drops), cur=0;
+  while(left.size){ let b=null,bd=1e18; for(const k of left){ if(D[cur][k]<bd){bd=D[cur][k];b=k;} } ord.push(b); left.delete(b); cur=b; }
+  let better=true;
+  while(better){ better=false;
+    for(let i=0;i<ord.length-1;i++) for(let j=i+1;j<ord.length;j++){
+      const t=ord.slice(0,i).concat(ord.slice(i,j+1).reverse(), ord.slice(j+1));
+      if(cost(t)+0.5<cost(ord)){ ord=t; better=true; } } }
+  return ord;
+}
+async function planOptimize(){
+  const raw=planVals();
+  if(raw.slice(1).filter(x=>x).length<2){ planMsg('Add at least two drops to optimize.'); return false; }
+  if(raw.slice(1).some(x=>!x)){ planMsg('Fill in every drop first, or tap the \u00d7 to remove the empty one.'); return false; }
+  const fromHere=!raw[0], vals=raw.slice(); if(fromHere) vals[0]=HERE;
+  planMsg('Optimizing drop order...');
+  try{
+    const pts=[]; for(const c of vals) pts.push(await geocode(c));
+    const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
+    const j=await (await fetch('https://router.project-osrm.org/table/v1/driving/'+coordStr+'?annotations=distance')).json();
+    if(!j.distances) throw new Error('no result');
+    const ord=bestOrder(j.distances);
+    const nv=[raw[0]].concat(ord.map(k=>vals[k]));
+    planFill(nv); planSave();
+    let mi=0,prev=0; for(const k of ord){ mi+=j.distances[prev][k]; prev=k; }
+    planMsg('Drops put in the shortest order ('+Math.round(mi/1609).toLocaleString()+' miles). Tap Run route for the full report.');
+    return true;
+  }catch(e){ planMsg('Could not optimize right now ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.'); return false; }
+}
+async function planRun(){
+  if(planInputs().length<2){ planMsg('Enter a start and at least one drop.'); return; }
+  planMsg(''); runTrip();
+}
+async function runTrip(){
+  const pop=document.getElementById('trippop'), body=document.getElementById('tripbody');
+  const raw=planVals();
+  const inputs=raw.filter(x=>x);
+  if(!raw[0] && inputs.length>=1) inputs.unshift(HERE);
+  if(!pop.classList.contains('show')){ enterScreen(); pop.classList.add('show'); document.body.classList.add('on-trip'); }
+  pop.scrollTop=0;
+  if(inputs.length<2){ body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Enter at least a start and an end, then tap Run route.</div>'; return; }
+  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Working out your route...</div>';
+  try{
+    const pts=[], names=[];
+    for(const c of inputs){ const g=await geocode(c); pts.push(g); names.push(c===HERE?HERE:shortPlace(g[2]||c)); }
+    const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
+    const u='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=false&steps=true';
+    const rj=await (await fetch(u)).json();
+    if(!rj.routes||!rj.routes.length) throw new Error('no route came back');
+    const legs=rj.routes[0].legs||[];
+    let run=0;
+    let h='<h2>Trip Summary</h2><div class="trsub">'+names.length+' stops \u00b7 '+Math.round(rj.routes[0].distance/1609).toLocaleString()+' miles</div>'
+      +'<div class="trhead"><span></span><span>City</span><span>State</span><span>Leg mi</span><span>Total mi</span></div>';
+    names.forEach((nm,k)=>{
+      const [city,st]=splitPlace(nm);
+      let leg='';
+      if(k>0){ const mi=Math.round(legs[k-1].distance/1609); run+=mi; leg=mi.toLocaleString(); }
+      h+='<div class="trstop"><span class="n">'+(k+1)+'</span><span class="c">'+esc(city)+'</span><span>'+esc(st)+'</span><span>'+(k?leg:'Start')+'</span><span class="t">'+(k?run.toLocaleString():'0')+'</span></div>';
+      if(k<legs.length){ const rd=legRoads(legs[k]); h+='<div class="trroads">'+(rd||'Local roads')+'</div>'; }
+    });
+    h+='<div class="trtotal"><span>Total</span><span>'+run.toLocaleString()+' miles</span></div>';
+    body.innerHTML=h;
+  }catch(e){
+    body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Could not work out the route ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.</div>';
+  }
+}
+function closeTrip(){ if(document.getElementById('trippop').classList.contains('show')) history.back(); }
+async function tripOptimize(){
+  const body=document.getElementById('tripbody');
+  if(planVals().slice(1).filter(x=>x).length<2){ body.insertAdjacentHTML('beforeend','<div class="trmsg">Optimize needs at least two drops.</div>'); return; }
+  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Optimizing drop order...</div>';
+  if(await planOptimize()) await runTrip();
+  else body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">'+document.getElementById('planmsg').textContent+'</div>';
+}
 async function optimizeStops(){
   const rows=[...document.querySelectorAll('#stops input')];
   const vals=rows.map(i=>i.value.trim());
@@ -1745,5 +1995,31 @@ async function optimizeStops(){
   }catch(e){ res.innerHTML='<p class="hint">Could not optimize right now ('+e.message+'). The free service may be busy \u2014 try again, or order the stops by hand.</p>'; }
 }
 </script>
+  <div id="planpop"><div class="plwrap">
+    <h2>Plan your load</h2>
+    <div class="plsub">Enter your start and every drop, then tap Run route.</div>
+    <div id="planstops"></div>
+    <div class="btnrow">
+      <button class="pladd" onclick="planAdd()">+ Add drop</button>
+      <button class="plgo" onclick="planRun()">Run route</button>
+    </div>
+    <div id="planmsg"></div>
+  </div>
+    <div class="trbar">
+      <button class="back" onclick="history.back()">Back</button>
+    </div>
+    <div id="planintro"><div class="pibox">
+      <div class="pitext">Enter your stops in any order.<br>You can optimize them later with one click.</div>
+      <label class="picheck"><input type="checkbox" id="pihide"> Don't show this again</label>
+      <button class="pigot" onclick="closePlanIntro()">Got it</button>
+    </div></div>
+  </div>
+  <div id="trippop"><div class="trwrap" id="tripbody"></div>
+    <div class="trbar">
+      <button onclick="tripOptimize()">Optimize</button>
+      <button onclick="window.print()">Print</button>
+      <button class="back" onclick="closeTrip()">Back</button>
+    </div>
+  </div>
 </body>
 </html>
