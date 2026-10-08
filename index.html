@@ -24,6 +24,14 @@
              border:1px solid #27466b; border-radius:10px; z-index:10; overflow:hidden; }
   .suggest div { padding:12px 14px; border-bottom:1px solid #1d3a5e; cursor:pointer; font-size:15px; }
   .suggest div:hover { background:#1d3a5e; }
+  .stop .fieldwrap input.isloc,.stop input.isloc{font-weight:700;color:#fff;padding-left:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cpath d='M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z' fill='%23f26a21'/%3E%3Ccircle cx='8' cy='7.5' r='2.4' fill='%231d3a5e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:15px 19px}
+  .suggest .useloc{display:flex;align-items:center;gap:9px;color:#f26a21;font-weight:700}
+  .suggest .useloc svg{flex:0 0 auto}
+  #routetools{display:flex;justify-content:flex-end;margin:0 0 4px}
+  #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+  #revbtn svg{flex:0 0 auto}
+  #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
+  #planbtn .pbs{display:block;font-size:11.5px;font-weight:600;color:#9fb4ce;margin-top:3px;line-height:1.2}
   .btnrow{display:flex;gap:10px;margin:4px 0 14px}
   .btnrow > button{flex:1;width:auto;margin:0}
   .popwrap{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
@@ -43,7 +51,7 @@
      text-decoration:none;cursor:pointer;white-space:nowrap}
   #mainbtns .bluebtn{background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;padding:0}
 
-  #planbtn{display:block;width:100%;height:64px;margin:0 0 12px;border-radius:10px;font-size:17px;font-weight:bold;
+  #planbtn{display:block;width:100%;min-height:72px;padding:8px 10px;margin:0 0 12px;border-radius:10px;font-size:17px;font-weight:bold;
      background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;cursor:pointer}
   #planpop{position:fixed;inset:0;z-index:9400;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #planpop.show{display:block}
@@ -132,7 +140,8 @@
   .hint { color:#9fb4ce; font-size:13px; text-align:center; margin-top:14px; line-height:1.5; }
   #results > .hint{margin-top:4px;margin-bottom:10px}
   .expandallrow{display:flex;justify-content:flex-end;margin:0 0 8px}
-  .sthead #expandall{margin-left:auto;margin-right:auto}
+  .sthead #expandall{margin-left:auto;margin-right:0}   /* sits against the round toggle, flex gap = the small space */
+  .sthead #expandall + .stx{margin-left:0}
   #expandall{box-sizing:border-box;height:34px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:104px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer}
   #results .stgrp:first-of-type .sthead{margin-top:6px}
 
@@ -311,6 +320,7 @@
   #cheappop .big{color:var(--orange);font-size:20px;font-weight:bold;margin:6px 0}
   #popback{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:890;opacity:0;pointer-events:none;transition:opacity .3s}
   #popback.show{opacity:1;pointer-events:auto}
+  /* loading scene: truck and trailer drive from the start pin to the green pump */
   #bar{height:6px;background:var(--orange);width:0;transition:width .4s;border-radius:3px;margin-top:10px;display:none}
   .legmi{font-size:12px;color:#f26a21;margin-top:3px;min-height:14px}
   /* stop rows: arrows and X sit level with the city box, arrows bright orange */
@@ -320,6 +330,22 @@
   .arrows button{flex:1;height:auto;background:#2b4a70;color:var(--orange);font-size:14px}
   .arrows button:disabled{opacity:1}
   .stop .remove{height:48px}
+  .stop .mvbtn,.stop .remove{flex:0 0 48px;width:48px;height:48px;padding:0;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--orange)}
+  .stop .mvbtn:focus-visible,.stop .remove:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+  .stop .remove svg{overflow:visible}
+  .stop .remove .lid{transform-box:fill-box;transform-origin:50% 50%}
+  .tossfly{position:fixed;z-index:9700;color:#fff;font-size:16px;font-weight:700;white-space:nowrap;pointer-events:none;
+    background:#10233f;border:1.5px solid #4f7bb0;border-radius:8px;padding:4px 9px;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+  #mvpop{position:fixed;inset:0;z-index:9600;background:rgba(5,12,24,.35);display:none}
+  #mvpop.show{display:block}
+  #mvpop .mvbox{position:absolute;right:10px;width:160px;background:#1d3a5e;border:1.5px solid #4f7bb0;border-radius:12px;padding:12px;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+  #mvtitle{font-size:16px;font-weight:800;color:#fff;margin:0 0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #mvpop .mvchoice{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;margin:0 0 8px;border:0;border-radius:10px;background:var(--orange);color:#fff;font-size:17px;font-weight:700}
+  #mvpop .mvcancel{display:block;width:100%;height:42px;border-radius:10px;background:transparent;border:1.5px solid #4f7bb0;color:#9fc0e8;font-size:15px;font-weight:700}
+  .stop.dragging{position:relative;z-index:50;box-shadow:0 10px 24px rgba(0,0,0,.6);border-radius:12px;background:#10233f}
+  .stop.dragging .fieldwrap input{outline:2px solid var(--orange)}
+  body.rowdrag,body.rowdrag *{user-select:none;-webkit-user-select:none}
   /* new header: taller, gauge + FPS, two-line price status, big gear */
   header{padding:22px 16px 18px}
   header h1{display:flex;align-items:center;justify-content:center;gap:10px;font-size:34px;letter-spacing:2px;line-height:1}
@@ -333,7 +359,12 @@
   header h1{display:block;font-size:23px;letter-spacing:.3px;line-height:1.2;padding:0 54px;white-space:nowrap;color:#ffffff;margin-top:6px}
   header h1 span{font-weight:800}
   .fpsmono.corner{position:absolute;left:12px;top:10px;width:58px;height:38px;display:flex;align-items:center;justify-content:center;border:2px solid var(--orange);border-radius:9px;color:var(--orange);font-weight:800;font-size:19px;letter-spacing:1px;text-indent:1px;line-height:1;padding-top:1px;background:rgba(0,0,0,.15)}
-  .newtag{left:0 !important;right:0 !important;top:22px !important;margin:0 auto !important;width:max-content}
+  header .newtag{left:80px !important;right:auto !important;top:15px !important;margin:0 !important;width:max-content;
+     font-size:15px;padding:5px 9px;line-height:1.15;text-align:center;white-space:nowrap;border-radius:9px;border-width:2px;letter-spacing:.4px;z-index:5;
+     transform-origin:50% 60%;animation:tagfloat 2.4s ease-in-out infinite}
+  @keyframes tagfloat{0%,100%{transform:translateY(0) rotate(-12deg)}25%{transform:translateY(-3px) rotate(-6deg)}
+     50%{transform:translateY(-5px) rotate(-10deg)}75%{transform:translateY(-2px) rotate(-4deg)}}
+  @media (prefers-reduced-motion:reduce){ header .newtag{animation:none;transform:rotate(-9deg)} }
   .gear{top:10px !important;transform:none !important;margin-top:0}
   body.on-detail .fpsmono.corner, body.on-svc .fpsmono.corner, body.on-news .fpsmono.corner{display:none}
   body.on-detail header h1, body.on-svc header h1, body.on-news header h1{font-size:22px}
@@ -482,7 +513,7 @@
   <button class="go" style="padding:10px" onclick="hidePop()">Got it</button>
 </div>
 
-<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
+<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
 <div class="wrap">
   
   <div id="routehint" style="font-size:18px;font-weight:bold;color:#eaf0f7;text-align:center;margin:2px 0 14px;line-height:1.35">Plan your fuel stops below.</div>
@@ -503,7 +534,7 @@
       <div id="predrow" onclick="closeSettings();openFc()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:none;align-items:center">
         <span><b>Tomorrow's prediction</b><small style="display:block;color:#9fb4ce;margin-top:2px">What we expect fuel to do tomorrow</small></span>
       </div>
-      <div onclick="closeSettings();openNews()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
+      <div id="histrow" onclick="closeSettings();openNews()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
         <span><b>History of changes</b><small style="display:block;color:#9fb4ce;margin-top:2px">Everything that's been updated, newest first</small></span>
         <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <button class="go" style="padding:10px;margin-top:14px" onclick="closeSettings()">Done</button>
@@ -518,6 +549,7 @@
     </div>
   </div>
   <div id="stops"></div>
+  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
   <div id="mainbtns">
   <div class="btnrow">
     <button class="go" onclick="addStop()">+ Add stop</button>
@@ -553,7 +585,7 @@
       </div>
     </div>
   </div>
-  <button id="planbtn" onclick="openPlan()">Plan the stops on your load</button>
+  <button id="planbtn" onclick="openPlan()"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button>
   </div>
   <div id="opthint"></div>
 </div>
@@ -566,29 +598,180 @@
 
 <script>
 const stopsEl = document.getElementById('stops');
+const HERE='Your location';
+let HERE_LL='';
+
+// ---------- Row buttons: square move button (long orange arrows) + orange trash can ----------
+const TRASH_SVG='<svg class="trsvg" width="26" height="30" viewBox="0 0 30 34" aria-hidden="true">'+
+  '<g class="lid"><rect x="2" y="5" width="26" height="4" rx="1.5" fill="#f26a21"/>'+
+  '<rect x="11" y="1.5" width="8" height="4" rx="1.2" fill="none" stroke="#f26a21" stroke-width="2"/></g>'+
+  '<path d="M5 11h20l-1.8 20.2a2 2 0 0 1-2 1.8H8.8a2 2 0 0 1-2-1.8z" fill="#f26a21"/>'+
+  '<path d="M11 15v14M15 15v14M19 15v14" stroke="#9c3f0c" stroke-width="1.6" stroke-linecap="round"/></svg>';
+function moveSVG(up,down){
+  const a='stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"';
+  const u=up?'<path d="M14 30V9" '+a+'/><path d="M8 15l6-7 6 7" '+a+'/>':'';
+  const d=down?'<path d="M26 8v21" '+a+'/><path d="M20 23l6 7 6-7" '+a+'/>':'';
+  const shift=(up&&down)?'':(up?'translate(6 0)':'translate(-6 0)');
+  return '<svg width="36" height="34" viewBox="0 0 40 38" aria-hidden="true"><g transform="'+shift+'">'+u+d+'</g></svg>';
+}
+// only show the arrows that work: top row down only, bottom row up only, middle rows both
+function setMoveIcon(r,i,n){
+  const b=r.querySelector('.mvbtn'); if(!b) return;
+  const up=i>0, down=i<n-1;
+  b.dataset.up=up?'1':''; b.dataset.dn=down?'1':'';
+  b.style.visibility=(up||down)?'':'hidden';
+  b.innerHTML=moveSVG(up,down);
+}
+function stopName(row){
+  const v=(row.querySelector('input').value||'').trim();
+  if(v) return v.split(',')[0].trim();
+  return '';
+}
+let MV={row:null,list:null,after:null};
+function openMove(row,list,after){
+  const pop=document.getElementById('mvpop'); if(pop.classList.contains('show')) return;
+  const b=row.querySelector('.mvbtn'), canUp=!!b.dataset.up, canDn=!!b.dataset.dn;
+  MV={row,list,after};
+  // start and end rows only move one way: just do it, no pop-up
+  if(canUp&&!canDn){ doMove(-1); return; }
+  if(canDn&&!canUp){ doMove(1); return; }
+  const nm=stopName(row);
+  document.getElementById('mvtitle').textContent=nm?('Move '+nm):'Move this stop';
+  // sit off to the right, level with the row, so the city name stays in view
+  const r=row.getBoundingClientRect(), box=pop.querySelector('.mvbox');
+  pop.classList.add('show');
+  const h=box.offsetHeight;
+  box.style.top=Math.max(8,Math.min(r.top,innerHeight-h-8))+'px';
+}
+// press and hold the city box, then slide it up or down
+function enableDrag(row,list,after){
+  const fw=row.querySelector('.fieldwrap'), input=row.querySelector('input');
+  let timer=null, armed=false, active=false, sx=0, sy=0, grab=0;
+  const place=y=>{
+    row.style.transform='none';
+    const nat=row.getBoundingClientRect();
+    const center=y-grab+nat.height/2;
+    const prev=row.previousElementSibling, next=row.nextElementSibling;
+    if(prev){ const pr=prev.getBoundingClientRect(); if(center<pr.top+pr.height/2){ list.insertBefore(row,prev); after(); } }
+    if(next){ const nr=next.getBoundingClientRect(); if(center>nr.top+nr.height/2){ list.insertBefore(next,row); after(); } }
+    const top=row.getBoundingClientRect().top;
+    row.style.transform='translateY('+(y-grab-top)+'px)';
+  };
+  const begin=()=>{
+    if(TOSSING||list.children.length<2) return;
+    active=true; input.blur(); try{ getSelection().removeAllRanges(); }catch(e){}
+    const sug=row.querySelector('.suggest'); if(sug) sug.style.display='none';
+    if(navigator.vibrate) navigator.vibrate(15);
+    grab=sy-row.getBoundingClientRect().top;
+    row.classList.add('dragging'); document.body.classList.add('rowdrag');
+  };
+  const start=(x,y)=>{ sx=x; sy=y; armed=true; clearTimeout(timer); timer=setTimeout(()=>{ if(armed) begin(); },420); };
+  const move=(x,y,e)=>{
+    if(active){ if(e&&e.cancelable) e.preventDefault(); place(y); return; }
+    if(armed&&Math.hypot(x-sx,y-sy)>10){ armed=false; clearTimeout(timer); }
+  };
+  const end=e=>{
+    clearTimeout(timer); armed=false;
+    if(!active) return;
+    active=false; if(e&&e.cancelable) e.preventDefault();
+    row.style.transform='';
+    row.classList.remove('dragging'); document.body.classList.remove('rowdrag');
+    after();
+    row.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'});
+  };
+  fw.addEventListener('touchstart',e=>{ if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY); },{passive:true});
+  fw.addEventListener('touchmove',e=>move(e.touches[0].clientX,e.touches[0].clientY,e),{passive:false});
+  fw.addEventListener('touchend',end); fw.addEventListener('touchcancel',end);
+  fw.addEventListener('mousedown',e=>{
+    if(e.button) return; start(e.clientX,e.clientY);
+    const mm=ev=>move(ev.clientX,ev.clientY,ev);
+    const mu=ev=>{ removeEventListener('mousemove',mm); removeEventListener('mouseup',mu); end(ev); };
+    addEventListener('mousemove',mm); addEventListener('mouseup',mu);
+  });
+  fw.addEventListener('contextmenu',e=>{ if(armed||active) e.preventDefault(); });
+}
+function closeMove(){ document.getElementById('mvpop').classList.remove('show'); }
+function doMove(dir){
+  const {row,list,after}=MV; closeMove(); if(!row) return;
+  if(dir<0){ const p=row.previousElementSibling; if(p) list.insertBefore(row,p); }
+  else { const nx=row.nextElementSibling; if(nx) list.insertBefore(nx,row); }
+  if(after) after();
+  row.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'});
+}
+// trash can: lid pops up, the city name flies in, lid shuts, row folds away
+let TOSSING=false;
+function tossRow(row,keepRow,done){
+  if(TOSSING) return; TOSSING=true;
+  const finish=()=>{ TOSSING=false; done(); };
+  const input=row.querySelector('input'), btn=row.querySelector('.remove');
+  const lid=btn.querySelector('.lid'), can=btn.querySelector('svg');
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches || !lid.animate){ finish(); return; }
+  const txt=(input.value||'').trim();
+  lid.animate([{transform:'none'},{transform:'translate(7px,-10px) rotate(28deg)',offset:.25},
+               {transform:'translate(7px,-10px) rotate(28deg)',offset:.7},{transform:'none'}],
+              {duration:txt?1300:700,easing:'ease-in-out'});
+  if(txt){
+    const fr=input.getBoundingClientRect(), br=btn.getBoundingClientRect();
+    const fly=document.createElement('div'); fly.className='tossfly'; fly.textContent=txt;
+    fly.style.left=(fr.left+3)+'px'; fly.style.top=(fr.top+fr.height/2-16)+'px';
+    document.body.appendChild(fly); input.style.color='transparent';
+    const fw=fly.getBoundingClientRect().width;
+    const tx=(br.left+br.width/2)-(fr.left+3)-fw/2, ty=(br.top+br.height/2)-(fr.top+fr.height/2);
+    fly.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:'translate('+tx*.55+'px,'+(ty-46)+'px) scale(.75) rotate(-8deg)',opacity:1,offset:.45},
+      {transform:'translate('+tx+'px,'+(ty-14)+'px) scale(.35) rotate(10deg)',opacity:1,offset:.75},
+      {transform:'translate('+tx+'px,'+(ty+6)+'px) scale(.12) rotate(14deg)',opacity:0}
+    ],{duration:800,delay:220,easing:'cubic-bezier(.3,.6,.4,1)',fill:'forwards'});
+    setTimeout(()=>{ fly.remove(); },1050);
+  }
+  can.animate([{transform:'scale(1)'},{transform:'scale(1.12,.9)'},{transform:'scale(1)'}],
+              {duration:260,delay:txt?1150:560,easing:'ease-out'});
+  setTimeout(()=>{
+    input.style.color='';
+    if(keepRow){ finish(); return; }
+    row.style.overflow='hidden';
+    row.animate([{opacity:1,height:row.offsetHeight+'px'},{opacity:0,height:'0px'}],{duration:280,easing:'ease-in',fill:'forwards'})
+       .onfinish=finish;
+  },txt?1450:850);
+}
 
 function makeRow(value){
   const box=document.createElement('div');
   box.className='stop';
   box.innerHTML =
-    '<div class="arrows"><button class="up">\u25b2</button><button class="dn">\u25bc</button></div>'+
+    '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
     '<div class="fieldwrap"><input type="text" autocomplete="off">'+
     '<div class="suggest" style="display:none"></div>'+
     '<div class="legmi"></div></div>'+
-    '<button class="remove">\u00d7</button>';
+    '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
   const input=box.querySelector('input');
   const sug=box.querySelector('.suggest');
   if(value) input.value=value;
+  markLoc(input);
   let timer;
   input.addEventListener('input',()=>{
     clearTimeout(timer);
+    if(pickGuard(input)){ sug.style.display='none'; return; }
+    markLoc(input);
     const q=input.value.trim();
-    if(q.length<2){ sug.style.display='none'; return; }
+    if(q.length<2){ locOnly(sug,input); return; }
     timer=setTimeout(()=>lookup(q,sug,input),180);
   });
-  box.querySelector('.remove').onclick=()=>{ box.remove(); relabel(); };
-  box.querySelector('.up').onclick=()=>{ const p=box.previousElementSibling; if(p) stopsEl.insertBefore(box,p); relabel(); };
-  box.querySelector('.dn').onclick=()=>{ const nx=box.nextElementSibling; if(nx) stopsEl.insertBefore(nx,box); relabel(); };
+  input.addEventListener('focus',()=>{
+    if(input.value===HERE){ setTimeout(()=>{ try{ input.select(); }catch(e){} },0); return; }
+    if(input.value.trim().length<2) locOnly(sug,input);
+  });
+  input.addEventListener('blur',()=>setTimeout(()=>{
+    sug.style.display='none';
+    if(stopsEl.children.length===1 && input.value.trim()) growStart(false);
+  },250));
+  box.querySelector('.remove').onclick=()=>{
+    const keep=stopsEl.children.length<=2;
+    tossRow(box,keep,()=>{ if(keep){ input.value=''; markLoc(input); } else box.remove(); relabel(); saveRoute(); });
+  };
+  box.querySelector('.mvbtn').onclick=()=>openMove(box,stopsEl,relabel);
+  enableDrag(box,stopsEl,relabel);
   return box;
 }
 
@@ -602,13 +785,55 @@ function addStop(){
 }
 
 function relabel(){
-  const rows=[...stopsEl.children];
+  const rows=[...stopsEl.children], n=rows.length;
   rows.forEach((r,i)=>{
     const inp=r.querySelector('input');
-    inp.placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : (i===rows.length-1 ? 'End city' : 'Stop '+i);
-    r.querySelector('.up').disabled = (i===0);
-    r.querySelector('.dn').disabled = (i===rows.length-1);
+    inp.placeholder = n===1 ? 'Destination' : i===0 ? 'Start city' : (i===n-1 ? 'End city' : 'Stop '+i);
+    markLoc(inp);
+    setMoveIcon(r,i,n);
+    const mb=r.querySelector('.mvbtn'); if(mb) mb.style.display=n===1?'none':'';
   });
+  const rt=document.getElementById('routetools'); if(rt) rt.style.display=n>=2?'':'none';
+}
+// ---- "Use my location": a real value that rides in its box, offered once ----
+const PIN_SVG='<svg viewBox="0 0 16 20" width="15" height="19" aria-hidden="true"><path d="M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z" fill="#f26a21"/><circle cx="8" cy="7.5" r="2.4" fill="#13273f"/></svg>';
+function markLoc(inp){ inp.classList.toggle('isloc', inp.value===HERE); }
+function locUsed(except){ return [...stopsEl.querySelectorAll('input')].some(i=>i!==except && i.value===HERE); }
+function locOption(sug,input){
+  if(!input.closest('#stops') || input.value===HERE || locUsed(input)) return false;
+  const d=document.createElement('div'); d.className='useloc';
+  d.innerHTML=PIN_SVG+'<span>Use my location</span>';
+  d.onclick=()=>{ input.value=HERE; markLoc(input); sug.style.display='none'; input.blur(); afterPick(input); };
+  sug.insertBefore(d,sug.firstChild); return true;
+}
+function locOnly(sug,input){ sug.innerHTML=''; sug.style.display=locOption(sug,input)?'block':'none'; }
+function growStart(focus){
+  if(stopsEl.children.length!==1) return;
+  const r=makeRow(''); stopsEl.insertBefore(r,stopsEl.firstChild); relabel(); saveRoute();
+  if(focus) r.querySelector('input').focus();
+}
+function afterPick(input){
+  if(!input.closest('#stops')) return;
+  saveRoute();
+  if(stopsEl.children.length===1 && input.value.trim()) growStart(true);
+}
+// Before routing: a blank start (or a lone destination) means "from where I am now" - shown, not hidden.
+function prepStart(){
+  const rows=[...stopsEl.children];
+  if(!rows.some(r=>r.querySelector('input').value.trim())) return;
+  if(rows.length===1){ const v=rows[0].querySelector('input').value; stopsEl.insertBefore(makeRow(v===HERE||locUsed()?'':HERE),rows[0]); relabel(); saveRoute(); return; }
+  const first=rows[0].querySelector('input');
+  if(!first.value.trim() && !locUsed()){ first.value=HERE; relabel(); saveRoute(); }
+}
+function reverseRoute(){
+  const rows=[...stopsEl.children]; if(rows.length<2) return;
+  prepStart();
+  const now=[...stopsEl.children];
+  now.reverse().forEach(r=>stopsEl.appendChild(r));
+  now.forEach(r=>{ const m=r.querySelector('.legmi'); if(m) m.textContent=''; });
+  relabel(); saveRoute(); gmapsOff();
+  document.getElementById('opthint').innerHTML='';
+  now.forEach(r=>r.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'}));
 }
 
 
@@ -630,6 +855,33 @@ function lookup(q, sug, input) {
     }).catch(()=>{ sug.style.display='none'; });
   });
 }
+// Picking a city: let the phone keyboard finish its half-typed word FIRST, then write the full name,
+// and guard it for a moment so a late keyboard commit ("Los") can't overwrite "Los Angeles, CA".
+function pickGuard(input){
+  const p=input._pick; if(!p||Date.now()>p.until) return false;
+  const v=input.value.trim().toLowerCase(), L=p.label.toLowerCase(), t=p.typed;
+  if(v===L) return false;
+  // the keyboard dropping back what was typed before the pick ("Sain", "Los") - or any piece of it
+  const typedBack = !v || (t && (v===t || t.startsWith(v) || v.startsWith(t)));
+  if(typedBack || L.startsWith(v)){ input.value=p.label; return true; }
+  return false;
+}
+function pickCity(input,sug,label){
+  const typed=input.value.trim().toLowerCase();
+  sug.style.display='none';
+  try{ input.blur(); }catch(e){}
+  input.value=label;
+  input._pick={label:label, typed:typed, until:Date.now()+1600};
+  const inStops=!!input.closest('#stops');
+  const resave=()=>{ try{ inStops?saveRoute():planSave(); }catch(e){} };
+  if(inStops && typeof markLoc==='function') markLoc(input);
+  setTimeout(()=>{
+    pickGuard(input);
+    if(inStops && typeof afterPick==='function') afterPick(input);
+    else resave();
+  },120);
+  [300,600,1000,1500].forEach(ms=>setTimeout(()=>{ if(pickGuard(input)) resave(); },ms));
+}
 function show(items,q,sug,input){
   sug.innerHTML='';
   const seen=new Set(), rows=[];
@@ -643,10 +895,11 @@ function show(items,q,sug,input){
   rows.sort((a,b)=>a.starts-b.starts||a.rank-b.rank||a.label.localeCompare(b.label));
   rows.slice(0,8).forEach(r=>{
     const d=document.createElement('div'); d.textContent=r.label;
-    d.onclick=()=>{ input.value=r.label; sug.style.display='none'; };
+    d.onclick=()=>pickCity(input,sug,r.label);
     sug.appendChild(d);
   });
-  sug.style.display=rows.length?'block':'none';
+  const hasLoc=(typeof locOption==='function') && locOption(sug,input);
+  sug.style.display=(rows.length||hasLoc)?'block':'none';
 }
 const STATES={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY","District of Columbia":"DC"};
 
@@ -668,15 +921,15 @@ function doClear(){
   try{ localStorage.removeItem(SAVEKEY); }catch(e){}
   stopsEl.innerHTML='';
   stopsEl.appendChild(makeRow(''));
-  stopsEl.appendChild(makeRow(''));
   relabel();
+  document.getElementById('opthint').innerHTML='';
   document.getElementById('results').innerHTML='';
   const bar=document.getElementById('bar'); if(bar) bar.style.display='none';
   gmapsOff();
 }
 (function(){
   const saved=loadRoute();
-  const vals=(saved&&saved.stops.length>=2)?saved.stops:['',''];
+  const vals=(saved&&saved.stops.some(v=>v&&v.trim()))?saved.stops:[''];
   vals.forEach(v=>stopsEl.appendChild(makeRow(v)));
   { const mm=document.getElementById('maxmi'); let v=null;
     try{ v=localStorage.getItem('fps_maxmi'); }catch(e){}
@@ -908,12 +1161,11 @@ function shortPlace(dn){
   for(const p of parts){ if(abbr[p]){ st=abbr[p]; break; } }
   return st? city+', '+st : city;
 }
-const HERE='Your location';
 function getHere(){
   return new Promise((ok,fail)=>{
     if(!navigator.geolocation){ fail(new Error('This device can\'t share its location. Type a start city')); return; }
     navigator.geolocation.getCurrentPosition(
-      p=>ok([p.coords.longitude, p.coords.latitude, HERE]),
+      p=>{ HERE_LL=p.coords.latitude+','+p.coords.longitude; ok([p.coords.longitude, p.coords.latitude, HERE]); },
       e=>fail(new Error(e.code===1
         ? 'Location is turned off for this app. Allow location, or type a start city'
         : 'Couldn\'t get your location. Type a start city')),
@@ -961,6 +1213,9 @@ function ding(){
     });
   }catch(e){}
 }
+// Loading scene. setBar(pct) tells the truck how far along the work is; it eases toward that
+// spot and creeps ahead a little while waiting so it never looks stuck. At 100 it pulls up
+// to the pump and parks, then the scene fades away.
 function setBar(pct){ const b=document.getElementById('bar'); b.style.display='block'; b.style.width=pct+'%'; }
 function hideBar(){ const b=document.getElementById('bar'); setTimeout(()=>{b.style.display='none';b.style.width='0';},500); }
 function showPop(txt,title){
@@ -1008,14 +1263,15 @@ function buildGmapsBtn(){
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const fromHere=!raw[0];
   const names=raw.filter(x=>x);
-  // P = every point in order; null = the phone's current location
-  const P=(fromHere?[null]:[]).concat(names);
+  // P = every point in order; null = the phone's current location (Google uses GPS when origin is left off)
+  const P=(fromHere?[null]:[]).concat(names).map((x,k)=>x===HERE?(k===0?null:(HERE_LL||null)):x);
   const btn=document.getElementById('gmaps');
   LEGS=[];
   // Google Maps takes 10 points per route (start + 8 stops + end), so split long runs into legs
   for(let i=0;i<P.length-1;){
     const end=Math.min(i+9,P.length-1), seg=P.slice(i,end+1);
     const enc=seg.map(x=>x==null?null:encodeURIComponent(x));
+    if(enc.slice(1).some(x=>x==null)){ i=end; continue; }
     let url='https://www.google.com/maps/dir/?api=1'+(enc[0]==null?'':'&origin='+enc[0])+'&destination='+enc[enc.length-1]+'&travelmode=driving';
     const mids=enc.slice(1,-1).join('|'); if(mids) url+='&waypoints='+mids;
     LEGS.push({url:url, from:seg[0]==null?'Your location':seg[0], to:seg[seg.length-1], n:seg.length});
@@ -1147,9 +1403,9 @@ async function fuelNear(radius){
 }
 
 async function findFuel(){
+  prepStart();                                            // blank start = where the driver is now (filled in visibly)
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const inputs=raw.filter(x=>x);
-  if(!raw[0] && inputs.length>=1) inputs.unshift(HERE);   // blank start = where the driver is now
   const res=document.getElementById('results');
   const oh=document.getElementById('opthint');
   if(inputs.length<2){ oh.innerHTML='<p class="hint">Enter at least a start and an end.</p>'; return; }
@@ -1682,33 +1938,62 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
-  { date:'2026-10-05', items:[
-    'The best price stands out at the top with its own orange banner and trophy',
-    'Details banner shows amenities with green checks, and only lists what the stop actually has',
-    'Pick which amenities show on the banner in Settings (up to 4)',
-    'Show all services right from the details banner',
-    'Find fuel opens your stops on their own page, so the route list has room to grow',
-    'The best price on your route is pinned at the top of the list',
-    'Interstate and U.S. highway shields with the exit number on every stop',
-    'The Details banner shows showers, laundry, food and RV dump at a glance',
-    'A big Back button at the bottom of every page',
-    '"Optimize" is now "Optimize route"',
-    'Long routes open in Google Maps in legs of up to 10 stops',
-    'New opening screen: the gauge needle sweeps up, then "Fuel savings maximized."',
-    'Stops are grouped by state again, in the order you drive through them, cheapest first in each state',
-    'A "Cheapest overall" tag marks the best price on the whole route',
-    'Buttons tidied up: all the same size, with more room under the city boxes',
-    '"See full route in Google Maps" is now "Map full route," next to Fuel near me',
-    'Max miles off route moved into Settings',
-    'Cleaner header: the gauge in the corner, prices on two lines, and a bigger Settings gear',
-    'The arrows and X\'s are orange now and line up with the city boxes',
-    'This page! Find it anytime in Settings under History of changes'
+  { date:'2026-10-07', items:[
+    'The \u201cWhat\u2019s new\u201d tag reads on one line again',
+    'Fixed: picking a city like \u201cSt. Louis, MO\u201d after typing \u201cSain\u201d keeps the full name',
+    'The \u201cWhat\u2019s new\u201d tag is centered between the FPS box and the title, halfway down the header',
+    'The Expand all button on your fuel stops now sits on the right, next to the round arrow button',
+    'The \u201cWhat\u2019s new\u201d tag moved over next to the FPS box',
+    'Tapping the \u201cWhat\u2019s new\u201d tag now opens Settings and goes straight into this list',
+    'Fresh start: from here on, every change to the app is listed on this page',
+    'The \u201cWhat\u2019s new\u201d tag is back on the home screen. Tap it to see this list',
+    'You start with one \u201cDestination\u201d box. Pick a city and a \u201cStart city\u201d box appears above it',
+    '\u201cUse my location\u201d is now the first choice in the city list, with an orange pin',
+    'Your location stays \u201cYour location\u201d wherever you move it. It no longer turns into \u201cStop 1\u201d',
+    'New Reverse route button flips your whole trip with one tap',
+    'Picking a city from the list keeps the whole name, like \u201cLos Angeles, CA,\u201d not just \u201cLos\u201d',
+    'If you leave the start blank, Find fuel fills in \u201cYour location\u201d so you can see where it\u2019s starting from',
+    'Load planner button now reads \u201cPlan your load stops,\u201d with \u201c(no fuel report produced)\u201d inside it',
+    'The truck loading animation is gone. The orange progress bar is back'
   ]}
 ];
-const APP_VER = CHANGELOG[0].date+'#'+CHANGELOG[0].items.length;  // same-day updates still light the tag
+const APP_VER = (()=>{ const t=JSON.stringify(CHANGELOG); let h=0; for(let k=0;k<t.length;k++) h=(h*31+t.charCodeAt(k))|0;
+  return CHANGELOG[0].date+'#'+(h>>>0).toString(36); })();  // any change to the history lights the tag again
 function newsDate(d){
   const m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return d;
   return new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+// Center the tag between the FPS box and the "F" in Fuel, and halfway down the header. Measured live, so any phone size works.
+function placeTag(){
+  const tag=document.querySelector('header .newtag'), hd=document.querySelector('header'),
+        mono=document.querySelector('header .fpsmono.corner'), h1=document.querySelector('header h1');
+  if(!tag||!hd||!mono||!h1||getComputedStyle(tag).display==='none') return;
+  const H=hd.getBoundingClientRect(), M=mono.getBoundingClientRect();
+  const r=document.createRange(); r.selectNodeContents(h1); const F=r.getBoundingClientRect().left;
+  // one line, as big as fits between the left edge and the "F" (never bigger than 15px, never under 9.5px)
+  const room=F-8-(H.left+6);
+  tag.style.fontSize='15px';
+  for(let fs=15; fs>9.5 && tag.offsetWidth>room; fs-=0.5) tag.style.fontSize=fs+'px';
+  const w=tag.offsetWidth, h=tag.offsetHeight;
+  let cx=(M.right+F)/2; cx=Math.min(cx, F-8-w/2); cx=Math.max(cx, H.left+6+w/2);
+  let cy=H.height/2;   cy=Math.max(cy, (M.bottom-H.top)+6+h/2);
+  tag.style.setProperty('left',(cx-H.left-w/2)+'px','important');
+  tag.style.setProperty('top',(cy-h/2)+'px','important');
+}
+addEventListener('load',placeTag); addEventListener('resize',placeTag);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(placeTag);
+setTimeout(placeTag,300); setTimeout(placeTag,1500);
+function tagTap(){
+  try{ localStorage.setItem('fps_seen_ver', APP_VER); }catch(e){}
+  document.body.classList.remove('has-new');
+  openSettings();
+  setTimeout(()=>{
+    const r=document.getElementById('histrow'); if(!r) return;
+    r.scrollIntoView({block:'center',behavior:'smooth'});
+    r.animate([{boxShadow:'0 0 0 0 rgba(242,106,33,0)'},{boxShadow:'0 0 0 3px #f26a21'},{boxShadow:'0 0 0 0 rgba(242,106,33,0)'}],
+              {duration:700,easing:'ease-in-out'});
+    setTimeout(()=>{ closeSettings(); openNews(); },750);   // Settings, then straight into the history list
+  },200);
 }
 function openNews(){
   let h='<div class="newswrap"><h2>What\'s new</h2><div class="sub">Changes to Fuel Price Saver, newest first</div>';
@@ -1822,31 +2107,33 @@ function planRow(value){
   const box=document.createElement('div');
   box.className='stop';
   box.innerHTML =
-    '<div class="arrows"><button class="up">\u25b2</button><button class="dn">\u25bc</button></div>'+
+    '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
     '<div class="fieldwrap"><input type="text" autocomplete="off">'+
     '<div class="suggest" style="display:none"></div><div class="legmi"></div></div>'+
-    '<button class="remove">\u00d7</button>';
+    '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
   const input=box.querySelector('input'), sug=box.querySelector('.suggest');
   if(value) input.value=value;
   let timer;
   input.addEventListener('input',()=>{
-    clearTimeout(timer); planSave();
+    clearTimeout(timer);
+    if(pickGuard(input)){ sug.style.display='none'; planSave(); return; }
+    planSave();
     const q=input.value.trim();
     if(q.length<2){ sug.style.display='none'; return; }
     timer=setTimeout(()=>lookup(q,sug,input),180);
   });
   input.addEventListener('change',planSave);
-  box.querySelector('.remove').onclick=()=>{ if(planEl.children.length>2){ box.remove(); } else { input.value=''; } planLabel(); planSave(); };
-  box.querySelector('.up').onclick=()=>{ const p=box.previousElementSibling; if(p) planEl.insertBefore(box,p); planLabel(); planSave(); };
-  box.querySelector('.dn').onclick=()=>{ const nx=box.nextElementSibling; if(nx) planEl.insertBefore(nx,box); planLabel(); planSave(); };
+  box.querySelector('.remove').onclick=()=>{ const keep=planEl.children.length<=2;
+    tossRow(box,keep,()=>{ if(keep){ input.value=''; } else { box.remove(); } planLabel(); planSave(); }); };
+  box.querySelector('.mvbtn').onclick=()=>openMove(box,planEl,()=>{ planLabel(); planSave(); });
+  enableDrag(box,planEl,()=>{ planLabel(); planSave(); });
   return box;
 }
 function planLabel(){
   const rows=[...planEl.children];
   rows.forEach((r,i)=>{
     r.querySelector('input').placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : 'Drop '+i;
-    r.querySelector('.up').disabled=(i===0);
-    r.querySelector('.dn').disabled=(i===rows.length-1);
+    setMoveIcon(r,i,rows.length);
   });
 }
 function planVals(){ return [...planEl.querySelectorAll('input')].map(i=>i.value.trim()); }
@@ -1965,11 +2252,10 @@ async function tripOptimize(){
   else body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">'+document.getElementById('planmsg').textContent+'</div>';
 }
 async function optimizeStops(){
+  prepStart();
   const rows=[...document.querySelectorAll('#stops input')];
   const vals=rows.map(i=>i.value.trim());
   if(vals.length<4){ alert('Add at least two middle stops to optimize. Start and end stay put.'); return; }
-  const fromHere=!vals[0];
-  if(fromHere) vals[0]=HERE;
   if(vals.some(v=>!v)){ alert('Fill in every city first.'); return; }
   const res=document.getElementById('opthint');
   res.innerHTML='<p class="hint">Optimizing stop order...</p>';
@@ -1986,7 +2272,6 @@ async function optimizeStops(){
     const order=j.waypoints.map((w,idx)=>({idx, pos:w.waypoint_index}));
     order.sort((a,b)=>a.pos-b.pos);
     const newVals=order.map(o=>vals[o.idx]);
-    if(fromHere && newVals[0]===HERE) newVals[0]='';
     stopsEl.innerHTML='';
     newVals.forEach(v=>stopsEl.appendChild(makeRow(v)));
     relabel();
@@ -2021,5 +2306,11 @@ async function optimizeStops(){
       <button class="back" onclick="closeTrip()">Back</button>
     </div>
   </div>
+<div id="mvpop" onclick="if(event.target===this)closeMove()"><div class="mvbox" role="dialog" aria-modal="true" aria-labelledby="mvtitle">
+  <div id="mvtitle">Move this stop</div>
+  <button class="mvchoice" id="mvup" type="button" onclick="doMove(-1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 16V3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 8l5-5 5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up</button>
+  <button class="mvchoice" id="mvdn" type="button" onclick="doMove(1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 10l5 5 5-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Down</button>
+  <button class="mvcancel" type="button" onclick="closeMove()">Cancel</button>
+</div></div>
 </body>
 </html>
