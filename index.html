@@ -490,10 +490,45 @@
   function lift(){ if(cover){ cover.remove(); cover=null; } }
   var REQ = ACCESS_URL+'?page=request&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
   var DENY = 'This app runs on private user links.<br>Tap below to request one.'+
-    '<a href="'+REQ+'" target="_blank" rel="noopener" style="display:block;margin:24px auto 0;padding:16px 22px;max-width:300px;font-size:18px;font-weight:800;border-radius:12px;background:#f26a21;color:#fff;text-decoration:none">Request access</a>'+
+    '<button onclick="fpsReqForm()" style="display:block;margin:24px auto 0;padding:16px 22px;width:100%;max-width:300px;font-size:18px;font-weight:800;border:0;border-radius:12px;background:#f26a21;color:#fff">Request access</button>'+
     '<div style="margin-top:10px;font-size:14px;color:#9fb4ce">Your link will be emailed to you.</div>'+
     '<div style="margin-top:22px;font-size:14px">Questions? Email<br><a href="mailto:'+CONTACT+'" style="color:#f26a21;font-weight:700">'+CONTACT+'</a></div>';
   function deny(){ ls('fps_ok',null); show('Private access', DENY, false); }
+  // In-app request form: stays inside the app, sends to Google quietly in the background
+  var FIN='display:block;width:100%;box-sizing:border-box;margin:4px 0 12px;padding:13px 12px;font-size:17px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff';
+  var FLB='display:block;text-align:left;font-size:14px;color:#c9d6e6;font-weight:700';
+  window.fpsReqForm=function(){
+    show('Request access',
+      '<div style="font-size:15px;margin-bottom:16px">Fill this in. Your own link will be emailed to you once you\'re approved.</div>'+
+      '<label style="'+FLB+'">Your name *</label><input id="rqname" autocomplete="name" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Email *</label><input id="rqemail" type="email" inputmode="email" autocomplete="email" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Phone (optional)</label><input id="rqphone" type="tel" autocomplete="tel" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Company or carrier (optional)</label><input id="rqco" autocomplete="organization" style="'+FIN+'">'+
+      '<input id="rqweb" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">'+
+      '<div id="rqerr" style="color:#ff6b5b;font-size:15px;font-weight:700;min-height:20px"></div>'+
+      '<button id="rqgo" onclick="fpsReqSend()" style="display:block;width:100%;margin:6px 0 0;padding:16px;font-size:18px;font-weight:800;border:0;border-radius:12px;background:#f26a21;color:#fff">Send request</button>'+
+      '<button onclick="fpsReqBack()" style="display:block;width:100%;margin:12px 0 0;padding:12px;font-size:16px;font-weight:700;border:1px solid #4f7bb0;border-radius:12px;background:transparent;color:#c9d6e6">Back</button>',
+      false);
+    if(cover){ cover.style.alignItems='flex-start'; cover.style.overflowY='auto'; }
+  };
+  window.fpsReqBack=function(){ if(cover){ cover.style.alignItems='center'; } deny(); };
+  window.fpsReqSend=function(){
+    function v(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+    var err=document.getElementById('rqerr'), b=document.getElementById('rqgo');
+    err.textContent='';
+    if(!v('rqname')){ err.textContent='Please enter your name.'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('rqemail'))){ err.textContent='Please enter a good email address.'; return; }
+    b.disabled=true; b.textContent='Sending…';
+    var u=ACCESS_URL+'?page=submit&name='+encodeURIComponent(v('rqname'))+'&email='+encodeURIComponent(v('rqemail'))+
+      '&phone='+encodeURIComponent(v('rqphone'))+'&company='+encodeURIComponent(v('rqco'))+'&website='+encodeURIComponent(v('rqweb'))+
+      '&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
+    fetch(u,{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
+      if(j&&j.ok){
+        if(cover){ cover.style.alignItems='center'; }
+        show('Request sent','<div style="font-size:46px;color:#3ab54a;margin-bottom:6px">✓</div>You\'ll get an email with your own link as soon as you\'re approved.<br><br>Check your spam folder if you don\'t see it.',false);
+      } else { err.textContent=(j&&j.msg)||'Something went wrong. Try again.'; b.disabled=false; b.textContent='Send request'; }
+    }).catch(function(){ err.textContent='Could not send. Check your signal and try again.'; b.disabled=false; b.textContent='Send request'; });
+  };
   if(!code){ deny(); return; }
   var trusted = ls('fps_ok')==='1';
   if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
@@ -1991,6 +2026,7 @@ const CHANGELOG = [
   { date:'2026-10-08', items:[
     'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
     'Locked-out screen now has a Request access button that opens a sign-up form',
+    'Request access form now opens right inside the app instead of jumping to a Google page',
     'Each person\u2019s link now works on their own phone only'
   ]},
   { date:'2026-10-07', items:[
