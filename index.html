@@ -24,6 +24,14 @@
              border:1px solid #27466b; border-radius:10px; z-index:10; overflow:hidden; }
   .suggest div { padding:12px 14px; border-bottom:1px solid #1d3a5e; cursor:pointer; font-size:15px; }
   .suggest div:hover { background:#1d3a5e; }
+  .stop .fieldwrap input.isloc,.stop input.isloc{font-weight:700;color:#fff;padding-left:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cpath d='M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z' fill='%23f26a21'/%3E%3Ccircle cx='8' cy='7.5' r='2.4' fill='%231d3a5e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:15px 19px}
+  .suggest .useloc{display:flex;align-items:center;gap:9px;color:#f26a21;font-weight:700}
+  .suggest .useloc svg{flex:0 0 auto}
+  #routetools{display:flex;justify-content:flex-end;margin:0 0 4px}
+  #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+  #revbtn svg{flex:0 0 auto}
+  #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
+  #planbtn .pbs{display:block;font-size:11.5px;font-weight:600;color:#9fb4ce;margin-top:3px;line-height:1.2}
   .btnrow{display:flex;gap:10px;margin:4px 0 14px}
   .btnrow > button{flex:1;width:auto;margin:0}
   .popwrap{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
@@ -38,17 +46,67 @@
   /* main six buttons: all the same size */
   #mainbtns{margin-top:26px}
   #mainbtns .btnrow{margin:0 0 12px}
-  #mainbtns .btnrow > *{flex:1 1 0;min-width:0;height:52px;margin:0;padding:0 8px;box-sizing:border-box;
-     display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;border-radius:10px;
+  #mainbtns .btnrow > *{flex:1 1 0;min-width:0;height:64px;margin:0;padding:0 6px;box-sizing:border-box;
+     display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:bold;border-radius:10px;
      text-decoration:none;cursor:pointer;white-space:nowrap}
-  #gmaps.off{opacity:.4}
-  .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--orange)}
+  #mainbtns .bluebtn{background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;padding:0}
+
+  #planbtn{display:block;width:100%;min-height:72px;padding:8px 10px;margin:0 0 12px;border-radius:10px;font-size:17px;font-weight:bold;
+     background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;cursor:pointer}
+  #planpop{position:fixed;inset:0;z-index:9400;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #planpop.show{display:block}
+  #planintro{position:fixed;inset:0;z-index:9450;display:none;align-items:center;justify-content:center;background:rgba(5,12,24,.72);padding:20px}
+  #planintro.show{display:flex}
+  #planintro .pibox{width:100%;max-width:340px;background:#17304f;border:1.5px solid #4f7bb0;border-radius:14px;padding:22px 18px 18px;text-align:center}
+  #planintro .pitext{color:#fff;font-size:18px;font-weight:bold;line-height:1.45}
+  #planintro .picheck{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 0 16px;color:#9fc0e8;font-size:15px}
+  #planintro .picheck input{width:22px;height:22px;accent-color:#f26a21}
+  #planintro .pigot{width:100%;height:50px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-size:16px;font-weight:bold}
+  .plwrap{max-width:560px;margin:0 auto;padding:18px 16px 110px;color:#fff}
+  .plwrap h2{margin:0;font-size:24px}
+  .plsub{color:#9fb4ce;font-size:14px;margin:4px 0 16px}
+  #planpop .btnrow{display:flex;gap:10px;margin:14px 0 0}
+  #planpop .btnrow > button{flex:1;height:52px;border-radius:10px;font-size:15px;font-weight:bold}
+  #planpop .plgo{background:var(--orange);border:none;color:#fff}
+  #planpop .pladd{background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8}
+  #planmsg .hint{margin-top:12px}
+  #trippop{position:fixed;inset:0;z-index:9500;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #trippop.show{display:block}
+  .trwrap{max-width:560px;margin:0 auto;padding:18px 16px 110px;color:#fff}
+  .trwrap h2{margin:0;font-size:24px}
+  .trsub{color:#9fb4ce;font-size:14px;margin:4px 0 16px}
+  .trhead,.trstop{display:grid;grid-template-columns:26px 1fr 44px 62px 66px;gap:6px;align-items:baseline}
+  .trhead{font-size:12px;color:#9fb4ce;padding:0 2px 6px;border-bottom:2px solid var(--line)}
+  .trhead span:nth-child(n+3),.trstop span:nth-child(n+3){text-align:right}
+  .trstop{padding:10px 2px 4px;font-size:15px}
+  .trstop .n{color:var(--orange);font-weight:bold}
+  .trstop .c{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .trstop .t{color:#9fc0e8}
+  .trroads{margin:0 0 0 32px;padding:0 2px 10px;font-size:13px;color:#b9c8da;border-bottom:1px solid #1f3a5c}
+  .trroads b{color:#fff;font-weight:600}
+  .trtotal{display:flex;justify-content:space-between;padding:12px 2px;font-weight:bold;font-size:16px;border-top:2px solid var(--line)}
+  .trbar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid var(--line)}
+  .trbar button{flex:1;height:50px;border-radius:10px;font-size:15px;font-weight:bold;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8}
+  .trbar button.back{background:var(--orange);border:none;color:#fff}
+  .trmsg{color:#b9c8da;padding:20px 2px;font-size:15px}
+  @media print{
+    html,body{background:#fff !important;padding:0 !important}
+    body > *:not(#trippop){display:none !important}
+    #planpop{display:none !important}
+    #trippop{position:static;display:block;background:#fff;overflow:visible}
+    .trwrap{color:#000;padding:0}
+    .trsub,.trhead,.trstop .t,.trroads{color:#333}
+    .trroads b,.trstop .c{color:#000}
+    .trstop .n{color:#000}
+    .trbar{display:none}
+  }
+  .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
   .sthead b{font-size:17px;letter-spacing:.5px;text-transform:uppercase}
   .sthead small{margin-left:auto;color:#9fb4ce;font-size:12px}
-  button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--orange);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
+  button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--line);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
   button.sthead small{margin-left:8px}
-  .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid var(--orange);border-radius:6px;color:var(--orange)}
+  .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid #4f7bb0;border-radius:6px;color:#9fc0e8}
   .stx svg{width:20px;height:20px;display:block;transition:transform .7s cubic-bezier(.2,.75,.2,1)}
   @media (prefers-reduced-motion:reduce){.stx svg{transition:none}}
   button.sthead:focus-visible{outline:2px solid #fff;outline-offset:3px}
@@ -82,8 +140,9 @@
   .hint { color:#9fb4ce; font-size:13px; text-align:center; margin-top:14px; line-height:1.5; }
   #results > .hint{margin-top:4px;margin-bottom:10px}
   .expandallrow{display:flex;justify-content:flex-end;margin:0 0 8px}
-  .sthead #expandall{margin-left:auto;margin-right:auto}
-  #expandall{box-sizing:border-box;height:34px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:104px;background:#17304f;border:1.5px solid var(--orange);color:#9fc0e8;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer}
+  .sthead #expandall{margin-left:auto;margin-right:0}   /* sits against the round toggle, flex gap = the small space */
+  .sthead #expandall + .stx{margin-left:0}
+  #expandall{box-sizing:border-box;height:34px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:104px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer}
   #results .stgrp:first-of-type .sthead{margin-top:6px}
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
@@ -110,13 +169,78 @@
   .cardhead .brandtag{flex:none}
   .cardhead .besttag{flex:none}
   .cardhead > b{flex:none}
+
+  .wx{flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:5px;cursor:pointer;background:#17304f;border:1.5px solid var(--line);border-radius:999px;padding:5px 11px;-webkit-tap-highlight-color:transparent}
+  .wx .ico{font-size:16px;line-height:1}
+  .wxsvg{width:1.2em;height:1.2em;display:block;overflow:visible}
+  .wx .ico .wxsvg{width:20px;height:20px}
+  #wxpop .wxbig .wxsvg{width:48px;height:48px}
+  #wxpop .wxi .wxsvg{width:24px;height:24px;margin:0 auto}
+  .wx .temp{font-weight:bold;font-size:14px;color:#cfe0f5}
+  .wx.wait .ico{color:#7f97b5;font-size:14px}
+  .wx.fail{display:none}
+  #wxpop{position:fixed;inset:0;z-index:9999;display:none;background:rgba(4,10,22,.6);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 30px}
+  #wxpop.on{display:block}
+  #wxpop .wxbox{max-width:420px;margin:0 auto;background:#13273f;border:2px solid var(--orange);border-radius:16px;padding:16px 16px 14px;box-shadow:0 10px 40px #000a;color:#e8eef7}
+  #wxpop .wxt{display:flex;align-items:center;gap:8px}
+  #wxpop .wxt b{font-size:17px}
+  #wxpop .wxt small{color:#9fb4ce;font-size:12px;margin-left:auto}
+  #wxpop .wxnow{padding:10px 2px 12px;border-bottom:1px solid var(--line);margin-bottom:4px}
+  #wxpop .wxnowtop{display:flex;align-items:center;gap:12px}
+  #wxpop .wxbig{font-size:40px;line-height:1}
+  #wxpop .wxnt{font-size:34px;font-weight:bold;color:#fff;line-height:1.1}
+  #wxpop .wxnowbody{display:flex;align-items:flex-end;gap:12px;margin-top:6px}
+  #wxpop .wxnowtxt{flex:1;min-width:0}
+  #wxpop .wxc{color:#cfe0f5;font-size:14px}
+  #wxpop .wxm{color:#9fb4ce;font-size:12px;margin-top:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+  #wxpop .wxradar{flex:none;display:flex;align-items:center;justify-content:center;background:#17304f;border:1.5px solid #4f7bb0;border-radius:12px;padding:8px;text-decoration:none;-webkit-tap-highlight-color:transparent}
+  #wxpop .wxradar svg{display:block}
+  .wxarw{display:inline-block;flex:none;vertical-align:-2px;margin-left:2px}
+  #wxpop .wxcolh{display:flex;justify-content:flex-end;padding:4px 102px 0 2px;font-size:10.5px;color:#7f97b5;white-space:nowrap}
+  #wxpop .wxr{display:flex;align-items:center;padding:9px 2px;border-bottom:1px solid #1b3350}
+  #wxpop .wxr.tap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  #wxpop .wxd{width:44px;flex:none;font-weight:bold;color:#cfe0f5;font-size:13px}
+  #wxpop .wxi{font-size:19px;width:26px;flex:none;text-align:center}
+  #wxpop .wxdd{flex:1;min-width:0;margin-left:6px}
+  #wxpop .wxtop{display:flex;align-items:center;gap:10px}
+  #wxpop .wxs{flex:1;min-width:0;color:#cfe0f5;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #wxpop .wxp{width:40px;flex:none;text-align:right;color:#6fb3e0;font-size:12.5px}
+  #wxpop .wxh{width:32px;flex:none;text-align:right;font-weight:bold;color:#fff;font-size:14px}
+  #wxpop .wxl{width:30px;flex:none;text-align:right;color:#8fa6c2;font-size:13px}
+  #wxpop .wxwind{color:#9fb4ce;font-size:12px;margin-top:2px;display:flex;align-items:center;gap:3px;white-space:nowrap}
+  #wxpop .wxchev{width:14px;margin-left:6px;flex:none;text-align:center;color:#6f8caf;font-size:18px;transition:transform .25s}
+  #wxpop .wxr.open .wxchev{transform:rotate(90deg)}
+  #wxpop .wxr.open{border-bottom:none}
+  #wxpop .wxhp{display:none;margin:0 0 4px;padding:4px 8px 8px;background:#0f2238;border-radius:8px;border-bottom:1px solid #1b3350}
+  #wxpop .wxr.open + .wxhp{display:block}
+  .wxhph{display:flex;justify-content:space-between;gap:8px;padding:2px 2px 4px;font-size:10.5px;color:#7f97b5;white-space:nowrap}
+  .wxhr{display:flex;align-items:center;gap:10px;padding:4px 2px;font-size:12.5px;color:#9fb4ce}
+  .wxhr .ht{width:46px;flex:none;color:#cfe0f5}
+  .wxhr .htp{width:32px;flex:none;color:#fff;font-weight:bold;text-align:right}
+  .wxhr .hw{flex:1;min-width:0;display:flex;align-items:center;gap:3px;white-space:nowrap;overflow:hidden}
+  .wxhr .hrn{width:40px;flex:none;color:#6fb3e0;text-align:right}
+  #wxpop .wxhbar{display:block;width:100%;margin-top:8px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;font-weight:bold;font-size:13px;padding:10px 12px;border-radius:8px;cursor:pointer}
+  #wxhr{position:fixed;inset:0;z-index:10000;display:none;background:rgba(4,10,22,.6);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 30px}
+  #wxhr.on{display:block}
+  #wxhr .wxbox{max-width:420px;margin:0 auto;background:#13273f;border:2px solid var(--orange);border-radius:16px;padding:16px 16px 14px;box-shadow:0 10px 40px #000a;color:#e8eef7}
+  #wxhr .wxt{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  #wxhr .wxt b{font-size:16px}
+  #wxhr .wxt small{color:#9fb4ce;font-size:12px;margin-left:auto}
+  #wxhr .wxhph{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px}
+  #wxhr .wxhr{border-bottom:1px solid #1b3350;padding:6px 2px}
+  #wxhr .wxhh{font-size:10.5px;color:#7f97b5;border-bottom:1px solid var(--line);padding:2px 2px 6px}
+  #wxhr .wxhh span{color:#7f97b5;font-weight:normal}
+  #wxhr .wxhh .hrn{width:auto;white-space:nowrap}
+  #wxhr .wxgot{display:block;margin:12px 0 0 auto;background:var(--orange);border:none;color:#fff;font-weight:bold;font-size:14px;padding:9px 20px;border-radius:9px;cursor:pointer}
+  #wxpop .wxmsg{color:#9fb4ce;font-size:14px;text-align:center;padding:24px 0}
+  #wxpop .wxgot{display:block;margin:12px 0 0 auto;background:var(--orange);border:none;color:#fff;font-weight:bold;font-size:14px;padding:9px 20px;border-radius:9px;cursor:pointer}
   .cardhead .headroads{display:inline-flex;align-items:center;gap:10px;flex:none;margin-left:auto;flex-wrap:nowrap}
   .cardhead .headroads .maplink{padding:5px 12px;font-size:13px;flex:none}
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .priceline .seebtn{margin-left:auto}
   .priceline .pdate{margin-top:0;margin-left:auto}
-  .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid var(--orange);color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
+  .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
   .priceline .onep .plabel{color:#3ab54a;font-weight:normal;font-size:12px}
@@ -196,6 +320,7 @@
   #cheappop .big{color:var(--orange);font-size:20px;font-weight:bold;margin:6px 0}
   #popback{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:890;opacity:0;pointer-events:none;transition:opacity .3s}
   #popback.show{opacity:1;pointer-events:auto}
+  /* loading scene: truck and trailer drive from the start pin to the green pump */
   #bar{height:6px;background:var(--orange);width:0;transition:width .4s;border-radius:3px;margin-top:10px;display:none}
   .legmi{font-size:12px;color:#f26a21;margin-top:3px;min-height:14px}
   /* stop rows: arrows and X sit level with the city box, arrows bright orange */
@@ -205,6 +330,22 @@
   .arrows button{flex:1;height:auto;background:#2b4a70;color:var(--orange);font-size:14px}
   .arrows button:disabled{opacity:1}
   .stop .remove{height:48px}
+  .stop .mvbtn,.stop .remove{flex:0 0 48px;width:48px;height:48px;padding:0;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--orange)}
+  .stop .mvbtn:focus-visible,.stop .remove:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+  .stop .remove svg{overflow:visible}
+  .stop .remove .lid{transform-box:fill-box;transform-origin:50% 50%}
+  .tossfly{position:fixed;z-index:9700;color:#fff;font-size:16px;font-weight:700;white-space:nowrap;pointer-events:none;
+    background:#10233f;border:1.5px solid #4f7bb0;border-radius:8px;padding:4px 9px;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+  #mvpop{position:fixed;inset:0;z-index:9600;background:rgba(5,12,24,.35);display:none}
+  #mvpop.show{display:block}
+  #mvpop .mvbox{position:absolute;right:10px;width:160px;background:#1d3a5e;border:1.5px solid #4f7bb0;border-radius:12px;padding:12px;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+  #mvtitle{font-size:16px;font-weight:800;color:#fff;margin:0 0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #mvpop .mvchoice{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;margin:0 0 8px;border:0;border-radius:10px;background:var(--orange);color:#fff;font-size:17px;font-weight:700}
+  #mvpop .mvcancel{display:block;width:100%;height:42px;border-radius:10px;background:transparent;border:1.5px solid #4f7bb0;color:#9fc0e8;font-size:15px;font-weight:700}
+  .stop.dragging{position:relative;z-index:50;box-shadow:0 10px 24px rgba(0,0,0,.6);border-radius:12px;background:#10233f}
+  .stop.dragging .fieldwrap input{outline:2px solid var(--orange)}
+  body.rowdrag,body.rowdrag *{user-select:none;-webkit-user-select:none}
   /* new header: taller, gauge + FPS, two-line price status, big gear */
   header{padding:22px 16px 18px}
   header h1{display:flex;align-items:center;justify-content:center;gap:10px;font-size:34px;letter-spacing:2px;line-height:1}
@@ -218,7 +359,12 @@
   header h1{display:block;font-size:23px;letter-spacing:.3px;line-height:1.2;padding:0 54px;white-space:nowrap;color:#ffffff;margin-top:6px}
   header h1 span{font-weight:800}
   .fpsmono.corner{position:absolute;left:12px;top:10px;width:58px;height:38px;display:flex;align-items:center;justify-content:center;border:2px solid var(--orange);border-radius:9px;color:var(--orange);font-weight:800;font-size:19px;letter-spacing:1px;text-indent:1px;line-height:1;padding-top:1px;background:rgba(0,0,0,.15)}
-  .newtag{left:0 !important;right:0 !important;top:22px !important;margin:0 auto !important;width:max-content}
+  header .newtag{left:80px !important;right:auto !important;top:15px !important;margin:0 !important;width:max-content;
+     font-size:15px;padding:5px 9px;line-height:1.15;text-align:center;white-space:nowrap;border-radius:9px;border-width:2px;letter-spacing:.4px;z-index:5;
+     transform-origin:50% 60%;animation:tagfloat 2.4s ease-in-out infinite}
+  @keyframes tagfloat{0%,100%{transform:translateY(0) rotate(-12deg)}25%{transform:translateY(-3px) rotate(-6deg)}
+     50%{transform:translateY(-5px) rotate(-10deg)}75%{transform:translateY(-2px) rotate(-4deg)}}
+  @media (prefers-reduced-motion:reduce){ header .newtag{animation:none;transform:rotate(-9deg)} }
   .gear{top:10px !important;transform:none !important;margin-top:0}
   body.on-detail .fpsmono.corner, body.on-svc .fpsmono.corner, body.on-news .fpsmono.corner{display:none}
   body.on-detail header h1, body.on-svc header h1, body.on-news header h1{font-size:22px}
@@ -311,6 +457,90 @@
 </style>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgcng9IjI0IiBmaWxsPSIjMTAyMzNmIi8+PHBhdGggZD0iTTI4IDc4IGEzMiAzMiAwIDAgMSA2NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMyYjRhNzAiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI4IDc4IGEzMiAzMiAwIDAgMSAyMCAtMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyNmEyMSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNjAiIHkxPSI3OCIgeDI9Ijc4IiB5Mj0iNTIiIHN0cm9rZT0iI2YyNmEyMSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI2MCIgY3k9Ijc4IiByPSI2IiBmaWxsPSIjZjI2YTIxIi8+PHRleHQgeD0iNjAiIHk9IjEwNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIyMiIgZmlsbD0iI2ZmZiI+RlBTPC90ZXh0Pjwvc3ZnPg=="><link rel="apple-touch-icon" href="data:image/png;base64,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"><link rel="icon" type="image/png" href="data:image/png;base64,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"><link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkZ1ZWwgUHJpY2UgU2F2ZXIiLCAic2hvcnRfbmFtZSI6ICJGdWVsIFNhdmVyIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYzFhMzAiLCAidGhlbWVfY29sb3IiOiAiIzEwMjMzZiIsICJpY29ucyI6IFt7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQU1BQUFBREFDQUlBQUFEZHZ2dFFBQUFKMGtsRVFWUjRuTzNjYVd3Y1p4M0g4V2RtWjJkbmQrMjliR2ZqT0RaMlhFb1NVdHRxbXBRbUpGRktnU2hGaURZb3FsS1ZGMVJRS2dxVmdCY1JBZ2tRRW9nM0ZTWGlraEF2SUtuNkFuT2tDSXFhb29RMHpWVWF1MG1xcU1GSjQ5Ukg3TjMxanZlY25ZTVhSbTIwWHM5Njl6K1h3Ky96TXA3c1REemZQUFBNdFZ5c2Z4Y0RhQmJ2OWdiQXlvYUFnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBZ0lDQVJuRm5OalUvZmNHWkZjTHVlbDN2c1hnVVg2OTlsNndxUWp1dHN6Y2plUXhqcThRSmI5NEpkSXhEUzhTQTdoaUtINWtETWtlTXgzTTZaLzhPMmpFQlZtNDUwWEdUM3ZyQitEb1I2UEtYcTkyLzVzR1R2SkJyMWVNRktPZ3ZEM05uN3JOMUhObzVBR0g2OHc3NTlnVnNaUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBNGR6TVZhdkx6eHVhWU1oZ3BEMGFWdnJBYUVmU0lvTGNJdW1wd1JZMHJhbHkyd2srVWhNbVNiNklrdkpNWExzdmllRkV3M043czk3a1cwUEQ5MC9mRnlwWi83TzZUbmYvSis2MWRxYUp6OHlvdnE1eGM0YS9tL2FOWmNWUVdSMld4b25PVVRlME5xUWZXNXZaMzVSS2l2dmluUHM0SThFYk16em9sYlgxcjVmWWY1VFh1c2l5ZXlRVE9aS1R6bVVCZUkyMEdFVWFnK2tUZWFCTzFOcEV4eGdhanlyNDFlY1pZU3VHSEo4SXYzR3k1dW5TdlN4RTQ0OWwrK2F2cnNrSlR1ejdzTTdiRXkxdmk1V2VZckJwczk4azE3eFpjMjQrWUF6V3BUZFMvMUR0LzdPT1RQOXFZYmhGcURDRkw2UWhvTHowdy9XeC9rL1ZVRVRnbWNHNGUwQkFRQ2NmWTQ5MjVZOXNudDhhWGRXU01DUHJoemJjMnRpcDJiNWhqRUpBRk9pWHQ4SDIzdHJlVjZpNzU4NkhacWduTlNvZUFyQkhnalY4TnpYWUhWWk5sSHVvbzdseEdaQ3NMQXJKTVJOQi8vTkcweVFJSDc1NXphbHVjZzdNd0srMW9LMzBzVVQ2ZERpeiswWWRiS25lM21CMjhETWIrT1JQOHg2M2dSVmw4cnlUa05VN1Z1WWhmandoNnU2aHRhSzFzYUZVMlJaUjdJb3JQemRQMmFoNE5xS0J4NjEvcDlzSktnejZqWGRTR29zcStOZmtITzRwMVArVEEybHpOZ0hhM20vM2RtYkx2eVRjN0xtVEZxajlQSzN4YTRhOFhoUE56Ly92TXFGL2YyVmJhM1ZIY3M2clkwTm1mVFR3YWtIY1VOVzY4S0l3WGhhTlRvVDNKd3FHQmxNaWJuVFovb3FQSWMweGZ0TWk5TWJNenIyOWViRnRjVDAzWkNuOTBLblIwS3ZSdG43RTNXWGlzSzJjd04wY2t6SUVhOFBmcDBBK3V4TTJYYVJYMHU4STFEbFVkb3JiVVgwa3IvUEZacWRHTktXbmM4RVI0Lzdua1dON05VUUFCTmVid2VFdW1VdWVYMWhlcWNTN1daaEpReGVlZGUxdU5Ra0NOMFF6Mjc3a2FVNXpiSldxMUlpMGR5UnBKRFpnZUZyME1BVFZzcnQ0SUpOV3FZYTdpVzJyNWtNLzR4bDFaNm1hNUJBRTFMTzZ2Yys1VHFuV1hQcVdZL2FxZjdwTi9QVFE3RUZsNXR6aHdGdFlZZ1dQMzFuc2dKSzNVR0d3dVpNVWRwcGVoOXlRTGU1S0Y2d1hoeEt4MGZpNXdJUnU0N3Q0OTl1WHo2Q2FHZkVZVEwxQnVPclpXVnUwZFU1L29uby9WRzRHdTFkcnhyNldrcjYyVDYzNStiMGp0N2NsOW9TZkhHSnVyOEtPeU9KSVYzNWdMbk0wRWNqYi8wNXJqMFlDOGFXK3k4SjJQekprdk02L3lOWjhRT3AyUnh2TEN1ckRaemJJcU1iKytzNjIwY1B0TU05aEZXVHcrRy96alpNamtpVG5uSWFBNkpKL1JJV3BEVWVYelhYbnpxOGtMWHBrSkxyNkt5QmpURGZhenNlaHo5NlNhMnd3Znh3YWp5bUJVK1hwL2RpUXIvdWJkMWo5UGhyMXc1b2FBUHREY2NiUEtrZkdXcFg3MGg0bndKMWNWOXlZTHhGVU1ScFhuQjFKZjZadi83dHZ4YzVrNjF4VHM1c1hENnNyMXI1UjB4blNQZnV0aXdueUI1ZHZZcXJ5NFpmcUxINXEzNU5PYWhvQXNNNi95Qnk4bHpKZkpxZnlCODZ1TzNGeHlsR3FJd0xIdnJjODgwWjJ6NU5PYWc0Q3NVZGE1TDE5b0h5L1dueEpVZE83Z3BjUytzOG0zNUdYZFBhM3IreHN5bTl5N2dJU0FMREJWOGoxK2Z0VnJxUVp1aUo3TEJCNStmZlgrYzhrL1RZWkx0UGR5Qk03TkM5a2VuVVM3OGp4UUV3ekdYcmpaOHNNcnNlWXUwcHhPQjA2bkF3RStjWCs4dktPOXRDMVIydENxTlBHMnhrTWR4YjZRV3ZQNms5MDhHcEQzcFJWK2VESjhaTHlaOThLcWxIWHVSRW82a1pJWVl5R2ZNUlF0TDd6MnRUbFdEaS83UHYzMnR0SzFnalZUcTRZZ29Qb3FPaWVyQ3krbjhsZHovaEZaZkNzcmpwRGZUSzJwb0hHbjB0S3B0TVFZRXppMk5WNzZiR2ZoMGM2OHljMzhCVnZpNWQ4dmZRWEJQZ2pvQTE0N2Jxb0dXNGpwdWF2UjV3ZFNEeVRNYnFWMUJocTR4bTBoVEtKWGdPbXk3OGszMjJmS1N6NFF3aGlMMTNyQjNnRUlhR1hJcWZ6ZnBvTW1DN2oxU0JvQ1dqR215bWJ6RGVLMWdLWmhEdVNRWjliSnJZTCsyeHV0VXlXekk1R0pMc2xzbGpOVDZ5RWtCMkFFY2tqTXJ6L2RKNS9hT2ZIVGdWVGRSOUlXYXhQMWgxZWIzWVYxNnh0ZU1BSTVTdUNNUnpyemozVG0zeXNLTDAySC9qb1ZXczdyWUYyUytzdWhXZk1IMlVhVzkxcVo1UkNRTzdxQzZsTzk4bE85Y3FiQ2oyYkZrV3hnVkJZblM3NU1oWityOEVXTmwzZ2pLV25yVzVRSE80cWY2eXlZdjgxb01IWWlaVGJGdGc4Q2NsbmNyKzlxTCsxcUozMXJ4K3RwYWJMWnFSVVI1a0IzZ2tOakViZFdqWUJXdkw5TWhrNDI4aUNBdFJEUXl2YjJ2UC9nNVRwUHNka0tBVG1rNXBQMlJHL01CUjQ3bDNUM2RSOU1vaDN5azNlaXB6T0J6Nnd1ZkdwVk1VTCtYcCtpeHYzaVd1VFFXRlIxKzgwTUJPUVExZUJlblFtK09oUDA4OGEyUkhsYm9yUTFYaDZNS28xK1NlK05vakE4RWY3ZGVJdjV2VlhIdUJiUW8yZVMveWNyclZMUnVlT3owc0lYQWtrK1l5Q2k5SWNydlNHMUw2UjJCOVZXdng3MjZXR2ZFZkFacXM0VmRTNnQ4Rk1sMzFqQmYwa1d6MllDVjNJZWVxdVFZUVJ5VjBuanptWUNaOTErdDRzQ2syZ2dRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTR3dNaVA1ZE8yQVYrL2FGeFFIMXZOeGo3UWVDNWF6ZFIvWWV3akFJZVlHdGU4SDZnS29DUjBQdXF2cjlXMzZJNEdMOXU2ejl4QVdMdThIUnpXSE83QUxuYnFaaUtMb2oyVFVDTFVBMEhtSGY4Ry92SkJxSExTK3dkUy9ZT3dLOUQwT1JLeHo0RCt4UVFIQ253cTBNSUVGQVFJS0FnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpEOEY2NjNEWFlQYXZ0S0FBQUFBRWxGVGtTdVFtQ0MiLCAic2l6ZXMiOiAiMTkyeDE5MiIsICJ0eXBlIjogImltYWdlL3BuZyJ9LCB7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQWdBQUFBSUFDQUlBQUFCN0drT3RBQUFiOGtsRVFWUjRuTzNkZVpnY1paM0E4YmU2cTZ1dm1aN3VPWktaSkNRaGs0UWpCNEVrRUFnU2lMSW9vbml0cUkrNnJ1NnU2NFh1NnFMN3VNcXk2aU11N09MS0lsNDhyTUlEcmc4cnh3TXFMb1lzU0FLSmtBUXdoOG5renN4azdwNmV2cXFQMmoraUVVSk1acnFydXJycjkvMzg0Zk1Zc2FaSVRiL2ZydXQ5dFhqM0dnVUFrTWZuOWc0QUFOeEJBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoZExkM29ONGR2T3FnMjdzQW9IS3pINS90OWk3VUx5M2V2Y2J0ZmFnN0RQcUFKeEdERXhDQVYySG9CenlQREJ4SEFKUmkzQWRFb2dUY0JHYjBCNFRpc3kvNkRJREREMEFKUGhXUWV3YkE2QS9nR0xHamdkQUFpRDNlQUU1SzVwZ2dNUUF5anpTQVV4TTRNb2dMZ01CakRHQ1NwSTBQc2dJZzdlZ0NtQ3BSbzRTZ0FJZzZyZ0FxSm1lc2tQSVlhRFZIVk93allrQ2o0NE4vYWlJQ1VOa3ZnWVRERHdqQklIQlN6QVo2RXA0LzZvQTB4ejdVY3E3dFRKTDM3d0ZNOVpBeitnTmVOZFZQdCtlRDRmRkxRRk02Zmd6OWdCQ01ETWQ0L3d4Z2tqeDhqQUdjZ00vN01RUkFLWDRiQUhuNDFDdHZCOER6MSs4QTFJQ0hSeEl2QjJDUytDSUF5TVJuMzdNQm1HUzArUTBBSkp2a0NPRFZrd0RQQmdBQWNHcWlBOERYZndDU3h3SFJBUUFBeWJ3WkFLOWVzQVBnRmsrT0t0NE13R1JJUHU4RDhFcGlSd081QVFBQTRRZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlwYnU5QXdEcWpxNnBPWkhDd3FiQzNFaXgzU2gxQk1zZFJxazlXR3J5VzRiUEN2b3RRN01NbjFWV3FsaldpcFpXdEpSWjFpYUtXcnJrU3hWOTZhSTJWdkFObWY0aDB6K1U5dzJhL3I2Y3Z6ZW5aMHVhMi85bWVCVUNBRUFwcGVaRWlxc1N1Vld0K2NVeGMxNmtHUEJacC8yLytKVFMvWlpTdi84bnB3VlA4ODhQbTc3ZW5INDRxKy9MNkQzcHdONjAzcE1PakJXNER1RWFBbEN0blc4NEZQR2YvcVBTNkg1Mk5QSzNXOXR0M0dDOS9iMFZMUzFmVnZtU1pwYTFmRmtiTC9vRzgvNUIweitVOXcyWS9nTVpmZmRFNEhCV3I2TTl0b05mVTVlMDV0N1NtYm04UGRzWktqbjk0OXFNY3B0aExvbVpyL3pEWWRPM2E4TFluZ3JzU0JuYlU0SGRFd0d6eklsQ2pSQUFRQ21sZE0zUy9TcDZ5aWJsU2xwUE9yQmpJckJwTlBqY1NHaGZwb0UvUG1jMUZUNXdSdXJObmRrMncvRngvOVRhalBJbHJibExXblBIL212UjBuYWtBbHVUeHBheDROYWswWk1PZUN5NmRhV0JmNE9CR2d2NXJVVXhjMUhNZk5lTXRGSnFJTy9mT0JMOCtkSEl1cUZ3cm5HdWJxOXV5MzEwN3ZqbDdUbTNkK1RrZE0xYUVqT1h4TXdQbkRHaGxFb1ZmWnRIZzgrTkJqZU5CcmNsamFMVk1IL1BEWUVBQUJXYUZpeGQyNVc1dGl1VExtbFBESVFmNm9zK09SUXUxL0gzMWFVeDg2WnpScGZIODI3dnlCUTA2K1cxSGRtMUhWbWxWSzZrM1hXZytSdTc0Mjd2bEhjUUFLQmFVYjkxckFUN012b1A5c2NlNkkzVzIrTXVyVWI1aGdWajc1azU0YXV2L1pxYWtOODZNMXAwZXk4OGhmdnZnRzNPakJTL2R1N0lzMnVPZk96TWNXTVNUOUhVeHFWdHVTZFc5NzF2Vm1PUC9uQUNBUUJzbGdpVS8zSGgySzlXOS8zWnRLeTdlK0xYMUdmbkorOWRQdER1OXAxZTFDY0NBRGhpVHFUNGcvTUgvK3VDd1RhajdNb09HRDdyZThzR1A5MmQ1SXMvL2hRQ0FEaG9iVWYyOFV2NmpqL2pXRE1Sdi9YREN3YXZkUHNVQkhXT0FBRE9taFlzM2JkaTRKUHp4bXYyRTRNKzY5NFZBNnZiNnZSQlQ5UVBBZ0E0enFlcEd4YU0vZlBabzdXNUdIUHI0dUVWRGZXc0o5eENBSUFhK2ZDYzFLMkxoLzBPUitENjd1UzFYUmxuZndhOGdnQUF0ZlBuTTlNM25UM2kzUFl2U3VRL096L3AzUGJoTVFRQXFLa1B6cDc0eXprcEo3WWM5Rm5mV0RUTUl6K1lQQUlBMU5xWHp4cGQ0OEJVUEovcFRzN2pSVmxNQlFFQWFzMnZxWDliUEJ6VDdYdy9vRE5VK3B1NWpweFl3TU1JQU9DQ2FjSFNsODRlczNHREg1czdQcGtsWElCWElnQ0FPNjZiT1hHcFRZL3F0eG1sOTg2YXNHVlRFSVhaUUFIWGZHSGgyRFViTzZ2ZnpudG5wVVBPTDY5Mk5PL2ZsalNPTGVWNE5LOFA1SDNKb2k5VjhPWExXc25TeWtxRmZGYlFaNFg4VnRSZm5oWXN0UWZMSFVhcE0xVHFqaGJtUlFxekl5VmQ0eHlsdmhBQXdEVkxZK2JhanV5NndYQ1YyM2xiVjlxVy9Ya3RTNm1OSTZHZkhZMnNHd3dkenA1bXVNaVV0RXhKVXdXbGxIOVBPbkRDLzNwc29mbWxNZk84Rm5OcGkzbHVzMWxYYTRMS1JBRGdIZHRUeGhzM1RPMEx0ZUd6UWo2clBWanVEQmJQYWlvc2FURXZiYzNWWUhYYzR6N1RuYXd5QU9jMEZ4WTJGZXphbitQS2x2cHBYL1QybmhhN1ZyNHNXcW9uSGVoSkJ4N3NpeXFsL0pwYUdqTXZhY3V0YnMwdGorZkR4TUFOQktBZVZUQ1FvVEptV1RQTDJualJ0emV0YnhnSkhmdkRaUzNtZTJkTnZHdEd1Z2EzVlplMW1FdGo1b3ZqUnNWYnVIcTYvZS85SHNycTE3L1k5dnhZMFBZdEgxZXkxSmFrc1NWcDNMRTNGdkJaSytQNXE2WmxyNXlXblJYbVNkYmE0U1l3Y0tLdFNlUHp2MjI5N09tdVIvc2pOZmh4YjU5UjFRV2NWWFpQTmJvOVpiejEyZW1PanY0bktKUzFEU09oRzNjbUxubHF4aHMzZE42MnA2WG5OVmVRNEFRQ0FKemNrWnorOFczdG4zcXgzZWtGMzkvU21hbDR5bjVkczg2TG1UYnV6TERwKzlBTEhjT20zOFp0VHNuMmxIRmJUOHNWdis1Nnk3T2RkeDlvSG5KdlR5UWdBTUNwUE53WHVXN3o5SW1pZzUrVWFjSFNSWWtLdjhVdmJUSHRmZjduSzdzUy9ibTZHSE8zSlkwYmR5WldycC81NFJjNm5od0tsN2xINEFBQ0FKekdscVR4VjF2YVMwNE9RS3RhSzV5OStaeG1PMi8vSHN6cUQvVkZiZHhnOVVxV2VtSXcvQmZQZDF6NjlJdzc5c1lHODNVUko4L2dKakJ3ZWh0R1F2KytKLzRQQzhZYzJ2NkZsVTdmUDl2V1c2YVA5a2ZxOW92MjRheitqZDF4dC9mQ2F6Z0RBQ2Jsem4zTnp0MlpQRCtlMXl1NkRUQW5ZbWNBbmh1cDNZMWYxQU1DQUV4SzBkSnUzeHR6YU9NUnY3V2dvbWY1ejdEMURHQmZobWR2WkNFQXdHUTkwaGNaTnAzNnlNeUpWQktBMW9DZFU0cW1uTHpYalRyRThRWW1xMmhwVHd3NjlXWkFaVmZ6UTM0N0EyRHYxbEQvQ0FBd0JVOFBoeHphY21VQnNIYzZuV2tHQVpDRkFBQlRzSFdzOGprYlRxMnlDWWpzZlFsZ2FVdUZEeU9oUVJFQVlBb081L1NpTXc5SzFzUFVtRythbm5WN0YxQlRCQUNZZ3JLbEJweDVGNm15NlREenRrNVRjWEZyN3NJRUp3R0NFQUJnYWpJbFJ6NDFrWXB1d09iS2RnWkFVK3JtUlNOTnRpNVdqSHBHQUlDcHNmZEw5M0hCaXFhZXR2M0J6Zm5Sd24wckJscHNmYm9VZFlzQUFGUGowT0tMdVhJbEg4WmVCeVp1VzlaaVBuWngveVYyenpLTk9rUUFnS21KT3ZPd2ZMYWlFNHNqcDF1bXNUS3p3OFVmcnh6NDBmS0JpOG1BcHpFWkhEQUZ1cVk2Z280c0dKbXBLQUFIYkZxdjhhUXViODlkM3A3clNRZitwemY2V0gvRXJyVWhVVDg0b3NBVXpJNFUvYzRzRDFOWkFLcFpTM0tTdXFPRkd4YU0zYkJnckNjZFdEOFVlbVk0OU54b2tFa2p2SUVBQUZPd3pMRlhwZnB6bFh3WXR5VWREOEJ4M2RGQ2Q3VHdrVGtwUzZuZEU0RVh4b0piazhhMnBMRnJ3bkRvM1FnNGpRQUFVM0JabTFQWHhDdTdtRE5rK2c5a2RIc25oVDR0VGFtRlRZV0ZUWVgzekZKS3FWeEorMjNLMkpvMHRpYURXNU9HbzFlbFlDOE9WVDA2dDlrOGVOVkJ0L2RDS2FXZUhRbStlL04wdC9laVhnUjkxdXM3bkhwWDltQ2x0M09mR0F4L1pFN0szcDJaa3BEZldoN1BMNC9ubFVvcHBjWUt2bTEvaU1IV3BPSGk4c0k0TFFJQVROYmJ1dExPUFNCZjhSZm5YdzY0SElBVHhBUGxOZTI1TmUyL1AxVTZtTldmSHd1K01HYjhaaXk0TTJVNHVySW1wb29BQUpOaStLenJ1OGNkMm5pNnBGVzgzTmltMGRDUm5ENHpWTk9yUUpNM08xeWNIUzYrdlN1dGxFb1ZmUnRHZ2s4TmhaOGVEdTNuU2xFZDRCZ0FrL0xwN3FTOXkyKzkwcGF4WU1YM1VVdVd1dmRRMCtjZFc2L1lSczE2K2FwcDJhdW1aWlZTK3pQNno0OUdIdXVQMU9CQkp2d3BQTXNGbk43bDdibFBuT25VMTMrbDFLYlJxaGJqdmY5d1U4NlpDU3FjTXpkUy9OaVo0NDllM0wvaHN0NGJGb3padTdvOUpva0FBS2R4WVNML25XV0RQaWNIMkkwalZhMHpNMkw2Zm5DZzJhNmRxYkZaNGVJbjU0MC9mVm52L1NzR3J1bk1PUFNhQlU2S0FBQ244bzRaNmZ0V0REZzZXZi9SdkgveldGVm5BRXFwYisrTE9iZGVjUTFvU3ExdXkzMzd2S0gxbC9hK2I5WkVvS0twOFRCVkRmd2JBemhxVnJqNDNXVkQzMXd5YkRnOEdEM1NGeWxYL1JNbWlyNmJkaWJzMkIyWHpZa1ViMTQwOHN6cmV0ODVJODNKZ05NSUFIQ2lDK0w1V3hhUC9OK2xmVythbnFuQmozdXdMMnJMZGg3cWl6N2M1OVNhOVRYV0dTcmR0bVQ0NFZYOTU3ZVlidStMbC9FVUVFUUwrS3lRejJvenlqTkN4WVZOaFNVeDgzVnR1Y3FXNTYzTUMyUEJsKzE3RE9hTDIxc1h4d3JkMFlKZEczVFhzaGJ6cHhmMWYzdGY3TFk5Y1dhYmNBSUJnSGZVenh2VWsvY2ZQVEVidHpaZTlIM3crWTZIVngxdE4yclhNRWY1TmZXcGVlTnIybk1mM2RydTBOelhrbkVKQ0hETnRxVHg1RkRZM20wZXl1b2ZlTDVqdE9DcGovYlNtUG5JUlVjWHg3Z2NaRE5QL1pZQWplWG0zWEVuTnZ2YmNlTWR6MDEzWXJFd0YzVUVTdzljZUpRRmF1eEZBQUIzL1BlUnBtZUdxM3I4L3hSNjBvRjNQTmU1dFlhVFJkZEF4Ry9kZGY3UW9tYk9BMnhEQUFBWERPVDlYOWtaZC9SSDlPYjg3OXcwL2U2R2ZVSHNwSnIwOGowckJxYzdzeWliUUFRQXFMV1NwZjcrcGJaeDV4ZlZLcFMxRzNjbTN2K2JhVjZhbzcvZEtIMXp5VEN2Q05pQ0FBQzE5aTg3RTA4NWR2SG50WjRhRGwyNW9lcy85OGJ5Wlk4TW02dmJjbjg5MThHcG1lUWdBRUJOM1h1bzZlNkR0YjRza3l0cC83bzdmdWxUTSs0NTFGVHdSQWIrYm43U000KzZ1b2dBQUxYelFHLzBTenRhM2ZycFIvUCtMMjV2dmV6WFhkL2YzOXpvcTdwSC9kYm5GaVRkM291RzE5aS9CRUFEdWZ0QTgyZGZhbk45U2F3aldmMHJ1eElyMTgvODR2WldHMTlDcnIxM3o1em9xdUU3MjU1RUFBREhsUzExeSs3NGpUc1RiZy8rZjVRcGFmY2NhcnA2WStjVnYrNjZmVytzRWRmbjBqWDEvalBxYUMzTVJ0UjRSMTJDN1NuampSczYzZDRMMkdNZzc3Lyt4YllOMWMzNDc1eWVkT0NXM2ZGYmRzZTdvNFhYZDJSZjM1RmJtY2pyV3YyazZsVGVOeXQ5MjU2V291V0Z1eHF1SUFDQWc5WU5oai83Y3V1dzJRQXY1ZmFrQXozcHdQZjJ4OEorNjRKNC9zSkUvcUpFL3Z5V2ZOakp0UkNxMUdhVUxtck5PL2MrbmVjUkFNQVJCN1A2VjNmRmYzRzA4ZVpuenBhMFo0WkR4MFpWWGJPV3hBb3JFdm1WOGZ6S1JMNnQvaDY4dWJJalN3QXFSZ0FBbTQwVmZOL2RIL3YrL21hejhSKzRMRnJhbHFTeEpXbDhYelVycGM2TUZGY204aXNUK1JYeGZKMU1PcjIySS92UG5sZ0p4eFVFQUxETi9veCsxNEhtbnh4cHlqYmFFdTJUdEMrajc4dm9QemtTVlVxMUd1V1Y4ZnlLUlA3Q1JHNUpyT0RXYllPNWtXSThVQjd6MXV5bk5VTUFnR3BsU3RvVEErR0grcUxyaHNMVkwrN1lLRVpNMytNRDRjY0h3a3Fwc04rNktKRy90QzIzdGlNN3YrWm5Ca3RqWmkzZnJQWVNBZ0JVYUNEdjN6Z1MvTVZBNUZlRDRaeEh2L0pQVXJha3JSOEtyUjhLZlhWWGZFNmtlRTFuNXRyTzlObk5OU3JCWWdKUUtRSUFURmErclBXa0F6dFNnYzJqd1dkSFEzdlRmSHhPNGtCR3YyTnY3STY5c2ZOYnpBL05TYjIxTSsxM09JNW5oSXZPL2dEdjRqY1lVRXFwb3FYTXNtYVd0WHhaTTh2YWVNRTNhUG9HOC80aDB6K1E5eC9JNkx2VGdVTlpYYzRWbnVwdFNScGJYbXk3YlUvTGw4OGVmVU5IMXJrZnhQdkFGU01BOEE1ZW9LdEQrelA2aDEvb2VQZk05TTJMUmh5NlVUd2p4QmxBaGJoMURzQnhQemtTL2N4TGJRNmRQOFVDWlVlMkt3QUJBRkFMai9SRnZyVzN4WWt0aDN4Y21Lc1FBUUJRSTNmdWkvVTVzRlI5cUk0bnE2aHpCQUJBaldSTDJvOE8yYjhZamk3NkVkeXFFQUFBdGJOdU1HejdObk9OUCtXR1d3Z0FnTnJaa1FyWXZoaVpWeWZlcUFFQ0FLQ21Cdk0yRHp2Q1g4T3VCZ0VBVUZPMnI0NlFJUUNWSWdBQWFzcjJtU0VHOGcydzNrNTlJZ0JBQTR2NHJmdFhERnpjbW5ON1I2YWdJMmp6ekEySHM4eG9VQ0grNG9BR3BpbTF1aTIzdWkyM2VUUjQrOTZXOVVQMVBpbG1zMTZlWmZmY2JZZHpqR01WNGd3QThJS1ZpZnlQbGc4OGVuSC8xZE16VHMrK1dZMjFIVG5iOTQ0emdJb1JBTUE3bHNiTTd5d2JldWF5SXg4L2N6eFJselBrZlBDTWxPM2IzRFVSc0gyYlFoQUF3R3RtaEVwZldEaTI2ZklqdHl3ZVdSd3ozZDZkUDdwNmVtWmxJbS92TmllS3Z0OFJnRXB4NmdSNFU5Qm5YVGR6NHJxWkV6dFRnUWQ2b3cvMlJRZGRmVnBtYnFUNDlVVWp0bS8yeFhHRFJSb3F4aGtBNEhGbk54Zis2YXl4VFd1Ty9IRDU0TFZkbVNiZGhVdEQzZEhDL1NzR25MZ3E5ZnlZWWZzMjVlQU1BQkRCcjZrcjJyTlh0R2NMWlczRFNQQ1hBNUgvSFF6M096QTM1MnU5clN2OXRYTkhtNTBKanhPVEM4bEJBQUJaQWo1clRYdHVUWHZ1YTBxOVBHNDhNeEo2ZGlTNGVUUTRidmNVUFVxcGxZbjg1K1lublh0Tm9UL25mMkVzNk5ER0pTQUFnRnlMWStiaW1QblJ1YXBzcVIwVHhxYlI0UGJ4d0k2VThidDBvSm9KZHVaR2lsZE95NzY5SyszMExlaWZIWTF3L2I4YUJBQ0E4bWxxVWJPNXFQbjM0M1haVXZzeit1NTBvRGVuOStmOGZUbC9YMDRmTW4yNXNwWXIrWElsTFZ2V05LVjB6UXI3clhpZzNHYVVab1ZMY3lPRmM1b0x5MXJ5TTJxMVN2dkRmZEhhL0NDdklnQUFUdVRUMUx4b2NWNjByaGRiM3p3YTNKTGtEbkJWZUFvSVFFTzZZMS9NN1Yxb2VBUUFRT1BabVFvOHlmTS9WU01BQUJyUGpUc1QzUDZ0SGdFQTBHQWU2STF1SEtuM2VVOGJBZ0VBMEVpR1RkOVhkeVhjM2d1UElBQUFHa2JSVXAvWTFqNWlNbkRaZzc5SEFBM2pwcDJKRFZ6OHNROEJBTkFZN2o3WS9NT0R6Vzd2aGFmd0loaUFCbkRudnRqWGZ4ZDNleSs4aGdBQXFIZTM3STdmdnBmWHZ1eEhBQURVcjdHQzczTXZ0LzF5Z0hlK0hNRTlBS0NCNWN2YXQzcGFldExlWEJQeHVkSGdWUnU2R1AyZHd4a0EwTUNLbHJwMVQ4dXRlMXJPYVM1YzA1bCs4L1JNbmMvZ05rbERwdi9XM1MwL1B0TEVjbytPSWdDQUYreElCWGFrNHJmc2pwL1ZWRmpia1YzYmtWMGV6K3VWVCtudm1seEp1K3RBOHgzN1loTU9MRkNERXhBQXdGTjJUUVIyVFFUdTNCZHIxc3VYdGVldWFNK3ViczNQRERmQWFVRnZ6bi9Qb2ViN0RqV05GaGo2YTRRQUFONlVLdm9lNjQ4ODFoOVJTczBNRnk5TzVGZTE1bGExNW1mWFdReXlKZTJwNGRDRHZkSEhCeUlsTHZqVUZnRUF2TzlJVm44Z3F6L1FHMVZLdFJtbDgxck04Mkxta2haemFjeWNGcXpSNmwwbjZNLzVONHlFSGg4SXJ4OEtaNnRZZmhMVklBRFZPdnVKTTl6ZWhZYkUzNXRiaGszL3VzSHd1ajlNcHQ5dWxCWTBGZVpIaS9PYkN2T2poZTVvb1ROWThqa3dJSThWZkh2VGdaZkdqZWZIak0xandTTlpCaC8zY1F3QTBZWk0vOUNJZitQSUgvOUUxOVQwVUhGR3FEUWpWSm9SS3JZYnBYaWczQklvSC92UFpyMXMrRlJBc3dJK3kvQXB2MmFWTE0wc0s3T3NtV1d0VU5aU1JXMms0QjgyZlVPbWY4VDA5ZWIwZldsOWJ5YkFERzUxaUFBQWVKV2lwWTVrZGI2aFMwQ1RBVUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVMSkRjREJxdzY2dlFzQTZvTFkwY0NiQVpqOStHeTNkd0dBcDNoeVZQRm1BQUFBcHlVNkFHTFArd0FjSjNrY0VCMEFBSkRNc3dHWTVBVTd5ZkVITU1rUndKTTNBSlNIQXpCNU5BQ1FpYysrbHdQZzFXZ0RxQ1VQanlSZURzRGs4VVVBa0laUHZTSUF4L0hiQU1qQjUvMFlMZDY5eHUxOWNOWlVqN1NIVC9jQU1DQzhrdmZQQUtaNi9QaHFBSGdWby84SmRMZDNvQjRkK3kzeC9MRUg1T0NMM1VsNS94TFFNZFVjZmtvQU5DZysrS2NtSlFDS3J3QUFKazNDNks4azNBTTRUc2dSQlZBbE9XT0ZvQUFvU2NjVlFHVkVqUkt5QXFDRUhWMEFVeUp0ZkJBWEFDWHZHQU9ZRElFamc4UUFLSkZIR3NBcHlCd1RoQVpBU1QzZUFGNUw3R2dnNkRIUVA0WEhRd0d4eEE3OXg4ZzlBemhPK0c4QUlCYWZmYzRBWG9XekFjRHpHUGVQSXdBblFRWUFUMkxvUHdFQk9BMWlBRFEwQnYxVElBQUFJQlEzZ1FGQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDUFgvMWR5cWl0dzNNOTBBQUFBQVNVVk9SSzVDWUlJPSIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ=="><meta name="theme-color" content="#10233f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"></head>
 <body>
+<script>
+/* ===== ACCESS LOCK — each user's link works on ONE phone ===== */
+(function(){
+  var ACCESS_URL = "https://script.google.com/macros/s/AKfycbyETR5rUpf2j3Z7fBHObPn2xKssen156tpgVEGPpbp8aMwk4ikBF3gfAywTXDABkjpr/exec";  var CONTACT = "rdrichardsllc@gmail.com";
+  function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){} return null; }
+  // 1. user code: from their link (?a=CODE) the first time, then remembered
+  var q = new URLSearchParams(location.search), fromLink = (q.get('a')||'').trim().toUpperCase();
+  if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink);
+    q.delete('a'); var rest=q.toString(); try{ history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);}catch(e){} }
+  var code = ls('fps_code')||'';
+  // 2. device stamp: a random tag saved on this phone
+  var dev = ls('fps_dev');
+  if(!dev){ dev = (window.crypto&&crypto.randomUUID)? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)); ls('fps_dev',dev); }
+  // 3. the cover screen
+  var cover=null;
+  function show(title,msg,retry){
+    function build(){
+      if(!cover){ cover=document.createElement('div'); cover.id='fpslock';
+        cover.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0c1a30;color:#fff;display:flex;align-items:center;justify-content:center;padding:28px;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:center';
+        document.body.appendChild(cover); }
+      cover.innerHTML='<div style="max-width:420px">'+
+        '<div style="width:72px;height:72px;margin:0 auto 18px;border-radius:16px;background:#10233f;border:2px solid #f26a21;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#f26a21">FPS</div>'+
+        '<div style="font-size:21px;font-weight:800;margin-bottom:12px">'+title+'</div>'+
+        '<div style="font-size:16px;line-height:1.5;color:#c9d6e6">'+msg+'</div>'+
+        (retry?'<button onclick="location.reload()" style="margin-top:22px;padding:14px 26px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:#f26a21;color:#fff">Try again</button>':'')+
+        '</div>';
+    }
+    if(document.body) build(); else document.addEventListener('DOMContentLoaded',build);
+  }
+  function lift(){ if(cover){ cover.remove(); cover=null; } }
+  var REQ = ACCESS_URL+'?page=request&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
+  var DENY = 'This app runs on private user links.<br>Tap below to request one.'+
+    '<button onclick="fpsReqForm()" style="display:block;margin:24px auto 0;padding:16px 22px;width:100%;max-width:300px;font-size:18px;font-weight:800;border:0;border-radius:12px;background:#f26a21;color:#fff">Request access</button>'+
+    '<div style="margin-top:10px;font-size:14px;color:#9fb4ce">Your link will be emailed to you.</div>'+
+    '<div style="margin-top:22px;font-size:14px">Questions? Email<br><a href="mailto:'+CONTACT+'" style="color:#f26a21;font-weight:700">'+CONTACT+'</a></div>';
+  function deny(){ ls('fps_ok',null); show('Private access', DENY, false); }
+  // In-app request form: stays inside the app, sends to Google quietly in the background
+  var FIN='display:block;width:100%;box-sizing:border-box;margin:4px 0 12px;padding:13px 12px;font-size:17px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff';
+  var FLB='display:block;text-align:left;font-size:14px;color:#c9d6e6;font-weight:700';
+  window.fpsReqForm=function(){
+    show('Request access',
+      '<div style="font-size:15px;margin-bottom:16px">Fill this in. Your own link will be emailed to you once you\'re approved.</div>'+
+      '<label style="'+FLB+'">Your name *</label><input id="rqname" autocomplete="name" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Email *</label><input id="rqemail" type="email" inputmode="email" autocomplete="email" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Phone (optional)</label><input id="rqphone" type="tel" autocomplete="tel" style="'+FIN+'">'+
+      '<label style="'+FLB+'">Company or carrier (optional)</label><input id="rqco" autocomplete="organization" style="'+FIN+'">'+
+      '<input id="rqweb" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">'+
+      '<div id="rqerr" style="color:#ff6b5b;font-size:15px;font-weight:700;min-height:20px"></div>'+
+      '<button id="rqgo" onclick="fpsReqSend()" style="display:block;width:100%;margin:6px 0 0;padding:16px;font-size:18px;font-weight:800;border:0;border-radius:12px;background:#f26a21;color:#fff">Send request</button>'+
+      '<button onclick="fpsReqBack()" style="display:block;width:100%;margin:12px 0 0;padding:12px;font-size:16px;font-weight:700;border:1px solid #4f7bb0;border-radius:12px;background:transparent;color:#c9d6e6">Back</button>',
+      false);
+    if(cover){ cover.style.alignItems='flex-start'; cover.style.overflowY='auto'; }
+  };
+  window.fpsReqBack=function(){ if(cover){ cover.style.alignItems='center'; } deny(); };
+  window.fpsReqSend=function(){
+    function v(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+    var err=document.getElementById('rqerr'), b=document.getElementById('rqgo');
+    err.textContent='';
+    if(!v('rqname')){ err.textContent='Please enter your name.'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('rqemail'))){ err.textContent='Please enter a good email address.'; return; }
+    b.disabled=true; b.textContent='Sending…';
+    var u=ACCESS_URL+'?page=submit&name='+encodeURIComponent(v('rqname'))+'&email='+encodeURIComponent(v('rqemail'))+
+      '&phone='+encodeURIComponent(v('rqphone'))+'&company='+encodeURIComponent(v('rqco'))+'&website='+encodeURIComponent(v('rqweb'))+
+      '&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
+    fetch(u,{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
+      if(j&&j.ok){
+        if(cover){ cover.style.alignItems='center'; }
+        show('Request sent','<div style="font-size:46px;color:#3ab54a;margin-bottom:6px">✓</div>You\'ll get an email with your own link as soon as you\'re approved.<br><br>Check your spam folder if you don\'t see it.',false);
+      } else { err.textContent=(j&&j.msg)||'Something went wrong. Try again.'; b.disabled=false; b.textContent='Send request'; }
+    }).catch(function(){ err.textContent='Could not send. Check your signal and try again.'; b.disabled=false; b.textContent='Send request'; });
+  };
+  if(!code){ deny(); return; }
+  var trusted = ls('fps_ok')==='1';
+  if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
+  fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); lift(); } else deny(); })
+    .catch(function(){
+      // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
+      if(trusted) return;
+      show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
+    });
+})();
+</script>
 <div id="splash">
   <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
   <rect width="120" height="120" rx="24" fill="#10233f"/>
@@ -367,7 +597,7 @@
   <button class="go" style="padding:10px" onclick="hidePop()">Got it</button>
 </div>
 
-<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
+<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
 <div class="wrap">
   
   <div id="routehint" style="font-size:18px;font-weight:bold;color:#eaf0f7;text-align:center;margin:2px 0 14px;line-height:1.35">Plan your fuel stops below.</div>
@@ -388,7 +618,7 @@
       <div id="predrow" onclick="closeSettings();openFc()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:none;align-items:center">
         <span><b>Tomorrow's prediction</b><small style="display:block;color:#9fb4ce;margin-top:2px">What we expect fuel to do tomorrow</small></span>
       </div>
-      <div onclick="closeSettings();openNews()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
+      <div id="histrow" onclick="closeSettings();openNews()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
         <span><b>History of changes</b><small style="display:block;color:#9fb4ce;margin-top:2px">Everything that's been updated, newest first</small></span>
         <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <button class="go" style="padding:10px;margin-top:14px" onclick="closeSettings()">Done</button>
@@ -403,14 +633,22 @@
     </div>
   </div>
   <div id="stops"></div>
+  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
   <div id="mainbtns">
   <div class="btnrow">
     <button class="go" onclick="addStop()">+ Add stop</button>
     <button class="go" onclick="findFuel()">Find fuel</button>
+    <button class="bluebtn" onclick="optimizeStops()">Optimize</button>
   </div>
   <div class="btnrow">
-    <button class="addbtn" style="border-color:#3ab54a;color:#9fe0a8" onclick="askNear()">⛽ Fuel near me</button>
-    <a id="gmaps" class="addbtn off" target="_blank" rel="noopener" onclick="return gmapsTap()">🗺 Map full route</a>
+    <button class="bluebtn" onclick="askNear()" aria-label="Fuel near me" title="Fuel near me"><svg viewBox="0 0 44 44" width="50" height="50"><circle cx="22" cy="22" r="20" fill="none" stroke="#f26a21" stroke-width="2.6"/>
+<rect x="14" y="12" width="12" height="20" rx="2" fill="#3ab54a"/><rect x="16.5" y="15" width="7" height="5" rx="1" fill="#0c1a30"/>
+<rect x="12.5" y="31" width="15" height="2.6" rx="1" fill="#3ab54a"/>
+<path d="M26 17 h2.5 a2 2 0 0 1 2 2 v8 a1.6 1.6 0 0 0 3.2 0 v-9 l-2.6-3" fill="none" stroke="#3ab54a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a id="gmaps" class="bluebtn off" target="_blank" rel="noopener" onclick="return gmapsTap()" aria-label="Map" title="Map"><svg viewBox="0 0 40 40" width="48" height="48"><path d="M6 11 l9-3 l10 3 l9-3 v21 l-9 3 l-10-3 l-9 3 z" fill="none" stroke="#9fc0e8" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M15 8 v21 M25 11 v21" stroke="#9fc0e8" stroke-width="1.6"/>
+<path d="M20 26 c-4-5-6-7.5-6-10.5 a6 6 0 0 1 12 0 c0 3-2 5.5-6 10.5z" fill="#f26a21" stroke="#0c1a30" stroke-width="1.2"/><circle cx="20" cy="15.5" r="2.2" fill="#0c1a30"/></svg></a>
+    <button class="bluebtn" style="color:#ff2a2a;font-weight:800;border-color:#d11f1f" onclick="askClear()">Clear</button>
   </div>
   <div id="nearpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNear()">
     <div class="popbox">
@@ -420,10 +658,6 @@
       <div class="btnrow"><button class="go" onclick="fuelNear(15)">15 mi</button><button class="go" onclick="fuelNear(25)">25 mi</button></div>
       <button class="addbtn" style="margin:0" onclick="closeNear()">Cancel</button>
     </div>
-  </div>
-  <div class="btnrow">
-    <button class="addbtn" style="border-color:#4a7fb5;color:#9fc0e8" onclick="optimizeStops()">⇅ Optimize route</button>
-    <button class="addbtn" style="border-color:#b55a4a;color:#e8a99f" onclick="askClear()">✕ Clear data</button>
   </div>
   <div id="clearpop" class="popwrap" style="display:none">
     <div class="popbox">
@@ -435,6 +669,7 @@
       </div>
     </div>
   </div>
+  <button id="planbtn" onclick="openPlan()"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button>
   </div>
   <div id="opthint"></div>
 </div>
@@ -447,29 +682,180 @@
 
 <script>
 const stopsEl = document.getElementById('stops');
+const HERE='Your location';
+let HERE_LL='';
+
+// ---------- Row buttons: square move button (long orange arrows) + orange trash can ----------
+const TRASH_SVG='<svg class="trsvg" width="26" height="30" viewBox="0 0 30 34" aria-hidden="true">'+
+  '<g class="lid"><rect x="2" y="5" width="26" height="4" rx="1.5" fill="#f26a21"/>'+
+  '<rect x="11" y="1.5" width="8" height="4" rx="1.2" fill="none" stroke="#f26a21" stroke-width="2"/></g>'+
+  '<path d="M5 11h20l-1.8 20.2a2 2 0 0 1-2 1.8H8.8a2 2 0 0 1-2-1.8z" fill="#f26a21"/>'+
+  '<path d="M11 15v14M15 15v14M19 15v14" stroke="#9c3f0c" stroke-width="1.6" stroke-linecap="round"/></svg>';
+function moveSVG(up,down){
+  const a='stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"';
+  const u=up?'<path d="M14 30V9" '+a+'/><path d="M8 15l6-7 6 7" '+a+'/>':'';
+  const d=down?'<path d="M26 8v21" '+a+'/><path d="M20 23l6 7 6-7" '+a+'/>':'';
+  const shift=(up&&down)?'':(up?'translate(6 0)':'translate(-6 0)');
+  return '<svg width="36" height="34" viewBox="0 0 40 38" aria-hidden="true"><g transform="'+shift+'">'+u+d+'</g></svg>';
+}
+// only show the arrows that work: top row down only, bottom row up only, middle rows both
+function setMoveIcon(r,i,n){
+  const b=r.querySelector('.mvbtn'); if(!b) return;
+  const up=i>0, down=i<n-1;
+  b.dataset.up=up?'1':''; b.dataset.dn=down?'1':'';
+  b.style.visibility=(up||down)?'':'hidden';
+  b.innerHTML=moveSVG(up,down);
+}
+function stopName(row){
+  const v=(row.querySelector('input').value||'').trim();
+  if(v) return v.split(',')[0].trim();
+  return '';
+}
+let MV={row:null,list:null,after:null};
+function openMove(row,list,after){
+  const pop=document.getElementById('mvpop'); if(pop.classList.contains('show')) return;
+  const b=row.querySelector('.mvbtn'), canUp=!!b.dataset.up, canDn=!!b.dataset.dn;
+  MV={row,list,after};
+  // start and end rows only move one way: just do it, no pop-up
+  if(canUp&&!canDn){ doMove(-1); return; }
+  if(canDn&&!canUp){ doMove(1); return; }
+  const nm=stopName(row);
+  document.getElementById('mvtitle').textContent=nm?('Move '+nm):'Move this stop';
+  // sit off to the right, level with the row, so the city name stays in view
+  const r=row.getBoundingClientRect(), box=pop.querySelector('.mvbox');
+  pop.classList.add('show');
+  const h=box.offsetHeight;
+  box.style.top=Math.max(8,Math.min(r.top,innerHeight-h-8))+'px';
+}
+// press and hold the city box, then slide it up or down
+function enableDrag(row,list,after){
+  const fw=row.querySelector('.fieldwrap'), input=row.querySelector('input');
+  let timer=null, armed=false, active=false, sx=0, sy=0, grab=0;
+  const place=y=>{
+    row.style.transform='none';
+    const nat=row.getBoundingClientRect();
+    const center=y-grab+nat.height/2;
+    const prev=row.previousElementSibling, next=row.nextElementSibling;
+    if(prev){ const pr=prev.getBoundingClientRect(); if(center<pr.top+pr.height/2){ list.insertBefore(row,prev); after(); } }
+    if(next){ const nr=next.getBoundingClientRect(); if(center>nr.top+nr.height/2){ list.insertBefore(next,row); after(); } }
+    const top=row.getBoundingClientRect().top;
+    row.style.transform='translateY('+(y-grab-top)+'px)';
+  };
+  const begin=()=>{
+    if(TOSSING||list.children.length<2) return;
+    active=true; input.blur(); try{ getSelection().removeAllRanges(); }catch(e){}
+    const sug=row.querySelector('.suggest'); if(sug) sug.style.display='none';
+    if(navigator.vibrate) navigator.vibrate(15);
+    grab=sy-row.getBoundingClientRect().top;
+    row.classList.add('dragging'); document.body.classList.add('rowdrag');
+  };
+  const start=(x,y)=>{ sx=x; sy=y; armed=true; clearTimeout(timer); timer=setTimeout(()=>{ if(armed) begin(); },420); };
+  const move=(x,y,e)=>{
+    if(active){ if(e&&e.cancelable) e.preventDefault(); place(y); return; }
+    if(armed&&Math.hypot(x-sx,y-sy)>10){ armed=false; clearTimeout(timer); }
+  };
+  const end=e=>{
+    clearTimeout(timer); armed=false;
+    if(!active) return;
+    active=false; if(e&&e.cancelable) e.preventDefault();
+    row.style.transform='';
+    row.classList.remove('dragging'); document.body.classList.remove('rowdrag');
+    after();
+    row.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'});
+  };
+  fw.addEventListener('touchstart',e=>{ if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY); },{passive:true});
+  fw.addEventListener('touchmove',e=>move(e.touches[0].clientX,e.touches[0].clientY,e),{passive:false});
+  fw.addEventListener('touchend',end); fw.addEventListener('touchcancel',end);
+  fw.addEventListener('mousedown',e=>{
+    if(e.button) return; start(e.clientX,e.clientY);
+    const mm=ev=>move(ev.clientX,ev.clientY,ev);
+    const mu=ev=>{ removeEventListener('mousemove',mm); removeEventListener('mouseup',mu); end(ev); };
+    addEventListener('mousemove',mm); addEventListener('mouseup',mu);
+  });
+  fw.addEventListener('contextmenu',e=>{ if(armed||active) e.preventDefault(); });
+}
+function closeMove(){ document.getElementById('mvpop').classList.remove('show'); }
+function doMove(dir){
+  const {row,list,after}=MV; closeMove(); if(!row) return;
+  if(dir<0){ const p=row.previousElementSibling; if(p) list.insertBefore(row,p); }
+  else { const nx=row.nextElementSibling; if(nx) list.insertBefore(nx,row); }
+  if(after) after();
+  row.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'});
+}
+// trash can: lid pops up, the city name flies in, lid shuts, row folds away
+let TOSSING=false;
+function tossRow(row,keepRow,done){
+  if(TOSSING) return; TOSSING=true;
+  const finish=()=>{ TOSSING=false; done(); };
+  const input=row.querySelector('input'), btn=row.querySelector('.remove');
+  const lid=btn.querySelector('.lid'), can=btn.querySelector('svg');
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches || !lid.animate){ finish(); return; }
+  const txt=(input.value||'').trim();
+  lid.animate([{transform:'none'},{transform:'translate(7px,-10px) rotate(28deg)',offset:.25},
+               {transform:'translate(7px,-10px) rotate(28deg)',offset:.7},{transform:'none'}],
+              {duration:txt?1300:700,easing:'ease-in-out'});
+  if(txt){
+    const fr=input.getBoundingClientRect(), br=btn.getBoundingClientRect();
+    const fly=document.createElement('div'); fly.className='tossfly'; fly.textContent=txt;
+    fly.style.left=(fr.left+3)+'px'; fly.style.top=(fr.top+fr.height/2-16)+'px';
+    document.body.appendChild(fly); input.style.color='transparent';
+    const fw=fly.getBoundingClientRect().width;
+    const tx=(br.left+br.width/2)-(fr.left+3)-fw/2, ty=(br.top+br.height/2)-(fr.top+fr.height/2);
+    fly.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:'translate('+tx*.55+'px,'+(ty-46)+'px) scale(.75) rotate(-8deg)',opacity:1,offset:.45},
+      {transform:'translate('+tx+'px,'+(ty-14)+'px) scale(.35) rotate(10deg)',opacity:1,offset:.75},
+      {transform:'translate('+tx+'px,'+(ty+6)+'px) scale(.12) rotate(14deg)',opacity:0}
+    ],{duration:800,delay:220,easing:'cubic-bezier(.3,.6,.4,1)',fill:'forwards'});
+    setTimeout(()=>{ fly.remove(); },1050);
+  }
+  can.animate([{transform:'scale(1)'},{transform:'scale(1.12,.9)'},{transform:'scale(1)'}],
+              {duration:260,delay:txt?1150:560,easing:'ease-out'});
+  setTimeout(()=>{
+    input.style.color='';
+    if(keepRow){ finish(); return; }
+    row.style.overflow='hidden';
+    row.animate([{opacity:1,height:row.offsetHeight+'px'},{opacity:0,height:'0px'}],{duration:280,easing:'ease-in',fill:'forwards'})
+       .onfinish=finish;
+  },txt?1450:850);
+}
 
 function makeRow(value){
   const box=document.createElement('div');
   box.className='stop';
   box.innerHTML =
-    '<div class="arrows"><button class="up">\u25b2</button><button class="dn">\u25bc</button></div>'+
+    '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
     '<div class="fieldwrap"><input type="text" autocomplete="off">'+
     '<div class="suggest" style="display:none"></div>'+
     '<div class="legmi"></div></div>'+
-    '<button class="remove">\u00d7</button>';
+    '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
   const input=box.querySelector('input');
   const sug=box.querySelector('.suggest');
   if(value) input.value=value;
+  markLoc(input);
   let timer;
   input.addEventListener('input',()=>{
     clearTimeout(timer);
+    if(pickGuard(input)){ sug.style.display='none'; return; }
+    markLoc(input);
     const q=input.value.trim();
-    if(q.length<2){ sug.style.display='none'; return; }
+    if(q.length<2){ locOnly(sug,input); return; }
     timer=setTimeout(()=>lookup(q,sug,input),180);
   });
-  box.querySelector('.remove').onclick=()=>{ box.remove(); relabel(); };
-  box.querySelector('.up').onclick=()=>{ const p=box.previousElementSibling; if(p) stopsEl.insertBefore(box,p); relabel(); };
-  box.querySelector('.dn').onclick=()=>{ const nx=box.nextElementSibling; if(nx) stopsEl.insertBefore(nx,box); relabel(); };
+  input.addEventListener('focus',()=>{
+    if(input.value===HERE){ setTimeout(()=>{ try{ input.select(); }catch(e){} },0); return; }
+    if(input.value.trim().length<2) locOnly(sug,input);
+  });
+  input.addEventListener('blur',()=>setTimeout(()=>{
+    sug.style.display='none';
+    if(stopsEl.children.length===1 && input.value.trim()) growStart(false);
+  },250));
+  box.querySelector('.remove').onclick=()=>{
+    const keep=stopsEl.children.length<=2;
+    tossRow(box,keep,()=>{ if(keep){ input.value=''; markLoc(input); } else box.remove(); relabel(); saveRoute(); });
+  };
+  box.querySelector('.mvbtn').onclick=()=>openMove(box,stopsEl,relabel);
+  enableDrag(box,stopsEl,relabel);
   return box;
 }
 
@@ -483,13 +869,55 @@ function addStop(){
 }
 
 function relabel(){
-  const rows=[...stopsEl.children];
+  const rows=[...stopsEl.children], n=rows.length;
   rows.forEach((r,i)=>{
     const inp=r.querySelector('input');
-    inp.placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : (i===rows.length-1 ? 'End city' : 'Stop '+i);
-    r.querySelector('.up').disabled = (i===0);
-    r.querySelector('.dn').disabled = (i===rows.length-1);
+    inp.placeholder = n===1 ? 'Destination' : i===0 ? 'Start city' : (i===n-1 ? 'End city' : 'Stop '+i);
+    markLoc(inp);
+    setMoveIcon(r,i,n);
+    const mb=r.querySelector('.mvbtn'); if(mb) mb.style.display=n===1?'none':'';
   });
+  const rt=document.getElementById('routetools'); if(rt) rt.style.display=n>=2?'':'none';
+}
+// ---- "Use my location": a real value that rides in its box, offered once ----
+const PIN_SVG='<svg viewBox="0 0 16 20" width="15" height="19" aria-hidden="true"><path d="M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z" fill="#f26a21"/><circle cx="8" cy="7.5" r="2.4" fill="#13273f"/></svg>';
+function markLoc(inp){ inp.classList.toggle('isloc', inp.value===HERE); }
+function locUsed(except){ return [...stopsEl.querySelectorAll('input')].some(i=>i!==except && i.value===HERE); }
+function locOption(sug,input){
+  if(!input.closest('#stops') || input.value===HERE || locUsed(input)) return false;
+  const d=document.createElement('div'); d.className='useloc';
+  d.innerHTML=PIN_SVG+'<span>Use my location</span>';
+  d.onclick=()=>{ input.value=HERE; markLoc(input); sug.style.display='none'; input.blur(); afterPick(input); };
+  sug.insertBefore(d,sug.firstChild); return true;
+}
+function locOnly(sug,input){ sug.innerHTML=''; sug.style.display=locOption(sug,input)?'block':'none'; }
+function growStart(focus){
+  if(stopsEl.children.length!==1) return;
+  const r=makeRow(''); stopsEl.insertBefore(r,stopsEl.firstChild); relabel(); saveRoute();
+  if(focus) r.querySelector('input').focus();
+}
+function afterPick(input){
+  if(!input.closest('#stops')) return;
+  saveRoute();
+  if(stopsEl.children.length===1 && input.value.trim()) growStart(true);
+}
+// Before routing: a blank start (or a lone destination) means "from where I am now" - shown, not hidden.
+function prepStart(){
+  const rows=[...stopsEl.children];
+  if(!rows.some(r=>r.querySelector('input').value.trim())) return;
+  if(rows.length===1){ const v=rows[0].querySelector('input').value; stopsEl.insertBefore(makeRow(v===HERE||locUsed()?'':HERE),rows[0]); relabel(); saveRoute(); return; }
+  const first=rows[0].querySelector('input');
+  if(!first.value.trim() && !locUsed()){ first.value=HERE; relabel(); saveRoute(); }
+}
+function reverseRoute(){
+  const rows=[...stopsEl.children]; if(rows.length<2) return;
+  prepStart();
+  const now=[...stopsEl.children];
+  now.reverse().forEach(r=>stopsEl.appendChild(r));
+  now.forEach(r=>{ const m=r.querySelector('.legmi'); if(m) m.textContent=''; });
+  relabel(); saveRoute(); gmapsOff();
+  document.getElementById('opthint').innerHTML='';
+  now.forEach(r=>r.animate([{background:'rgba(242,106,33,.25)'},{background:'transparent'}],{duration:700,easing:'ease-out'}));
 }
 
 
@@ -511,6 +939,33 @@ function lookup(q, sug, input) {
     }).catch(()=>{ sug.style.display='none'; });
   });
 }
+// Picking a city: let the phone keyboard finish its half-typed word FIRST, then write the full name,
+// and guard it for a moment so a late keyboard commit ("Los") can't overwrite "Los Angeles, CA".
+function pickGuard(input){
+  const p=input._pick; if(!p||Date.now()>p.until) return false;
+  const v=input.value.trim().toLowerCase(), L=p.label.toLowerCase(), t=p.typed;
+  if(v===L) return false;
+  // the keyboard dropping back what was typed before the pick ("Sain", "Los") - or any piece of it
+  const typedBack = !v || (t && (v===t || t.startsWith(v) || v.startsWith(t)));
+  if(typedBack || L.startsWith(v)){ input.value=p.label; return true; }
+  return false;
+}
+function pickCity(input,sug,label){
+  const typed=input.value.trim().toLowerCase();
+  sug.style.display='none';
+  try{ input.blur(); }catch(e){}
+  input.value=label;
+  input._pick={label:label, typed:typed, until:Date.now()+1600};
+  const inStops=!!input.closest('#stops');
+  const resave=()=>{ try{ inStops?saveRoute():planSave(); }catch(e){} };
+  if(inStops && typeof markLoc==='function') markLoc(input);
+  setTimeout(()=>{
+    pickGuard(input);
+    if(inStops && typeof afterPick==='function') afterPick(input);
+    else resave();
+  },120);
+  [300,600,1000,1500].forEach(ms=>setTimeout(()=>{ if(pickGuard(input)) resave(); },ms));
+}
 function show(items,q,sug,input){
   sug.innerHTML='';
   const seen=new Set(), rows=[];
@@ -524,10 +979,11 @@ function show(items,q,sug,input){
   rows.sort((a,b)=>a.starts-b.starts||a.rank-b.rank||a.label.localeCompare(b.label));
   rows.slice(0,8).forEach(r=>{
     const d=document.createElement('div'); d.textContent=r.label;
-    d.onclick=()=>{ input.value=r.label; sug.style.display='none'; };
+    d.onclick=()=>pickCity(input,sug,r.label);
     sug.appendChild(d);
   });
-  sug.style.display=rows.length?'block':'none';
+  const hasLoc=(typeof locOption==='function') && locOption(sug,input);
+  sug.style.display=(rows.length||hasLoc)?'block':'none';
 }
 const STATES={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY","District of Columbia":"DC"};
 
@@ -549,15 +1005,15 @@ function doClear(){
   try{ localStorage.removeItem(SAVEKEY); }catch(e){}
   stopsEl.innerHTML='';
   stopsEl.appendChild(makeRow(''));
-  stopsEl.appendChild(makeRow(''));
   relabel();
+  document.getElementById('opthint').innerHTML='';
   document.getElementById('results').innerHTML='';
   const bar=document.getElementById('bar'); if(bar) bar.style.display='none';
   gmapsOff();
 }
 (function(){
   const saved=loadRoute();
-  const vals=(saved&&saved.stops.length>=2)?saved.stops:['',''];
+  const vals=(saved&&saved.stops.some(v=>v&&v.trim()))?saved.stops:[''];
   vals.forEach(v=>stopsEl.appendChild(makeRow(v)));
   { const mm=document.getElementById('maxmi'); let v=null;
     try{ v=localStorage.getItem('fps_maxmi'); }catch(e){}
@@ -789,12 +1245,11 @@ function shortPlace(dn){
   for(const p of parts){ if(abbr[p]){ st=abbr[p]; break; } }
   return st? city+', '+st : city;
 }
-const HERE='Your location';
 function getHere(){
   return new Promise((ok,fail)=>{
     if(!navigator.geolocation){ fail(new Error('This device can\'t share its location. Type a start city')); return; }
     navigator.geolocation.getCurrentPosition(
-      p=>ok([p.coords.longitude, p.coords.latitude, HERE]),
+      p=>{ HERE_LL=p.coords.latitude+','+p.coords.longitude; ok([p.coords.longitude, p.coords.latitude, HERE]); },
       e=>fail(new Error(e.code===1
         ? 'Location is turned off for this app. Allow location, or type a start city'
         : 'Couldn\'t get your location. Type a start city')),
@@ -842,6 +1297,9 @@ function ding(){
     });
   }catch(e){}
 }
+// Loading scene. setBar(pct) tells the truck how far along the work is; it eases toward that
+// spot and creeps ahead a little while waiting so it never looks stuck. At 100 it pulls up
+// to the pump and parks, then the scene fades away.
 function setBar(pct){ const b=document.getElementById('bar'); b.style.display='block'; b.style.width=pct+'%'; }
 function hideBar(){ const b=document.getElementById('bar'); setTimeout(()=>{b.style.display='none';b.style.width='0';},500); }
 function showPop(txt,title){
@@ -889,14 +1347,15 @@ function buildGmapsBtn(){
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const fromHere=!raw[0];
   const names=raw.filter(x=>x);
-  // P = every point in order; null = the phone's current location
-  const P=(fromHere?[null]:[]).concat(names);
+  // P = every point in order; null = the phone's current location (Google uses GPS when origin is left off)
+  const P=(fromHere?[null]:[]).concat(names).map((x,k)=>x===HERE?(k===0?null:(HERE_LL||null)):x);
   const btn=document.getElementById('gmaps');
   LEGS=[];
   // Google Maps takes 10 points per route (start + 8 stops + end), so split long runs into legs
   for(let i=0;i<P.length-1;){
     const end=Math.min(i+9,P.length-1), seg=P.slice(i,end+1);
     const enc=seg.map(x=>x==null?null:encodeURIComponent(x));
+    if(enc.slice(1).some(x=>x==null)){ i=end; continue; }
     let url='https://www.google.com/maps/dir/?api=1'+(enc[0]==null?'':'&origin='+enc[0])+'&destination='+enc[enc.length-1]+'&travelmode=driving';
     const mids=enc.slice(1,-1).join('|'); if(mids) url+='&waypoints='+mids;
     LEGS.push({url:url, from:seg[0]==null?'Your location':seg[0], to:seg[seg.length-1], n:seg.length});
@@ -1028,9 +1487,9 @@ async function fuelNear(radius){
 }
 
 async function findFuel(){
+  prepStart();                                            // blank start = where the driver is now (filled in visibly)
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const inputs=raw.filter(x=>x);
-  if(!raw[0] && inputs.length>=1) inputs.unshift(HERE);   // blank start = where the driver is now
   const res=document.getElementById('results');
   const oh=document.getElementById('opthint');
   if(inputs.length<2){ oh.innerHTML='<p class="hint">Enter at least a start and an end.</p>'; return; }
@@ -1085,7 +1544,7 @@ function flagBestPrice(){
   if(BESTFLAG_TIMER){ clearTimeout(BESTFLAG_TIMER); BESTFLAG_TIMER=null; }
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   if(!reduce){ el.classList.remove('twist'); void el.offsetWidth; el.classList.add('twist'); }
-  BESTFLAG_TIMER=setTimeout(dismissBestFlag, 15000);
+  BESTFLAG_TIMER=setTimeout(dismissBestFlag, 10000);
 }
 function dismissBestFlag(){
   const el=document.getElementById('bestflag'); if(!el) return;
@@ -1138,7 +1597,7 @@ function render(hits){
     h+='<div class="card '+bc+(i===0?' top':'')+'">'
       +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
       +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
-      +'<span class="headroads">'+roadsHTML(s,22)+'</span>'
+      +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
       +'<div class="priceline">'
       +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> $'+fmt(dOn?s.disc:s.pre)+'</span>'
@@ -1156,7 +1615,191 @@ function render(hits){
   const firstHead=res.querySelector('.stgrp button.sthead'), firstStx=firstHead?firstHead.querySelector('.stx'):null;
   if(xr&&btn&&firstHead&&firstStx){ firstHead.insertBefore(btn, firstStx); if(xr.parentNode) xr.parentNode.removeChild(xr); }
   syncExpandAllBtn();
+  wxFillCards(hits);
 }
+
+/* ---- Weather (US National Weather Service, free, no key) ---- */
+const WX_PT={}, WX_NOW={}, WX_WEEK={}; let WX_GEN=0;
+function wxKey(la,lo){ return (+la).toFixed(3)+','+(+lo).toFixed(3); }
+function wxJSON(u){ return fetch(u,{headers:{'Accept':'application/geo+json'}}).then(r=>{ if(!r.ok) throw new Error('wx '+r.status); return r.json(); }); }
+function wxPoint(la,lo){
+  const k=wxKey(la,lo);
+  if(!WX_PT[k]) WX_PT[k]=wxJSON('https://api.weather.gov/points/'+(+la).toFixed(4)+','+(+lo).toFixed(4)).then(j=>j.properties).catch(e=>{ delete WX_PT[k]; throw e; });
+  return WX_PT[k];
+}
+const WX_HR={};
+const WX_DIRS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+function wxArrow(dir,sz){
+  const i=WX_DIRS.indexOf((dir||'').trim().toUpperCase()); if(i<0) return '';
+  const to=i*22.5+180;
+  return '<svg class="wxarw" width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="transform:rotate('+(to-90)+'deg)"><path d="M2 8h9M8 4l4 4-4 4" stroke="#9fc0e8" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function wxWind(pre,dir,spd,sz){
+  const t=((dir||'')+' '+(spd||'')).trim();
+  return '\uD83D\uDEA9 '+pre+(t||'calm')+' '+wxArrow(dir,sz);
+}
+function wxPopOf(x){ return (x&&x.probabilityOfPrecipitation&&x.probabilityOfPrecipitation.value!=null)?x.probabilityOfPrecipitation.value:null; }
+function wxGetHourly(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_HR[k]) WX_HR[k]=wxPoint(s.la,s.lo).then(p=>wxJSON(p.forecastHourly)).then(j=>(j.properties.periods||[]).map(q=>({
+      iso:q.startTime||'', t:q.temperature, txt:q.shortForecast, day:q.isDaytime,
+      dir:q.windDirection||'', spd:(q.windSpeed||'').replace(' to ','-'), pop:wxPopOf(q),
+      hum:(q.relativeHumidity&&q.relativeHumidity.value!=null)?q.relativeHumidity.value:null
+    }))).catch(e=>{ delete WX_HR[k]; throw e; });
+  return WX_HR[k];
+}
+function wxGetNow(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_NOW[k]) WX_NOW[k]=wxGetHourly(s).then(H=>{
+      const q=H[0]; if(!q) throw new Error('no hourly');
+      return {t:q.t, txt:q.txt, day:q.day, dir:q.dir, spd:q.spd, wind:(q.dir+' '+q.spd).trim(), pop:q.pop, hum:q.hum};
+    }).catch(e=>{ delete WX_NOW[k]; throw e; });
+  return WX_NOW[k];
+}
+function wxGetWeek(s){
+  const k=wxKey(s.la,s.lo);
+  if(!WX_WEEK[k]) WX_WEEK[k]=wxPoint(s.la,s.lo).then(p=>wxJSON(p.forecast)).then(j=>{
+      const P=j.properties.periods||[], rows=[];
+      const pop=x=>(x&&x.probabilityOfPrecipitation&&x.probabilityOfPrecipitation.value!=null)?x.probabilityOfPrecipitation.value:null;
+      const wnd=x=>((x&&x.windDirection)||'')+' '+((x&&x.windSpeed)||'').replace(' to ','-');
+      for(let n=0;n<P.length && rows.length<7;n++){
+        const a=P[n];
+        if(a.isDaytime){ const b=P[n+1]&&!P[n+1].isDaytime?P[n+1]:null;
+          rows.push({d:a.startTime,hi:a.temperature,lo:b?b.temperature:null,txt:a.shortForecast,day:true,
+            wind:wnd(a).trim(),dir:a.windDirection||'',spd:(a.windSpeed||'').replace(' to ','-'),pop:pop(a)}); if(b) n++; }
+        else rows.push({d:a.startTime,hi:null,lo:a.temperature,txt:a.shortForecast,day:false,night:true,
+            wind:wnd(a).trim(),dir:a.windDirection||'',spd:(a.windSpeed||'').replace(' to ','-'),pop:pop(a)});
+      }
+      return rows;
+    }).catch(e=>{ delete WX_WEEK[k]; throw e; });
+  return WX_WEEK[k];
+}
+const WXI_CLOUD='M9.5 26h14a5.5 5.5 0 0 0 .7-10.95A7.5 7.5 0 0 0 10 14.2 5.9 5.9 0 0 0 9.5 26z';
+function wxSun(cx,cy,r){
+  let g='<g stroke="#ffc94a" stroke-width="2" stroke-linecap="round">';
+  for(let k=0;k<8;k++){ const t=k*Math.PI/4, c=Math.cos(t), n=Math.sin(t);
+    g+='<line x1="'+(cx+c*(r+2.5)).toFixed(1)+'" y1="'+(cy+n*(r+2.5)).toFixed(1)+'" x2="'+(cx+c*(r+5)).toFixed(1)+'" y2="'+(cy+n*(r+5)).toFixed(1)+'"/>'; }
+  return g+'</g><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#ffc94a"/>';
+}
+function wxMoon(cx,cy,r){ return '<path d="M'+(cx+r*0.35)+' '+(cy-r)+'a'+r+' '+r+' 0 1 0 '+(r*0.65)+' '+(r*1.75)+'A'+(r*0.85)+' '+(r*0.85)+' 0 0 1 '+(cx+r*0.35)+' '+(cy-r)+'z" fill="#f3e7a8"/>'; }
+function wxCloud(dx,dy,sc,fill){ return '<path d="'+WXI_CLOUD+'" fill="'+fill+'" transform="translate('+dx+' '+dy+') scale('+sc+')"/>'; }
+function wxSvg(inner){ return '<svg class="wxsvg" viewBox="0 0 32 32" aria-hidden="true">'+inner+'</svg>'; }
+function wxIcon(txt,day){
+  const t=(txt||'').toLowerCase(), night=(day===false);
+  const lit='#e9eff6', grey='#b4c3d4';
+  const drops=c=>'<g stroke="'+c+'" stroke-width="2" stroke-linecap="round"><line x1="11" y1="25" x2="9.5" y2="29"/><line x1="16.5" y1="25" x2="15" y2="29"/><line x1="22" y1="25" x2="20.5" y2="29"/></g>';
+  const top=(x,y)=>wxCloud(x,y,1,grey);
+  if(/thunder|t-storm/.test(t)) return wxSvg(top(0,-6)+'<path d="M17 18l-5 7h4l-2 6 7-9h-4l2-4z" fill="#ffd23f"/>');
+  if(/snow|blizzard|flurr/.test(t)) return wxSvg(top(0,-6)+'<g fill="#fff"><circle cx="10.5" cy="25" r="1.6"/><circle cx="16" cy="28" r="1.6"/><circle cx="21.5" cy="25" r="1.6"/></g>');
+  if(/sleet|freezing|ice/.test(t)) return wxSvg(top(0,-6)+'<g stroke="#5fb0ff" stroke-width="2" stroke-linecap="round"><line x1="11" y1="24" x2="9.5" y2="28"/><line x1="21" y1="24" x2="19.5" y2="28"/></g><circle cx="15.5" cy="27" r="1.6" fill="#fff"/>');
+  if(/rain|shower|drizzle/.test(t)) return wxSvg(top(0,-6)+drops('#5fb0ff'));
+  if(/fog|haze|smoke|dust/.test(t)) return wxSvg(wxCloud(0,-5,1,grey)+'<g stroke="#9fb4ce" stroke-width="2" stroke-linecap="round"><line x1="6" y1="24" x2="26" y2="24"/><line x1="9" y1="28" x2="23" y2="28"/></g>');
+  if(/partly|mostly sunny|mostly clear/.test(t)) return wxSvg((night?wxMoon(12,11,8.5):wxSun(11,11,5.5))+wxCloud(2,1,0.95,lit));
+  if(/cloud|overcast/.test(t)) return wxSvg(wxCloud(-4,-4,0.85,grey)+wxCloud(2,1,0.95,lit));
+  if(/wind|breez/.test(t)) return wxSvg('<g stroke="#cfe0f5" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M4 12h15a3.5 3.5 0 1 0-3.5-3.5"/><path d="M4 18h20a3.5 3.5 0 1 1-3.5 3.5"/><path d="M4 24h10"/></g>');
+  return wxSvg(night?wxMoon(16,16,9):wxSun(16,16,7));
+}
+function wxFillCards(hits){
+  const gen=++WX_GEN;
+  const pills=[].slice.call(document.querySelectorAll('#results .wx[data-i]'));
+  let n=0;
+  function next(){
+    if(gen!==WX_GEN || n>=pills.length) return;
+    const el=pills[n++], s=hits[+el.getAttribute('data-i')];
+    if(!s||s.la==null){ el.classList.add('fail'); return next(); }
+    wxGetNow(s).then(w=>{
+      if(gen!==WX_GEN) return;
+      el.classList.remove('wait');
+      el.querySelector('.ico').innerHTML=wxIcon(w.txt,w.day);
+      el.querySelector('.temp').innerHTML=w.t+'&deg;';
+      el.setAttribute('aria-label','Weather '+w.t+' degrees, '+w.txt+'. Tap for 7-day forecast');
+    }).catch(()=>{ el.classList.add('fail'); }).then(next);
+  }
+  for(let k=0;k<4;k++) next();
+}
+function wxDayName(iso,first){
+  if(first) return 'Today';
+  const d=new Date(iso); return isNaN(d)?'':['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+}
+let WX_CUR=null;
+function wxHrLabel(iso){ const h=+iso.slice(11,13); return isNaN(h)?'':(h%12||12)+' '+(h<12?'AM':'PM'); }
+function wxFullDay(date){ const d=new Date(date+'T12:00:00'); return isNaN(d)?'':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]; }
+function wxHrRow(q){
+  return '<div class="wxhr"><span class="ht">'+wxHrLabel(q.iso)+'</span><span class="htp">'+q.t+'&deg;</span>'
+    +'<span class="hw">'+wxWind('',q.dir,q.spd,12)+'</span><span class="hrn">'+(q.pop!=null?q.pop+'%':'')+'</span></div>';
+}
+function wxRadarBtn(s){
+  const u='https://www.rainviewer.com/map.html?loc='+(+s.la).toFixed(4)+','+(+s.lo).toFixed(4)+',7&oAP=1&layer=radar&sm=1&sn=1';
+  return '<a class="wxradar" href="'+u+'" target="_blank" rel="noopener" aria-label="Open radar map">'
+    +'<svg width="52" height="52" viewBox="0 0 40 40">'
+    +'<defs><linearGradient id="wxsw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3ab54a" stop-opacity="0"/><stop offset="1" stop-color="#3ab54a" stop-opacity="0.75"/></linearGradient></defs>'
+    +'<circle cx="20" cy="20" r="18" fill="#0b1b30" stroke="#2f557f" stroke-width="1.5"/>'
+    +'<circle cx="20" cy="20" r="12" fill="none" stroke="#24456b" stroke-width="1"/>'
+    +'<circle cx="20" cy="20" r="6" fill="none" stroke="#24456b" stroke-width="1"/>'
+    +'<g><path d="M20 20 L38 20 A18 18 0 0 0 29 4.6 Z" fill="url(#wxsw)"/><line x1="20" y1="20" x2="38" y2="20" stroke="#5fe06f" stroke-width="1.6"/>'
+    +'<animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="9.6s" repeatCount="indefinite"/></g>'
+    +'<circle cx="20" cy="20" r="2" fill="#5fe06f"/></svg></a>';
+}
+function openWx(i){
+  const s=LASTHITS[i]; if(!s) return;
+  let pop=document.getElementById('wxpop');
+  if(!pop){ pop=document.createElement('div'); pop.id='wxpop'; pop.addEventListener('click',function(e){ if(e.target===pop) closeWx(); }); document.body.appendChild(pop); }
+  const head='<div class="wxt"><b>'+s.c+', '+s.st+'</b><small>7-day forecast</small></div>';
+  const got='<button class="wxgot" onclick="closeWx()">Got it</button>';
+  pop.innerHTML='<div class="wxbox">'+head+'<div class="wxmsg">Getting the weather\u2026</div>'+got+'</div>';
+  pop.classList.add('on'); pop.scrollTop=0;
+  Promise.all([wxGetNow(s),wxGetWeek(s),wxGetHourly(s).catch(()=>[])]).then(r=>{
+    if(!pop.classList.contains('on')) return;
+    const w=r[0], wk=r[1], H=r[2]||[];
+    WX_CUR={s:s, days:[]};
+    const rain=(w.pop!=null?w.pop+'% chance of rain':''), hum=(w.hum!=null?'Humidity '+w.hum+'%':'');
+    let h='<div class="wxbox">'+head
+      +'<div class="wxnow"><div class="wxnowtop"><span class="wxbig">'+wxIcon(w.txt,w.day)+'</span><span class="wxnt">'+w.t+'&deg;</span></div>'
+      +'<div class="wxnowbody"><div class="wxnowtxt"><div class="wxc">'+w.txt+'</div>'
+      +'<div class="wxm">'+wxWind('Wind ',w.dir,w.spd,14)+'</div>'
+      +((rain||hum)?'<div class="wxm">'+rain+(rain&&hum?' &middot; ':'')+hum+'</div>':'')
+      +'</div>'+(s.la!=null?wxRadarBtn(s):'')+'</div></div>'
+      +'<div class="wxcolh"><span>Chance of rain</span></div>';
+    wk.forEach((d,k)=>{
+      const date=(d.d||'').slice(0,10);
+      const hrs=H.filter(q=>q.iso.slice(0,10)===date);
+      const tap=k<3 && hrs.length>0;
+      WX_CUR.days[k]={date:date, hrs:hrs};
+      const name=(d.night&&k===0?'Tonight':wxDayName(d.d,k===0));
+      h+='<div class="wxr'+(tap?' tap':'')+'" id="wxr_'+k+'"'+(tap?' role="button" onclick="wxDay('+k+')"':'')+'>'
+        +'<span class="wxd">'+name+'</span><span class="wxi">'+wxIcon(d.txt,d.day)+'</span>'
+        +'<div class="wxdd"><div class="wxtop"><span class="wxs">'+d.txt+'</span>'
+        +'<span class="wxp">'+(d.pop!=null?d.pop+'%':'')+'</span>'
+        +'<span class="wxh">'+(d.hi!=null?d.hi+'&deg;':'')+'</span><span class="wxl">'+(d.lo!=null?d.lo+'&deg;':'')+'</span></div>'
+        +((d.dir||d.spd)?'<div class="wxwind">'+wxWind('',d.dir,d.spd,14)+'</div>':'')+'</div>'
+        +'<span class="wxchev">'+(tap?'\u203A':'')+'</span></div>';
+      if(tap){
+        const full=(k===0?'Today':wxFullDay(date));
+        h+='<div class="wxhp"><div class="wxhph"><span>'+full+', every 2 hours</span><span>Chance of rain</span></div>'
+          +hrs.filter((q,j)=>j%2===0).map(wxHrRow).join('')
+          +'<button class="wxhbar" onclick="wxHourly('+k+')">For an hour-by-hour view, tap here</button></div>';
+      }
+    });
+    pop.innerHTML=h+got+'</div>';
+  }).catch(()=>{
+    if(pop.classList.contains('on')) pop.innerHTML='<div class="wxbox">'+head+'<div class="wxmsg">Weather isn\u2019t available right now. Try again in a minute.</div>'+got+'</div>';
+  });
+}
+function wxDay(k){ const r=document.getElementById('wxr_'+k); if(r) r.classList.toggle('open'); }
+function wxHourly(k){
+  if(!WX_CUR||!WX_CUR.days[k]) return;
+  const s=WX_CUR.s, d=WX_CUR.days[k];
+  let el=document.getElementById('wxhr');
+  if(!el){ el=document.createElement('div'); el.id='wxhr'; el.addEventListener('click',function(e){ if(e.target===el) closeWxHr(); }); document.body.appendChild(el); }
+  const full=(k===0?'Today':wxFullDay(d.date));
+  el.innerHTML='<div class="wxbox"><div class="wxt"><b>'+full+' &middot; '+s.c+', '+s.st+'</b><small>Hour-by-hour</small></div>'
+    +'<div class="wxhr wxhh"><span class="ht">Time</span><span class="htp">Temp</span><span class="hw">Wind</span><span class="hrn">Chance of rain</span></div>'
+    +d.hrs.map(wxHrRow).join('')
+    +'<button class="wxgot" onclick="closeWxHr()">Got it</button></div>';
+  el.classList.add('on'); el.scrollTop=0;
+}
+function closeWxHr(){ const el=document.getElementById('wxhr'); if(el) el.classList.remove('on'); }
+function closeWx(){ closeWxHr(); const pop=document.getElementById('wxpop'); if(pop) pop.classList.remove('on'); }
 function toggleState(st){
   const g=document.getElementById('stg_'+st); if(!g) return;
   const open=g.classList.toggle('open');
@@ -1379,33 +2022,68 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
-  { date:'2026-10-05', items:[
-    'The best price stands out at the top with its own orange banner and trophy',
-    'Details banner shows amenities with green checks, and only lists what the stop actually has',
-    'Pick which amenities show on the banner in Settings (up to 4)',
-    'Show all services right from the details banner',
-    'Find fuel opens your stops on their own page, so the route list has room to grow',
-    'The best price on your route is pinned at the top of the list',
-    'Interstate and U.S. highway shields with the exit number on every stop',
-    'The Details banner shows showers, laundry, food and RV dump at a glance',
-    'A big Back button at the bottom of every page',
-    '"Optimize" is now "Optimize route"',
-    'Long routes open in Google Maps in legs of up to 10 stops',
-    'New opening screen: the gauge needle sweeps up, then "Fuel savings maximized."',
-    'Stops are grouped by state again, in the order you drive through them, cheapest first in each state',
-    'A "Cheapest overall" tag marks the best price on the whole route',
-    'Buttons tidied up: all the same size, with more room under the city boxes',
-    '"See full route in Google Maps" is now "Map full route," next to Fuel near me',
-    'Max miles off route moved into Settings',
-    'Cleaner header: the gauge in the corner, prices on two lines, and a bigger Settings gear',
-    'The arrows and X\'s are orange now and line up with the city boxes',
-    'This page! Find it anytime in Settings under History of changes'
+  { date:'2026-10-08', items:[
+    'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
+    'Locked-out screen now has a Request access button that opens a sign-up form',
+    'Request access form now opens right inside the app instead of jumping to a Google page',
+    'Each person\u2019s link now works on their own phone only'
+  ]},
+  { date:'2026-10-07', items:[
+    'The \u201cWhat\u2019s new\u201d tag reads on one line again',
+    'Fixed: picking a city like \u201cSt. Louis, MO\u201d after typing \u201cSain\u201d keeps the full name',
+    'The \u201cWhat\u2019s new\u201d tag is centered between the FPS box and the title, halfway down the header',
+    'The Expand all button on your fuel stops now sits on the right, next to the round arrow button',
+    'The \u201cWhat\u2019s new\u201d tag moved over next to the FPS box',
+    'Tapping the \u201cWhat\u2019s new\u201d tag now opens Settings and goes straight into this list',
+    'Fresh start: from here on, every change to the app is listed on this page',
+    'The \u201cWhat\u2019s new\u201d tag is back on the home screen. Tap it to see this list',
+    'You start with one \u201cDestination\u201d box. Pick a city and a \u201cStart city\u201d box appears above it',
+    '\u201cUse my location\u201d is now the first choice in the city list, with an orange pin',
+    'Your location stays \u201cYour location\u201d wherever you move it. It no longer turns into \u201cStop 1\u201d',
+    'New Reverse route button flips your whole trip with one tap',
+    'Picking a city from the list keeps the whole name, like \u201cLos Angeles, CA,\u201d not just \u201cLos\u201d',
+    'If you leave the start blank, Find fuel fills in \u201cYour location\u201d so you can see where it\u2019s starting from',
+    'Load planner button now reads \u201cPlan your load stops,\u201d with \u201c(no fuel report produced)\u201d inside it',
+    'The truck loading animation is gone. The orange progress bar is back'
   ]}
 ];
-const APP_VER = CHANGELOG[0].date+'#'+CHANGELOG[0].items.length;  // same-day updates still light the tag
+const APP_VER = (()=>{ const t=JSON.stringify(CHANGELOG); let h=0; for(let k=0;k<t.length;k++) h=(h*31+t.charCodeAt(k))|0;
+  return CHANGELOG[0].date+'#'+(h>>>0).toString(36); })();  // any change to the history lights the tag again
 function newsDate(d){
   const m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return d;
   return new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+// Center the tag between the FPS box and the "F" in Fuel, and halfway down the header. Measured live, so any phone size works.
+function placeTag(){
+  const tag=document.querySelector('header .newtag'), hd=document.querySelector('header'),
+        mono=document.querySelector('header .fpsmono.corner'), h1=document.querySelector('header h1');
+  if(!tag||!hd||!mono||!h1||getComputedStyle(tag).display==='none') return;
+  const H=hd.getBoundingClientRect(), M=mono.getBoundingClientRect();
+  const r=document.createRange(); r.selectNodeContents(h1); const F=r.getBoundingClientRect().left;
+  // one line, as big as fits between the left edge and the "F" (never bigger than 15px, never under 9.5px)
+  const room=F-8-(H.left+6);
+  tag.style.fontSize='15px';
+  for(let fs=15; fs>9.5 && tag.offsetWidth>room; fs-=0.5) tag.style.fontSize=fs+'px';
+  const w=tag.offsetWidth, h=tag.offsetHeight;
+  let cx=(M.right+F)/2; cx=Math.min(cx, F-8-w/2); cx=Math.max(cx, H.left+6+w/2);
+  let cy=H.height/2;   cy=Math.max(cy, (M.bottom-H.top)+6+h/2);
+  tag.style.setProperty('left',(cx-H.left-w/2)+'px','important');
+  tag.style.setProperty('top',(cy-h/2)+'px','important');
+}
+addEventListener('load',placeTag); addEventListener('resize',placeTag);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(placeTag);
+setTimeout(placeTag,300); setTimeout(placeTag,1500);
+function tagTap(){
+  try{ localStorage.setItem('fps_seen_ver', APP_VER); }catch(e){}
+  document.body.classList.remove('has-new');
+  openSettings();
+  setTimeout(()=>{
+    const r=document.getElementById('histrow'); if(!r) return;
+    r.scrollIntoView({block:'center',behavior:'smooth'});
+    r.animate([{boxShadow:'0 0 0 0 rgba(242,106,33,0)'},{boxShadow:'0 0 0 3px #f26a21'},{boxShadow:'0 0 0 0 rgba(242,106,33,0)'}],
+              {duration:700,easing:'ease-in-out'});
+    setTimeout(()=>{ closeSettings(); openNews(); },750);   // Settings, then straight into the history list
+  },200);
 }
 function openNews(){
   let h='<div class="newswrap"><h2>What\'s new</h2><div class="sub">Changes to Fuel Price Saver, newest first</div>';
@@ -1426,6 +2104,16 @@ function openNews(){
   if(seen!==APP_VER) document.body.classList.add('has-new');
 })();
 function stepBack(){
+  if(document.body.classList.contains('on-trip')){
+    document.body.classList.remove('on-trip');
+    document.getElementById('trippop').classList.remove('show');
+    return true;
+  }
+  if(document.body.classList.contains('on-plan')){
+    document.body.classList.remove('on-plan');
+    document.getElementById('planpop').classList.remove('show');
+    return true;
+  }
   if(document.body.classList.contains('on-news')){
     document.body.classList.remove('on-news');
     return true;
@@ -1482,12 +2170,182 @@ window.addEventListener('popstate', function(){
 });
 history.replaceState({app:0}, '');
 
+// ---------- Trip Summary ----------
+function roadName(r){
+  return r.replace(/^I\s+/,'I-').replace(/;\s*I\s+/g,' / I-').replace(/;\s*/g,' / ');
+}
+function legRoads(lg){
+  // add up miles on each road in this leg, keep the roads in driving order
+  const order=[], miles={};
+  (lg.steps||[]).forEach(st=>{
+    const r=(st.ref||'').trim(); if(!r) return;
+    const k=roadName(r);
+    if(!(k in miles)){ miles[k]=0; order.push(k); }
+    miles[k]+=st.distance/1609;
+  });
+  let out=order.filter(k=>miles[k]>=5);
+  if(!out.length && lg.summary) out=lg.summary.split(',').map(x=>x.trim()).filter(Boolean);
+  return out.map(k=>'<b>'+esc(k)+'</b>'+(miles[k]?' '+Math.round(miles[k])+' mi':'')).join(' \u2192 ');
+}
+function splitPlace(name){
+  const m=name.match(/^(.*),\s*([A-Z]{2})$/);
+  return m?[m[1],m[2]]:[name,''];
+}
+// ---------- Trip planner (its own drop list; shares only the routing engine) ----------
+Object.defineProperty(window,'planEl',{get:()=>document.getElementById('planstops')});
+function planRow(value){
+  const box=document.createElement('div');
+  box.className='stop';
+  box.innerHTML =
+    '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
+    '<div class="fieldwrap"><input type="text" autocomplete="off">'+
+    '<div class="suggest" style="display:none"></div><div class="legmi"></div></div>'+
+    '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
+  const input=box.querySelector('input'), sug=box.querySelector('.suggest');
+  if(value) input.value=value;
+  let timer;
+  input.addEventListener('input',()=>{
+    clearTimeout(timer);
+    if(pickGuard(input)){ sug.style.display='none'; planSave(); return; }
+    planSave();
+    const q=input.value.trim();
+    if(q.length<2){ sug.style.display='none'; return; }
+    timer=setTimeout(()=>lookup(q,sug,input),180);
+  });
+  input.addEventListener('change',planSave);
+  box.querySelector('.remove').onclick=()=>{ const keep=planEl.children.length<=2;
+    tossRow(box,keep,()=>{ if(keep){ input.value=''; } else { box.remove(); } planLabel(); planSave(); }); };
+  box.querySelector('.mvbtn').onclick=()=>openMove(box,planEl,()=>{ planLabel(); planSave(); });
+  enableDrag(box,planEl,()=>{ planLabel(); planSave(); });
+  return box;
+}
+function planLabel(){
+  const rows=[...planEl.children];
+  rows.forEach((r,i)=>{
+    r.querySelector('input').placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : 'Drop '+i;
+    setMoveIcon(r,i,rows.length);
+  });
+}
+function planVals(){ return [...planEl.querySelectorAll('input')].map(i=>i.value.trim()); }
+function planSave(){ try{ localStorage.setItem('fps_plan', JSON.stringify(planVals())); }catch(e){} }
+function planFill(vals){
+  planEl.innerHTML='';
+  vals.forEach(v=>planEl.appendChild(planRow(v)));
+  while(planEl.children.length<2) planEl.appendChild(planRow(''));
+  planLabel();
+}
+function openPlan(){
+  if(!planEl.children.length){
+    let v=[]; try{ v=JSON.parse(localStorage.getItem('fps_plan')||'[]'); }catch(e){}
+    planFill(Array.isArray(v)?v:[]);
+  }
+  document.getElementById('planmsg').innerHTML='';
+  let hideIntro=false; try{ hideIntro=localStorage.getItem('fps_plan_intro_hide')==='1'; }catch(e){}
+  document.getElementById('pihide').checked=false;
+  document.getElementById('planintro').classList.toggle('show',!hideIntro);
+  enterScreen(); document.getElementById('planpop').classList.add('show'); document.body.classList.add('on-plan');
+  document.getElementById('planpop').scrollTop=0;
+}
+function closePlanIntro(){
+  if(document.getElementById('pihide').checked){ try{ localStorage.setItem('fps_plan_intro_hide','1'); }catch(e){} }
+  document.getElementById('planintro').classList.remove('show');
+}
+function planAdd(){ const r=planRow(''); planEl.appendChild(r); planLabel(); r.querySelector('input').focus(); }
+function planInputs(){
+  const raw=planVals(), out=raw.filter(x=>x);
+  if(!raw[0] && out.length>=1) out.unshift(HERE);
+  return out;
+}
+function planMsg(t){ document.getElementById('planmsg').innerHTML=t?'<p class="hint">'+t+'</p>':''; }
+// Best drop order: start stays put, every drop (including the last) can move.
+function bestOrder(D){
+  const n=D.length, drops=[]; for(let i=1;i<n;i++) drops.push(i);
+  const cost=ord=>{ let c=0,prev=0; for(const k of ord){ c+=D[prev][k]; prev=k; } return c; };
+  if(drops.length<=8){
+    let best=null,bc=1e18;
+    const perm=(a,l)=>{ if(l===a.length){ const c=cost(a); if(c<bc){bc=c;best=a.slice();} return; }
+      for(let i=l;i<a.length;i++){ [a[l],a[i]]=[a[i],a[l]]; perm(a,l+1); [a[l],a[i]]=[a[i],a[l]]; } };
+    perm(drops.slice(),0); return best;
+  }
+  // many drops: nearest-next, then untangle with 2-opt
+  let ord=[], left=new Set(drops), cur=0;
+  while(left.size){ let b=null,bd=1e18; for(const k of left){ if(D[cur][k]<bd){bd=D[cur][k];b=k;} } ord.push(b); left.delete(b); cur=b; }
+  let better=true;
+  while(better){ better=false;
+    for(let i=0;i<ord.length-1;i++) for(let j=i+1;j<ord.length;j++){
+      const t=ord.slice(0,i).concat(ord.slice(i,j+1).reverse(), ord.slice(j+1));
+      if(cost(t)+0.5<cost(ord)){ ord=t; better=true; } } }
+  return ord;
+}
+async function planOptimize(){
+  const raw=planVals();
+  if(raw.slice(1).filter(x=>x).length<2){ planMsg('Add at least two drops to optimize.'); return false; }
+  if(raw.slice(1).some(x=>!x)){ planMsg('Fill in every drop first, or tap the \u00d7 to remove the empty one.'); return false; }
+  const fromHere=!raw[0], vals=raw.slice(); if(fromHere) vals[0]=HERE;
+  planMsg('Optimizing drop order...');
+  try{
+    const pts=[]; for(const c of vals) pts.push(await geocode(c));
+    const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
+    const j=await (await fetch('https://router.project-osrm.org/table/v1/driving/'+coordStr+'?annotations=distance')).json();
+    if(!j.distances) throw new Error('no result');
+    const ord=bestOrder(j.distances);
+    const nv=[raw[0]].concat(ord.map(k=>vals[k]));
+    planFill(nv); planSave();
+    let mi=0,prev=0; for(const k of ord){ mi+=j.distances[prev][k]; prev=k; }
+    planMsg('Drops put in the shortest order ('+Math.round(mi/1609).toLocaleString()+' miles). Tap Run route for the full report.');
+    return true;
+  }catch(e){ planMsg('Could not optimize right now ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.'); return false; }
+}
+async function planRun(){
+  if(planInputs().length<2){ planMsg('Enter a start and at least one drop.'); return; }
+  planMsg(''); runTrip();
+}
+async function runTrip(){
+  const pop=document.getElementById('trippop'), body=document.getElementById('tripbody');
+  const raw=planVals();
+  const inputs=raw.filter(x=>x);
+  if(!raw[0] && inputs.length>=1) inputs.unshift(HERE);
+  if(!pop.classList.contains('show')){ enterScreen(); pop.classList.add('show'); document.body.classList.add('on-trip'); }
+  pop.scrollTop=0;
+  if(inputs.length<2){ body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Enter at least a start and an end, then tap Run route.</div>'; return; }
+  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Working out your route...</div>';
+  try{
+    const pts=[], names=[];
+    for(const c of inputs){ const g=await geocode(c); pts.push(g); names.push(c===HERE?HERE:shortPlace(g[2]||c)); }
+    const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
+    const u='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=false&steps=true';
+    const rj=await (await fetch(u)).json();
+    if(!rj.routes||!rj.routes.length) throw new Error('no route came back');
+    const legs=rj.routes[0].legs||[];
+    let run=0;
+    let h='<h2>Trip Summary</h2><div class="trsub">'+names.length+' stops \u00b7 '+Math.round(rj.routes[0].distance/1609).toLocaleString()+' miles</div>'
+      +'<div class="trhead"><span></span><span>City</span><span>State</span><span>Leg mi</span><span>Total mi</span></div>';
+    names.forEach((nm,k)=>{
+      const [city,st]=splitPlace(nm);
+      let leg='';
+      if(k>0){ const mi=Math.round(legs[k-1].distance/1609); run+=mi; leg=mi.toLocaleString(); }
+      h+='<div class="trstop"><span class="n">'+(k+1)+'</span><span class="c">'+esc(city)+'</span><span>'+esc(st)+'</span><span>'+(k?leg:'Start')+'</span><span class="t">'+(k?run.toLocaleString():'0')+'</span></div>';
+      if(k<legs.length){ const rd=legRoads(legs[k]); h+='<div class="trroads">'+(rd||'Local roads')+'</div>'; }
+    });
+    h+='<div class="trtotal"><span>Total</span><span>'+run.toLocaleString()+' miles</span></div>';
+    body.innerHTML=h;
+  }catch(e){
+    body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Could not work out the route ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.</div>';
+  }
+}
+function closeTrip(){ if(document.getElementById('trippop').classList.contains('show')) history.back(); }
+async function tripOptimize(){
+  const body=document.getElementById('tripbody');
+  if(planVals().slice(1).filter(x=>x).length<2){ body.insertAdjacentHTML('beforeend','<div class="trmsg">Optimize needs at least two drops.</div>'); return; }
+  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Optimizing drop order...</div>';
+  if(await planOptimize()) await runTrip();
+  else body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">'+document.getElementById('planmsg').textContent+'</div>';
+}
 async function optimizeStops(){
+  prepStart();
   const rows=[...document.querySelectorAll('#stops input')];
   const vals=rows.map(i=>i.value.trim());
   if(vals.length<4){ alert('Add at least two middle stops to optimize. Start and end stay put.'); return; }
-  const fromHere=!vals[0];
-  if(fromHere) vals[0]=HERE;
   if(vals.some(v=>!v)){ alert('Fill in every city first.'); return; }
   const res=document.getElementById('opthint');
   res.innerHTML='<p class="hint">Optimizing stop order...</p>';
@@ -1504,7 +2362,6 @@ async function optimizeStops(){
     const order=j.waypoints.map((w,idx)=>({idx, pos:w.waypoint_index}));
     order.sort((a,b)=>a.pos-b.pos);
     const newVals=order.map(o=>vals[o.idx]);
-    if(fromHere && newVals[0]===HERE) newVals[0]='';
     stopsEl.innerHTML='';
     newVals.forEach(v=>stopsEl.appendChild(makeRow(v)));
     relabel();
@@ -1513,5 +2370,37 @@ async function optimizeStops(){
   }catch(e){ res.innerHTML='<p class="hint">Could not optimize right now ('+e.message+'). The free service may be busy \u2014 try again, or order the stops by hand.</p>'; }
 }
 </script>
+  <div id="planpop"><div class="plwrap">
+    <h2>Plan your load</h2>
+    <div class="plsub">Enter your start and every drop, then tap Run route.</div>
+    <div id="planstops"></div>
+    <div class="btnrow">
+      <button class="pladd" onclick="planAdd()">+ Add drop</button>
+      <button class="plgo" onclick="planRun()">Run route</button>
+    </div>
+    <div id="planmsg"></div>
+  </div>
+    <div class="trbar">
+      <button class="back" onclick="history.back()">Back</button>
+    </div>
+    <div id="planintro"><div class="pibox">
+      <div class="pitext">Enter your stops in any order.<br>You can optimize them later with one click.</div>
+      <label class="picheck"><input type="checkbox" id="pihide"> Don't show this again</label>
+      <button class="pigot" onclick="closePlanIntro()">Got it</button>
+    </div></div>
+  </div>
+  <div id="trippop"><div class="trwrap" id="tripbody"></div>
+    <div class="trbar">
+      <button onclick="tripOptimize()">Optimize</button>
+      <button onclick="window.print()">Print</button>
+      <button class="back" onclick="closeTrip()">Back</button>
+    </div>
+  </div>
+<div id="mvpop" onclick="if(event.target===this)closeMove()"><div class="mvbox" role="dialog" aria-modal="true" aria-labelledby="mvtitle">
+  <div id="mvtitle">Move this stop</div>
+  <button class="mvchoice" id="mvup" type="button" onclick="doMove(-1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 16V3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 8l5-5 5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up</button>
+  <button class="mvchoice" id="mvdn" type="button" onclick="doMove(1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 10l5 5 5-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Down</button>
+  <button class="mvcancel" type="button" onclick="closeMove()">Cancel</button>
+</div></div>
 </body>
 </html>
