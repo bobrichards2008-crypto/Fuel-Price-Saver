@@ -528,7 +528,8 @@
       } else { err.textContent=(j&&j.msg)||'Something went wrong. Try again.'; b.disabled=false; b.textContent='Send request'; }
     }).catch(function(){ err.textContent='Could not send. Check your signal and try again.'; b.disabled=false; b.textContent='Send request'; });
   };
-  if(!code){ deny(); return; }
+  // no code saved: still ask Google — if the gate is OFF it lets everyone in, if ON it says no
+  
   var trusted = ls('fps_ok')==='1';
   if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
   fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
