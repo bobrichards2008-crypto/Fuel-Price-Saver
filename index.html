@@ -41,6 +41,8 @@
   .nearlbl{display:block;font-size:13px;color:#9fb0c8;margin:0 0 6px}
   #nearcity{width:100%;padding:13px 14px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff;margin-bottom:16px}
   #nearcity::placeholder{color:#9fb4ce}
+  #nearcity:placeholder-shown{padding-left:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cpath d='M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z' fill='%23f26a21'/%3E%3Ccircle cx='8' cy='7.5' r='2.4' fill='%231d3a5e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:13px center;background-size:15px 19px}
+  #nearsug{top:50px;max-height:260px;overflow-y:auto}
   .nearmi > *{flex:1 1 0;min-width:0}
   .nearmi > button{padding:16px 4px}
   .addbtn { width:100%; padding:13px; margin:4px 0 18px; background:transparent;
@@ -659,7 +661,7 @@
     <div class="popbox">
       <div class="poptitle">Fuel near me</div>
       <label class="nearlbl" for="nearcity">Type a city to check somewhere else</label>
-      <input id="nearcity" type="text" placeholder="Your location" autocomplete="off" autocapitalize="words" enterkeyhint="done">
+      <div id="nearwrap" style="position:relative"><input id="nearcity" type="text" placeholder="Your location" autocomplete="off" autocapitalize="words" enterkeyhint="done"><div class="suggest" id="nearsug" style="display:none"></div></div>
       <div class="poptext">Show stops within how many miles?</div>
       <div class="btnrow nearmi"><button class="go" onclick="fuelNear(5)">5 mi</button><button class="go" onclick="fuelNear(10)">10 mi</button><button class="go" onclick="fuelNear(15)">15 mi</button></div>
       <div class="btnrow nearmi"><button class="go" onclick="fuelNear(25)">25 mi</button><button class="go" onclick="fuelNear(50)">50 mi</button><button class="go" onclick="fuelNear(75)">75 mi</button></div>
@@ -965,7 +967,7 @@ function pickCity(input,sug,label){
   input.value=label;
   input._pick={label:label, typed:typed, until:Date.now()+1600};
   const inStops=!!input.closest('#stops');
-  const resave=()=>{ try{ inStops?saveRoute():planSave(); }catch(e){} };
+  const resave=()=>{ if(input.id==='nearcity') return; try{ inStops?saveRoute():planSave(); }catch(e){} };
   if(inStops && typeof markLoc==='function') markLoc(input);
   setTimeout(()=>{
     pickGuard(input);
@@ -1123,6 +1125,22 @@ function openFc(){
 
 /* ---- SETTINGS: rank by pre-tax cost or by discount price ---- */
 let NEAR_R=null, NEAR_AT='you';
+(function(){
+  const go=()=>{
+    const input=document.getElementById('nearcity'), sug=document.getElementById('nearsug');
+    if(!input||!sug) return;
+    let timer;
+    input.addEventListener('input',()=>{
+      clearTimeout(timer);
+      if(pickGuard(input)){ sug.style.display='none'; return; }
+      const q=input.value.trim();
+      if(q.length<2){ sug.style.display='none'; return; }
+      timer=setTimeout(()=>lookup(q,sug,input),180);
+    });
+    input.addEventListener('blur',()=>setTimeout(()=>{ sug.style.display='none'; },250));
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+})();
 let RANKBY='pre';
 try{ RANKBY=localStorage.getItem('fps_rankby')||'pre'; }catch(e){}
 function rankVal(h){ return RANKBY==='disc' ? h.disc : h.pre; }
@@ -1464,7 +1482,7 @@ function addDetour(){
   findFuel();
 }
 
-function askNear(){ document.getElementById('nearcity').value=''; document.getElementById('nearpop').style.display='flex'; }
+function askNear(){ document.getElementById('nearcity').value=''; document.getElementById('nearsug').style.display='none'; document.getElementById('nearpop').style.display='flex'; }
 function closeNear(){ document.getElementById('nearpop').style.display='none'; }
 async function fuelNear(radius){
   const typed=(document.getElementById('nearcity').value||'').trim();
@@ -2035,7 +2053,8 @@ function enterScreen(){ history.pushState({app:1}, ''); }
 const CHANGELOG = [
   { date:'2026-10-10', items:[
     'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
-    'Fuel near me now offers 50, 75 and 100 mile circles'
+    'Fuel near me now offers 50, 75 and 100 mile circles',
+    'Fuel near me box shows the orange pin and suggests cities as you type'
   ]},
   { date:'2026-10-08', items:[
     'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
