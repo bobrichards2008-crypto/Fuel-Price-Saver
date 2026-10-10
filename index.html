@@ -454,6 +454,53 @@
   /* Google Maps legs */
   .leglink{display:block;padding:13px;margin:8px 0;border-radius:10px;background:#1d3a5e;color:#fff;text-decoration:none;font-weight:bold;font-size:15px}
   .leglink small{display:block;color:#9fb4ce;font-weight:normal;margin-top:3px}
+
+  /* ===== Price forecast banner + report (2026-10-09) ===== */
+  /* forecast teaser tag: same look as What's new (orange + white border, gentle tilt) */
+  .fcban{position:absolute;right:10px;top:54px;z-index:5;display:none;background:var(--orange);color:#fff;border:2px solid #fff;
+     border-radius:9px;font-size:11px;font-weight:bold;padding:7px 9px;cursor:pointer;letter-spacing:.3px;line-height:1.15;
+     text-align:center;max-width:92px;
+     box-shadow:0 2px 8px rgba(0,0,0,.5);animation:tagwig 2.2s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
+  .fcban small{display:none}.fcban b{display:none}
+  .fcban:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  body.has-fc .fcban{display:block}
+  /* the forecast report IS a diesel pump: navy body, white face, green DIESEL sign, rolling price wheels */
+  #fcpop{align-items:flex-start;overflow:auto;padding:14px 0;background:#fff}
+  .pump{position:relative;width:min(92vw,372px);margin:auto;padding-left:40px}
+  .pump-hose{position:absolute;left:0;top:118px;width:46px;height:420px;pointer-events:none}
+  .pump-body{position:relative;background:linear-gradient(90deg,#22355c,#1a2b4c 50%,#101c33);border-radius:44px;padding:16px 14px 18px;
+     box-shadow:inset 6px 0 0 rgba(255,255,255,.08)}
+  .pump-face{background:linear-gradient(90deg,#fff,#e9edf3);border-radius:30px;padding:14px 12px 14px;color:#1a2b4c}
+  .pump-sign{margin:0 auto 8px;width:62%;background:linear-gradient(#22b04b,#138a36);border:3px solid #1a2b4c;border-radius:8px;
+     color:#fff;font-weight:900;font-size:24px;letter-spacing:3px;text-align:center;padding:5px 0 4px}
+  .fchead{font-size:13px;color:#4a5d7a;text-align:center;font-weight:bold}
+  .pump-win{margin:8px auto 2px;width:max-content;background:#0e1830;border:4px solid #9aa3ae;border-radius:10px;padding:8px 12px 6px;
+     box-shadow:inset 0 3px 8px rgba(0,0,0,.7)}
+  .pump-win small{display:block;text-align:center;font-size:10px;letter-spacing:1px;color:#c9d6e6;margin-bottom:4px}
+  .fcodo{display:flex;align-items:center;justify-content:center;gap:3px}
+  .fcsym{font-size:34px;font-weight:800;color:#fff;line-height:50px}
+  .drum{width:32px;height:50px;overflow:hidden;background:linear-gradient(#b9bec6,#eef1f5 22%,#fff 50%,#eef1f5 78%,#b9bec6);border-radius:4px;position:relative}
+  .drum::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.35),transparent 28%,transparent 72%,rgba(0,0,0,.35));pointer-events:none}
+  .drum .strip{display:flex;flex-direction:column;transition:transform .12s ease-out}
+  .drum .strip span{height:50px;line-height:50px;text-align:center;font-size:36px;font-weight:800;color:#111;font-variant-numeric:tabular-nums}
+  .drum.whirl .strip{transition:none;animation:drumspin .16s linear infinite;filter:blur(2px)}
+  @keyframes drumspin{from{transform:translateY(0)}to{transform:translateY(-500px)}}
+  /* wheels stay white with black numerals; only the arrow shows red up / green down */
+  .fcarrow{display:inline-block;font-size:30px;margin-left:8px;opacity:0;transition:opacity .5s;transform:scaleY(1.6)}
+  .fcarrow.show{opacity:1}
+  .pump-screen{margin-top:12px;background:#03060b;border:3px solid #1a2b4c;border-radius:16px;padding:12px 12px 10px;color:#d8e2ee}
+  .pump-base{margin:-6px auto 0;width:80%;height:16px;background:#24385f;border-radius:4px}
+  .pump-plinth{margin:0 auto;width:100%;height:26px;background:#0e1830;border-radius:6px}
+  .fcway{text-align:center;font-size:17px;font-weight:900;min-height:22px;margin-top:6px}
+  .fcstats{display:flex;gap:10px;margin:0 0 4px}
+  .fcstat{flex:1;border:1px solid #1f3552;border-radius:10px;padding:10px 6px;text-align:center}
+  .fcstat b{display:block;font-size:24px;color:#3ab54a;font-variant-numeric:tabular-nums}
+  .fcstat span{font-size:11.5px;color:#e8eef6}
+  .fcnote{font-size:13.5px;line-height:1.45;margin-top:12px}
+  .fcgraph{margin-top:14px}
+  .fcgraph svg{width:100%;height:auto;display:block}
+  .fcdisc{font-size:11.5px;color:#e8eef6;margin-top:12px;text-align:center}
+  @media (prefers-reduced-motion:reduce){.fcarrow,.drum .strip{transition:none}}
 </style>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgcng9IjI0IiBmaWxsPSIjMTAyMzNmIi8+PHBhdGggZD0iTTI4IDc4IGEzMiAzMiAwIDAgMSA2NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMyYjRhNzAiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI4IDc4IGEzMiAzMiAwIDAgMSAyMCAtMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YyNmEyMSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNjAiIHkxPSI3OCIgeDI9Ijc4IiB5Mj0iNTIiIHN0cm9rZT0iI2YyNmEyMSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI2MCIgY3k9Ijc4IiByPSI2IiBmaWxsPSIjZjI2YTIxIi8+PHRleHQgeD0iNjAiIHk9IjEwNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIyMiIgZmlsbD0iI2ZmZiI+RlBTPC90ZXh0Pjwvc3ZnPg=="><link rel="apple-touch-icon" href="data:image/png;base64,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"><link rel="icon" type="image/png" href="data:image/png;base64,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"><link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkZ1ZWwgUHJpY2UgU2F2ZXIiLCAic2hvcnRfbmFtZSI6ICJGdWVsIFNhdmVyIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYzFhMzAiLCAidGhlbWVfY29sb3IiOiAiIzEwMjMzZiIsICJpY29ucyI6IFt7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQU1BQUFBREFDQUlBQUFEZHZ2dFFBQUFKMGtsRVFWUjRuTzNjYVd3Y1p4M0g4V2RtWjJkbmQrMjliR2ZqT0RaMlhFb1NVdHRxbXBRbUpGRktnU2hGaURZb3FsS1ZGMVJRS2dxVmdCY1JBZ2tRRW9nM0ZTWGlraEF2SUtuNkFuT2tDSXFhb29RMHpWVWF1MG1xcU1GSjQ5Ukg3TjMxanZlY25ZTVhSbTIwWHM5Njl6K1h3Ky96TXA3c1REemZQUFBNdFZ5c2Z4Y0RhQmJ2OWdiQXlvYUFnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBZ0lDQVJuRm5OalUvZmNHWkZjTHVlbDN2c1hnVVg2OTlsNndxUWp1dHN6Y2plUXhqcThRSmI5NEpkSXhEUzhTQTdoaUtINWtETWtlTXgzTTZaLzhPMmpFQlZtNDUwWEdUM3ZyQitEb1I2UEtYcTkyLzVzR1R2SkJyMWVNRktPZ3ZEM05uN3JOMUhObzVBR0g2OHc3NTlnVnNaUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBNGR6TVZhdkx6eHVhWU1oZ3BEMGFWdnJBYUVmU0lvTGNJdW1wd1JZMHJhbHkyd2srVWhNbVNiNklrdkpNWExzdmllRkV3M043czk3a1cwUEQ5MC9mRnlwWi83TzZUbmYvSis2MWRxYUp6OHlvdnE1eGM0YS9tL2FOWmNWUVdSMld4b25PVVRlME5xUWZXNXZaMzVSS2l2dmluUHM0SThFYk16em9sYlgxcjVmWWY1VFh1c2l5ZXlRVE9aS1R6bVVCZUkyMEdFVWFnK2tUZWFCTzFOcEV4eGdhanlyNDFlY1pZU3VHSEo4SXYzR3k1dW5TdlN4RTQ0OWwrK2F2cnNrSlR1ejdzTTdiRXkxdmk1V2VZckJwczk4azE3eFpjMjQrWUF6V3BUZFMvMUR0LzdPT1RQOXFZYmhGcURDRkw2UWhvTHowdy9XeC9rL1ZVRVRnbWNHNGUwQkFRQ2NmWTQ5MjVZOXNudDhhWGRXU01DUHJoemJjMnRpcDJiNWhqRUpBRk9pWHQ4SDIzdHJlVjZpNzU4NkhacWduTlNvZUFyQkhnalY4TnpYWUhWWk5sSHVvbzdseEdaQ3NMQXJKTVJOQi8vTkcweVFJSDc1NXphbHVjZzdNd0srMW9LMzBzVVQ2ZERpeiswWWRiS25lM21CMjhETWIrT1JQOHg2M2dSVmw4cnlUa05VN1Z1WWhmandoNnU2aHRhSzFzYUZVMlJaUjdJb3JQemRQMmFoNE5xS0J4NjEvcDlzSktnejZqWGRTR29zcStOZmtITzRwMVArVEEybHpOZ0hhM20vM2RtYkx2eVRjN0xtVEZxajlQSzN4YTRhOFhoUE56Ly92TXFGL2YyVmJhM1ZIY3M2clkwTm1mVFR3YWtIY1VOVzY4S0l3WGhhTlRvVDNKd3FHQmxNaWJuVFovb3FQSWMweGZ0TWk5TWJNenIyOWViRnRjVDAzWkNuOTBLblIwS3ZSdG43RTNXWGlzSzJjd04wY2t6SUVhOFBmcDBBK3V4TTJYYVJYMHU4STFEbFVkb3JiVVgwa3IvUEZacWRHTktXbmM4RVI0Lzdua1dON05VUUFCTmVid2VFdW1VdWVYMWhlcWNTN1daaEpReGVlZGUxdU5Ra0NOMFF6Mjc3a2FVNXpiSldxMUlpMGR5UnBKRFpnZUZyME1BVFZzcnQ0SUpOV3FZYTdpVzJyNWtNLzR4bDFaNm1hNUJBRTFMTzZ2Yys1VHFuV1hQcVdZL2FxZjdwTi9QVFE3RUZsNXR6aHdGdFlZZ1dQMzFuc2dKSzNVR0d3dVpNVWRwcGVoOXlRTGU1S0Y2d1hoeEt4MGZpNXdJUnU0N3Q0OTl1WHo2Q2FHZkVZVEwxQnVPclpXVnUwZFU1L29uby9WRzRHdTFkcnhyNldrcjYyVDYzNStiMGp0N2NsOW9TZkhHSnVyOEtPeU9KSVYzNWdMbk0wRWNqYi8wNXJqMFlDOGFXK3k4SjJQekprdk02L3lOWjhRT3AyUnh2TEN1ckRaemJJcU1iKytzNjIwY1B0TU05aEZXVHcrRy96alpNamtpVG5uSWFBNkpKL1JJV3BEVWVYelhYbnpxOGtMWHBrSkxyNkt5QmpURGZhenNlaHo5NlNhMnd3Znh3YWp5bUJVK1hwL2RpUXIvdWJkMWo5UGhyMXc1b2FBUHREY2NiUEtrZkdXcFg3MGg0bndKMWNWOXlZTHhGVU1ScFhuQjFKZjZadi83dHZ4YzVrNjF4VHM1c1hENnNyMXI1UjB4blNQZnV0aXdueUI1ZHZZcXJ5NFpmcUxINXEzNU5PYWhvQXNNNi95Qnk4bHpKZkpxZnlCODZ1TzNGeHlsR3FJd0xIdnJjODgwWjJ6NU5PYWc0Q3NVZGE1TDE5b0h5L1dueEpVZE83Z3BjUytzOG0zNUdYZFBhM3IreHN5bTl5N2dJU0FMREJWOGoxK2Z0VnJxUVp1aUo3TEJCNStmZlgrYzhrL1RZWkx0UGR5Qk03TkM5a2VuVVM3OGp4UUV3ekdYcmpaOHNNcnNlWXUwcHhPQjA2bkF3RStjWCs4dktPOXRDMVIydENxTlBHMnhrTWR4YjZRV3ZQNms5MDhHcEQzcFJWK2VESjhaTHlaOThLcWxIWHVSRW82a1pJWVl5R2ZNUlF0TDd6MnRUbFdEaS83UHYzMnR0SzFnalZUcTRZZ29Qb3FPaWVyQ3krbjhsZHovaEZaZkNzcmpwRGZUSzJwb0hHbjB0S3B0TVFZRXppMk5WNzZiR2ZoMGM2OHljMzhCVnZpNWQ4dmZRWEJQZ2pvQTE0N2Jxb0dXNGpwdWF2UjV3ZFNEeVRNYnFWMUJocTR4bTBoVEtKWGdPbXk3OGszMjJmS1N6NFF3aGlMMTNyQjNnRUlhR1hJcWZ6ZnBvTW1DN2oxU0JvQ1dqR215bWJ6RGVLMWdLWmhEdVNRWjliSnJZTCsyeHV0VXlXekk1R0pMc2xzbGpOVDZ5RWtCMkFFY2tqTXJ6L2RKNS9hT2ZIVGdWVGRSOUlXYXhQMWgxZWIzWVYxNnh0ZU1BSTVTdUNNUnpyemozVG0zeXNLTDAySC9qb1ZXczdyWUYyUytzdWhXZk1IMlVhVzkxcVo1UkNRTzdxQzZsTzk4bE85Y3FiQ2oyYkZrV3hnVkJZblM3NU1oWityOEVXTmwzZ2pLV25yVzVRSE80cWY2eXlZdjgxb01IWWlaVGJGdGc4Q2NsbmNyKzlxTCsxcUozMXJ4K3RwYWJMWnFSVVI1a0IzZ2tOakViZFdqWUJXdkw5TWhrNDI4aUNBdFJEUXl2YjJ2UC9nNVRwUHNka0tBVG1rNXBQMlJHL01CUjQ3bDNUM2RSOU1vaDN5azNlaXB6T0J6Nnd1ZkdwVk1VTCtYcCtpeHYzaVd1VFFXRlIxKzgwTUJPUVExZUJlblFtK09oUDA4OGEyUkhsYm9yUTFYaDZNS28xK1NlK05vakE4RWY3ZGVJdjV2VlhIdUJiUW8yZVMveWNyclZMUnVlT3owc0lYQWtrK1l5Q2k5SWNydlNHMUw2UjJCOVZXdng3MjZXR2ZFZkFacXM0VmRTNnQ4Rk1sMzFqQmYwa1d6MllDVjNJZWVxdVFZUVJ5VjBuanptWUNaOTErdDRzQ2syZ2dRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTR3dNaVA1ZE8yQVYrL2FGeFFIMXZOeGo3UWVDNWF6ZFIvWWV3akFJZVlHdGU4SDZnS29DUjBQdXF2cjlXMzZJNEdMOXU2ejl4QVdMdThIUnpXSE83QUxuYnFaaUtMb2oyVFVDTFVBMEhtSGY4Ry92SkJxSExTK3dkUy9ZT3dLOUQwT1JLeHo0RCt4UVFIQ253cTBNSUVGQVFJS0FnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpEOEY2NjNEWFlQYXZ0S0FBQUFBRWxGVGtTdVFtQ0MiLCAic2l6ZXMiOiAiMTkyeDE5MiIsICJ0eXBlIjogImltYWdlL3BuZyJ9LCB7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQWdBQUFBSUFDQUlBQUFCN0drT3RBQUFiOGtsRVFWUjRuTzNkZVpnY1paM0E4YmU2cTZ1dm1aN3VPWktaSkNRaGs0UWpCNEVrRUFnU2lMSW9vbml0cUkrNnJ1NnU2NFh1NnFMN3VNcXk2aU11N09MS0lsNDhyTUlEcmc4cnh3TXFMb1lzU0FLSmtBUXdoOG5renN4azdwNmV2cXFQMmoraUVVSk1acnFydXJycjkvMzg0Zk1Zc2FaSVRiL2ZydXQ5dFhqM0dnVUFrTWZuOWc0QUFOeEJBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoZExkM29ONGR2T3FnMjdzQW9IS3pINS90OWk3VUx5M2V2Y2J0ZmFnN0RQcUFKeEdERXhDQVYySG9CenlQREJ4SEFKUmkzQWRFb2dUY0JHYjBCNFRpc3kvNkRJREREMEFKUGhXUWV3YkE2QS9nR0xHamdkQUFpRDNlQUU1SzVwZ2dNUUF5anpTQVV4TTRNb2dMZ01CakRHQ1NwSTBQc2dJZzdlZ0NtQ3BSbzRTZ0FJZzZyZ0FxSm1lc2tQSVlhRFZIVk93allrQ2o0NE4vYWlJQ1VOa3ZnWVRERHdqQklIQlN6QVo2RXA0LzZvQTB4ejdVY3E3dFRKTDM3d0ZNOVpBeitnTmVOZFZQdCtlRDRmRkxRRk02Zmd6OWdCQ01ETWQ0L3d4Z2tqeDhqQUdjZ00vN01RUkFLWDRiQUhuNDFDdHZCOER6MSs4QTFJQ0hSeEl2QjJDUytDSUF5TVJuMzdNQm1HUzArUTBBSkp2a0NPRFZrd0RQQmdBQWNHcWlBOERYZndDU3h3SFJBUUFBeWJ3WkFLOWVzQVBnRmsrT0t0NE13R1JJUHU4RDhFcGlSd081QVFBQTRRZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlwYnU5QXdEcWpxNnBPWkhDd3FiQzNFaXgzU2gxQk1zZFJxazlXR3J5VzRiUEN2b3RRN01NbjFWV3FsaldpcFpXdEpSWjFpYUtXcnJrU3hWOTZhSTJWdkFObWY0aDB6K1U5dzJhL3I2Y3Z6ZW5aMHVhMi85bWVCVUNBRUFwcGVaRWlxc1N1Vld0K2NVeGMxNmtHUEJacC8yLytKVFMvWlpTdi84bnB3VlA4ODhQbTc3ZW5INDRxKy9MNkQzcHdONjAzcE1PakJXNER1RWFBbEN0blc4NEZQR2YvcVBTNkg1Mk5QSzNXOXR0M0dDOS9iMFZMUzFmVnZtU1pwYTFmRmtiTC9vRzgvNUIweitVOXcyWS9nTVpmZmRFNEhCV3I2TTl0b05mVTVlMDV0N1NtYm04UGRzWktqbjk0OXFNY3B0aExvbVpyL3pEWWRPM2E4TFluZ3JzU0JuYlU0SGRFd0d6eklsQ2pSQUFRQ21sZE0zUy9TcDZ5aWJsU2xwUE9yQmpJckJwTlBqY1NHaGZwb0UvUG1jMUZUNXdSdXJObmRrMncvRngvOVRhalBJbHJibExXblBIL212UjBuYWtBbHVUeHBheDROYWswWk1PZUN5NmRhV0JmNE9CR2d2NXJVVXhjMUhNZk5lTXRGSnFJTy9mT0JMOCtkSEl1cUZ3cm5HdWJxOXV5MzEwN3ZqbDdUbTNkK1RrZE0xYUVqT1h4TXdQbkRHaGxFb1ZmWnRIZzgrTkJqZU5CcmNsamFMVk1IL1BEWUVBQUJXYUZpeGQyNVc1dGl1VExtbFBESVFmNm9zK09SUXUxL0gzMWFVeDg2WnpScGZIODI3dnlCUTA2K1cxSGRtMUhWbWxWSzZrM1hXZytSdTc0Mjd2bEhjUUFLQmFVYjkxckFUN012b1A5c2NlNkkzVzIrTXVyVWI1aGdWajc1azU0YXV2L1pxYWtOODZNMXAwZXk4OGhmdnZnRzNPakJTL2R1N0lzMnVPZk96TWNXTVNUOUhVeHFWdHVTZFc5NzF2Vm1PUC9uQUNBUUJzbGdpVS8zSGgySzlXOS8zWnRLeTdlK0xYMUdmbkorOWRQdER1OXAxZTFDY0NBRGhpVHFUNGcvTUgvK3VDd1RhajdNb09HRDdyZThzR1A5MmQ1SXMvL2hRQ0FEaG9iVWYyOFV2NmpqL2pXRE1Sdi9YREN3YXZkUHNVQkhXT0FBRE9taFlzM2JkaTRKUHp4bXYyRTRNKzY5NFZBNnZiNnZSQlQ5UVBBZ0E0enFlcEd4YU0vZlBabzdXNUdIUHI0dUVWRGZXc0o5eENBSUFhK2ZDYzFLMkxoLzBPUitENjd1UzFYUmxuZndhOGdnQUF0ZlBuTTlNM25UM2kzUFl2U3VRL096L3AzUGJoTVFRQXFLa1B6cDc0eXprcEo3WWM5Rm5mV0RUTUl6K1lQQUlBMU5xWHp4cGQ0OEJVUEovcFRzN2pSVmxNQlFFQWFzMnZxWDliUEJ6VDdYdy9vRE5VK3B1NWpweFl3TU1JQU9DQ2FjSFNsODRlczNHREg1czdQcGtsWElCWElnQ0FPNjZiT1hHcFRZL3F0eG1sOTg2YXNHVlRFSVhaUUFIWGZHSGgyRFViTzZ2ZnpudG5wVVBPTDY5Mk5PL2ZsalNPTGVWNE5LOFA1SDNKb2k5VjhPWExXc25TeWtxRmZGYlFaNFg4VnRSZm5oWXN0UWZMSFVhcE0xVHFqaGJtUlFxekl5VmQ0eHlsdmhBQXdEVkxZK2JhanV5NndYQ1YyM2xiVjlxVy9Ya3RTNm1OSTZHZkhZMnNHd3dkenA1bXVNaVV0RXhKVXdXbGxIOVBPbkRDLzNwc29mbWxNZk84Rm5OcGkzbHVzMWxYYTRMS1JBRGdIZHRUeGhzM1RPMEx0ZUd6UWo2clBWanVEQmJQYWlvc2FURXZiYzNWWUhYYzR6N1RuYXd5QU9jMEZ4WTJGZXphbitQS2x2cHBYL1QybmhhN1ZyNHNXcW9uSGVoSkJ4N3NpeXFsL0pwYUdqTXZhY3V0YnMwdGorZkR4TUFOQktBZVZUQ1FvVEptV1RQTDJualJ0emV0YnhnSkhmdkRaUzNtZTJkTnZHdEd1Z2EzVlplMW1FdGo1b3ZqUnNWYnVIcTYvZS85SHNycTE3L1k5dnhZMFBZdEgxZXkxSmFrc1NWcDNMRTNGdkJaSytQNXE2WmxyNXlXblJYbVNkYmE0U1l3Y0tLdFNlUHp2MjI5N09tdVIvc2pOZmh4YjU5UjFRV2NWWFpQTmJvOVpiejEyZW1PanY0bktKUzFEU09oRzNjbUxubHF4aHMzZE42MnA2WG5OVmVRNEFRQ0FKemNrWnorOFczdG4zcXgzZWtGMzkvU21hbDR5bjVkczg2TG1UYnV6TERwKzlBTEhjT20zOFp0VHNuMmxIRmJUOHNWdis1Nnk3T2RkeDlvSG5KdlR5UWdBTUNwUE53WHVXN3o5SW1pZzUrVWFjSFNSWWtLdjhVdmJUSHRmZjduSzdzUy9ibTZHSE8zSlkwYmR5WldycC81NFJjNm5od0tsN2xINEFBQ0FKekdscVR4VjF2YVMwNE9RS3RhSzV5OStaeG1PMi8vSHN6cUQvVkZiZHhnOVVxV2VtSXcvQmZQZDF6NjlJdzc5c1lHODNVUko4L2dKakJ3ZWh0R1F2KytKLzRQQzhZYzJ2NkZsVTdmUDl2V1c2YVA5a2ZxOW92MjRheitqZDF4dC9mQ2F6Z0RBQ2Jsem4zTnp0MlpQRCtlMXl1NkRUQW5ZbWNBbmh1cDNZMWYxQU1DQUV4SzBkSnUzeHR6YU9NUnY3V2dvbWY1ejdEMURHQmZobWR2WkNFQXdHUTkwaGNaTnAzNnlNeUpWQktBMW9DZFU0cW1uTHpYalRyRThRWW1xMmhwVHd3NjlXWkFaVmZ6UTM0N0EyRHYxbEQvQ0FBd0JVOFBoeHphY21VQnNIYzZuV2tHQVpDRkFBQlRzSFdzOGprYlRxMnlDWWpzZlFsZ2FVdUZEeU9oUVJFQVlBb081L1NpTXc5SzFzUFVtRythbm5WN0YxQlRCQUNZZ3JLbEJweDVGNm15NlREenRrNVRjWEZyN3NJRUp3R0NFQUJnYWpJbFJ6NDFrWXB1d09iS2RnWkFVK3JtUlNOTnRpNVdqSHBHQUlDcHNmZEw5M0hCaXFhZXR2M0J6Zm5Sd24wckJscHNmYm9VZFlzQUFGUGowT0tMdVhJbEg4WmVCeVp1VzlaaVBuWngveVYyenpLTk9rUUFnS21KT3ZPd2ZMYWlFNHNqcDF1bXNUS3p3OFVmcnh6NDBmS0JpOG1BcHpFWkhEQUZ1cVk2Z280c0dKbXBLQUFIYkZxdjhhUXViODlkM3A3clNRZitwemY2V0gvRXJyVWhVVDg0b3NBVXpJNFUvYzRzRDFOWkFLcFpTM0tTdXFPRkd4YU0zYkJnckNjZFdEOFVlbVk0OU54b2tFa2p2SUVBQUZPd3pMRlhwZnB6bFh3WXR5VWREOEJ4M2RGQ2Q3VHdrVGtwUzZuZEU0RVh4b0piazhhMnBMRnJ3bkRvM1FnNGpRQUFVM0JabTFQWHhDdTdtRE5rK2c5a2RIc25oVDR0VGFtRlRZV0ZUWVgzekZKS3FWeEorMjNLMkpvMHRpYURXNU9HbzFlbFlDOE9WVDA2dDlrOGVOVkJ0L2RDS2FXZUhRbStlL04wdC9laVhnUjkxdXM3bkhwWDltQ2x0M09mR0F4L1pFN0szcDJaa3BEZldoN1BMNC9ubFVvcHBjWUt2bTEvaU1IV3BPSGk4c0k0TFFJQVROYmJ1dExPUFNCZjhSZm5YdzY0SElBVHhBUGxOZTI1TmUyL1AxVTZtTldmSHd1K01HYjhaaXk0TTJVNHVySW1wb29BQUpOaStLenJ1OGNkMm5pNnBGVzgzTmltMGRDUm5ENHpWTk9yUUpNM08xeWNIUzYrdlN1dGxFb1ZmUnRHZ2s4TmhaOGVEdTNuU2xFZDRCZ0FrL0xwN3FTOXkyKzkwcGF4WU1YM1VVdVd1dmRRMCtjZFc2L1lSczE2K2FwcDJhdW1aWlZTK3pQNno0OUdIdXVQMU9CQkp2d3BQTXNGbk43bDdibFBuT25VMTMrbDFLYlJxaGJqdmY5d1U4NlpDU3FjTXpkUy9OaVo0NDllM0wvaHN0NGJGb3padTdvOUpva0FBS2R4WVNML25XV0RQaWNIMkkwalZhMHpNMkw2Zm5DZzJhNmRxYkZaNGVJbjU0MC9mVm52L1NzR3J1bk1PUFNhQlU2S0FBQ244bzRaNmZ0V0REZzZXZi9SdkgveldGVm5BRXFwYisrTE9iZGVjUTFvU3ExdXkzMzd2S0gxbC9hK2I5WkVvS0twOFRCVkRmd2JBemhxVnJqNDNXVkQzMXd5YkRnOEdEM1NGeWxYL1JNbWlyNmJkaWJzMkIyWHpZa1ViMTQwOHN6cmV0ODVJODNKZ05NSUFIQ2lDK0w1V3hhUC9OK2xmVythbnFuQmozdXdMMnJMZGg3cWl6N2M1OVNhOVRYV0dTcmR0bVQ0NFZYOTU3ZVlidStMbC9FVUVFUUwrS3lRejJvenlqTkN4WVZOaFNVeDgzVnR1Y3FXNTYzTUMyUEJsKzE3RE9hTDIxc1h4d3JkMFlKZEczVFhzaGJ6cHhmMWYzdGY3TFk5Y1dhYmNBSUJnSGZVenh2VWsvY2ZQVEVidHpaZTlIM3crWTZIVngxdE4yclhNRWY1TmZXcGVlTnIybk1mM2RydTBOelhrbkVKQ0hETnRxVHg1RkRZM20wZXl1b2ZlTDVqdE9DcGovYlNtUG5JUlVjWHg3Z2NaRE5QL1pZQWplWG0zWEVuTnZ2YmNlTWR6MDEzWXJFd0YzVUVTdzljZUpRRmF1eEZBQUIzL1BlUnBtZUdxM3I4L3hSNjBvRjNQTmU1dFlhVFJkZEF4Ry9kZGY3UW9tYk9BMnhEQUFBWERPVDlYOWtaZC9SSDlPYjg3OXcwL2U2R2ZVSHNwSnIwOGowckJxYzdzeWliUUFRQXFMV1NwZjcrcGJaeDV4ZlZLcFMxRzNjbTN2K2JhVjZhbzcvZEtIMXp5VEN2Q05pQ0FBQzE5aTg3RTA4NWR2SG50WjRhRGwyNW9lcy85OGJ5Wlk4TW02dmJjbjg5MThHcG1lUWdBRUJOM1h1bzZlNkR0YjRza3l0cC83bzdmdWxUTSs0NTFGVHdSQWIrYm43U000KzZ1b2dBQUxYelFHLzBTenRhM2ZycFIvUCtMMjV2dmV6WFhkL2YzOXpvcTdwSC9kYm5GaVRkM291RzE5aS9CRUFEdWZ0QTgyZGZhbk45U2F3aldmMHJ1eElyMTgvODR2WldHMTlDcnIxM3o1em9xdUU3MjU1RUFBREhsUzExeSs3NGpUc1RiZy8rZjVRcGFmY2NhcnA2WStjVnYrNjZmVytzRWRmbjBqWDEvalBxYUMzTVJ0UjRSMTJDN1NuampSczYzZDRMMkdNZzc3Lyt4YllOMWMzNDc1eWVkT0NXM2ZGYmRzZTdvNFhYZDJSZjM1RmJtY2pyV3YyazZsVGVOeXQ5MjU2V291V0Z1eHF1SUFDQWc5WU5oai83Y3V1dzJRQXY1ZmFrQXozcHdQZjJ4OEorNjRKNC9zSkUvcUpFL3Z5V2ZOakp0UkNxMUdhVUxtck5PL2MrbmVjUkFNQVJCN1A2VjNmRmYzRzA4ZVpuenBhMFo0WkR4MFpWWGJPV3hBb3JFdm1WOGZ6S1JMNnQvaDY4dWJJalN3QXFSZ0FBbTQwVmZOL2RIL3YrL21hejhSKzRMRnJhbHFTeEpXbDhYelVycGM2TUZGY204aXNUK1JYeGZKMU1PcjIySS92UG5sZ0p4eFVFQUxETi9veCsxNEhtbnh4cHlqYmFFdTJUdEMrajc4dm9QemtTVlVxMUd1V1Y4ZnlLUlA3Q1JHNUpyT0RXYllPNWtXSThVQjd6MXV5bk5VTUFnR3BsU3RvVEErR0grcUxyaHNMVkwrN1lLRVpNMytNRDRjY0h3a3Fwc04rNktKRy90QzIzdGlNN3YrWm5Ca3RqWmkzZnJQWVNBZ0JVYUNEdjN6Z1MvTVZBNUZlRDRaeEh2L0pQVXJha3JSOEtyUjhLZlhWWGZFNmtlRTFuNXRyTzlObk5OU3JCWWdKUUtRSUFURmErclBXa0F6dFNnYzJqd1dkSFEzdlRmSHhPNGtCR3YyTnY3STY5c2ZOYnpBL05TYjIxTSsxM09JNW5oSXZPL2dEdjRqY1lVRXFwb3FYTXNtYVd0WHhaTTh2YWVNRTNhUG9HOC80aDB6K1E5eC9JNkx2VGdVTlpYYzRWbnVwdFNScGJYbXk3YlUvTGw4OGVmVU5IMXJrZnhQdkFGU01BOEE1ZW9LdEQrelA2aDEvb2VQZk05TTJMUmh5NlVUd2p4QmxBaGJoMURzQnhQemtTL2N4TGJRNmRQOFVDWlVlMkt3QUJBRkFMai9SRnZyVzN4WWt0aDN4Y21Lc1FBUUJRSTNmdWkvVTVzRlI5cUk0bnE2aHpCQUJBaldSTDJvOE8yYjhZamk3NkVkeXFFQUFBdGJOdU1HejdObk9OUCtXR1d3Z0FnTnJaa1FyWXZoaVpWeWZlcUFFQ0FLQ21Cdk0yRHp2Q1g4T3VCZ0VBVUZPMnI0NlFJUUNWSWdBQWFzcjJtU0VHOGcydzNrNTlJZ0JBQTR2NHJmdFhERnpjbW5ON1I2YWdJMmp6ekEySHM4eG9VQ0grNG9BR3BpbTF1aTIzdWkyM2VUUjQrOTZXOVVQMVBpbG1zMTZlWmZmY2JZZHpqR01WNGd3QThJS1ZpZnlQbGc4OGVuSC8xZE16VHMrK1dZMjFIVG5iOTQ0emdJb1JBTUE3bHNiTTd5d2JldWF5SXg4L2N6eFJselBrZlBDTWxPM2IzRFVSc0gyYlFoQUF3R3RtaEVwZldEaTI2ZklqdHl3ZVdSd3ozZDZkUDdwNmVtWmxJbS92TmllS3Z0OFJnRXB4NmdSNFU5Qm5YVGR6NHJxWkV6dFRnUWQ2b3cvMlJRZGRmVnBtYnFUNDlVVWp0bS8yeFhHRFJSb3F4aGtBNEhGbk54Zis2YXl4VFd1Ty9IRDU0TFZkbVNiZGhVdEQzZEhDL1NzR25MZ3E5ZnlZWWZzMjVlQU1BQkRCcjZrcjJyTlh0R2NMWlczRFNQQ1hBNUgvSFF6M096QTM1MnU5clN2OXRYTkhtNTBKanhPVEM4bEJBQUJaQWo1clRYdHVUWHZ1YTBxOVBHNDhNeEo2ZGlTNGVUUTRidmNVUFVxcGxZbjg1K1lublh0Tm9UL25mMkVzNk5ER0pTQUFnRnlMWStiaW1QblJ1YXBzcVIwVHhxYlI0UGJ4d0k2VThidDBvSm9KZHVaR2lsZE95NzY5SyszMExlaWZIWTF3L2I4YUJBQ0E4bWxxVWJPNXFQbjM0M1haVXZzeit1NTBvRGVuOStmOGZUbC9YMDRmTW4yNXNwWXIrWElsTFZ2V05LVjB6UXI3clhpZzNHYVVab1ZMY3lPRmM1b0x5MXJ5TTJxMVN2dkRmZEhhL0NDdklnQUFUdVRUMUx4b2NWNjByaGRiM3p3YTNKTGtEbkJWZUFvSVFFTzZZMS9NN1Yxb2VBUUFRT1BabVFvOHlmTS9WU01BQUJyUGpUc1QzUDZ0SGdFQTBHQWU2STF1SEtuM2VVOGJBZ0VBMEVpR1RkOVhkeVhjM2d1UElBQUFHa2JSVXAvWTFqNWlNbkRaZzc5SEFBM2pwcDJKRFZ6OHNROEJBTkFZN2o3WS9NT0R6Vzd2aGFmd0loaUFCbkRudnRqWGZ4ZDNleSs4aGdBQXFIZTM3STdmdnBmWHZ1eEhBQURVcjdHQzczTXZ0LzF5Z0hlK0hNRTlBS0NCNWN2YXQzcGFldExlWEJQeHVkSGdWUnU2R1AyZHd4a0EwTUNLbHJwMVQ4dXRlMXJPYVM1YzA1bCs4L1JNbmMvZ05rbERwdi9XM1MwL1B0TEVjbytPSWdDQUYreElCWGFrNHJmc2pwL1ZWRmpia1YzYmtWMGV6K3VWVCtudm1seEp1K3RBOHgzN1loTU9MRkNERXhBQXdGTjJUUVIyVFFUdTNCZHIxc3VYdGVldWFNK3ViczNQRERmQWFVRnZ6bi9Qb2ViN0RqV05GaGo2YTRRQUFONlVLdm9lNjQ4ODFoOVJTczBNRnk5TzVGZTE1bGExNW1mWFdReXlKZTJwNGRDRHZkSEhCeUlsTHZqVUZnRUF2TzlJVm44Z3F6L1FHMVZLdFJtbDgxck04Mkxta2haemFjeWNGcXpSNmwwbjZNLzVONHlFSGg4SXJ4OEtaNnRZZmhMVklBRFZPdnVKTTl6ZWhZYkUzNXRiaGszL3VzSHd1ajlNcHQ5dWxCWTBGZVpIaS9PYkN2T2poZTVvb1ROWThqa3dJSThWZkh2VGdaZkdqZWZIak0xandTTlpCaC8zY1F3QTBZWk0vOUNJZitQSUgvOUUxOVQwVUhGR3FEUWpWSm9SS3JZYnBYaWczQklvSC92UFpyMXMrRlJBc3dJK3kvQXB2MmFWTE0wc0s3T3NtV1d0VU5aU1JXMms0QjgyZlVPbWY4VDA5ZWIwZldsOWJ5YkFERzUxaUFBQWVKV2lwWTVrZGI2aFMwQ1RBVUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVMSkRjREJxdzY2dlFzQTZvTFkwY0NiQVpqOStHeTNkd0dBcDNoeVZQRm1BQUFBcHlVNkFHTFArd0FjSjNrY0VCMEFBSkRNc3dHWTVBVTd5ZkVITU1rUndKTTNBSlNIQXpCNU5BQ1FpYysrbHdQZzFXZ0RxQ1VQanlSZURzRGs4VVVBa0laUHZTSUF4L0hiQU1qQjUvMFlMZDY5eHUxOWNOWlVqN1NIVC9jQU1DQzhrdmZQQUtaNi9QaHFBSGdWby84SmRMZDNvQjRkK3kzeC9MRUg1T0NMM1VsNS94TFFNZFVjZmtvQU5DZysrS2NtSlFDS3J3QUFKazNDNks4azNBTTRUc2dSQlZBbE9XT0ZvQUFvU2NjVlFHVkVqUkt5QXFDRUhWMEFVeUp0ZkJBWEFDWHZHQU9ZRElFamc4UUFLSkZIR3NBcHlCd1RoQVpBU1QzZUFGNUw3R2dnNkRIUVA0WEhRd0d4eEE3OXg4ZzlBemhPK0c4QUlCYWZmYzRBWG9XekFjRHpHUGVQSXdBblFRWUFUMkxvUHdFQk9BMWlBRFEwQnYxVElBQUFJQlEzZ1FGQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDRVVBQUVBb0FnQUFRaEVBQUJDS0FBQ0FVQVFBQUlRaUFBQWdGQUVBQUtFSUFBQUlSUUFBUUNnQ0FBQkNFUUFBRUlvQUFJQlFCQUFBaENJQUFDQVVBUUFBb1FnQUFBaEZBQUJBS0FJQUFFSVJBQUFRaWdBQWdGQUVBQUNFSWdBQUlCUUJBQUNoQ0FBQUNFVUFBRUFvQWdBQVFoRUFBQkNLQUFDQVVBUUFBSVFpQUFBZ0ZBRUFBS0VJQUFBSVJRQUFRQ2dDQUFCQ0VRQUFFSW9BQUlCUUJBQUFoQ0lBQUNBVUFRQUFvUWdBQUFoRkFBQkFLQUlBQUVJUkFBQVFpZ0FBZ0ZBRUFBQ0VJZ0FBSUJRQkFBQ2hDQUFBQ0VVQUFFQW9BZ0FBUWhFQUFCQ0tBQUNBVUFRQUFJUWlBQUFnRkFFQUFLRUlBQUFJUlFBQVFDZ0NBQUJDRVFBQUVJb0FBSUJRQkFBQWhDSUFBQ0FVQVFBQW9RZ0FBQWhGQUFCQUtBSUFBRUlSQUFBUWlnQUFnRkFFQUFDRUlnQUFJQlFCQUFDaENBQUFDUFgvMWR5cWl0dzNNOTBBQUFBQVNVVk9SSzVDWUlJPSIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ=="><meta name="theme-color" content="#10233f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"></head>
 <body>
@@ -597,7 +644,7 @@
   <button class="go" style="padding:10px" onclick="hidePop()">Got it</button>
 </div>
 
-<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
+<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><button class="fcban" id="fcban" type="button" onclick="openFc()" aria-label="Tomorrow's price forecast">Tomorrow's<br>price<br>forecast</button><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
 <div class="wrap">
   
   <div id="routehint" style="font-size:18px;font-weight:bold;color:#eaf0f7;text-align:center;margin:2px 0 14px;line-height:1.35">Plan your fuel stops below.</div>
@@ -624,12 +671,30 @@
       <button class="go" style="padding:10px;margin-top:14px" onclick="closeSettings()">Done</button>
     </div>
   </div>
-  <div id="fcpop" class="popwrap" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-    <div class="popbox">
-      <div class="poptitle">Prediction Meter</div>
-      <div class="poptext" id="fctext" style="line-height:1.45"></div>
-      <div style="font-size:12px;color:#9fb4ce;margin-top:12px;text-align:center">To see this again, check Settings.</div>
-      <button class="go" style="padding:10px;margin-top:10px" onclick="document.getElementById('fcpop').style.display='none'">Got it</button>
+  <div id="fcpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeFc()">
+    <div class="pump">
+      <svg class="pump-hose" viewBox="0 0 46 420" aria-hidden="true">
+        <path d="M30 30 C 2 70, 0 200, 10 300 S 30 400, 40 412" fill="none" stroke="#1c1c1e" stroke-width="8" stroke-linecap="round"/>
+        <rect x="24" y="2" width="20" height="44" rx="4" fill="#138a36"/>
+        <path d="M14 8 h22 v32 h-8 v16 a6 6 0 0 1 -12 0 v-16 h-2 z" fill="#d9dee5" stroke="#5e6672" stroke-width="1.5"/>
+        <rect x="18" y="0" width="16" height="11" rx="3" fill="#22b04b"/>
+      </svg>
+      <div class="pump-body"><div class="pump-face">
+        <div class="pump-sign">DIESEL</div>
+        <div class="fchead" id="fchead">Price forecast</div>
+        <div class="pump-win"><small>PRICE CHANGE PER GALLON</small>
+          <div class="fcodo" id="fcodo"><span class="fcsym">$</span><div class="drum"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></div></div><span class="fcsym">.</span><div class="drum"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></div></div><div class="drum"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></div></div><span class="fcarrow" id="fcarrow"></span></div>
+        </div>
+        <div class="fcway" id="fcway"></div>
+        <div class="pump-screen">
+          <div class="fcstats" id="fcstats"></div>
+          <div class="fcnote" id="fcnote"></div>
+          <div class="fcgraph" id="fcgraph"></div>
+          <div class="fcdisc">A forecast, not a promise. Prices can change without notice.</div>
+        </div>
+      </div></div>
+      <div class="pump-base"></div><div class="pump-plinth"></div>
+      <button class="go" style="padding:10px;margin-top:16px;width:100%" onclick="closeFc()">Close</button>
     </div>
   </div>
   <div id="stops"></div>
@@ -1082,35 +1147,120 @@ function loadLiveData(){
    it's market-wide (stronger) or mixed (weaker). */
 let FC=null;
 function showForecast(f){
-  if(!f){ document.body.classList.remove('has-pred'); return; }
-  const to=fpsParseDate(f.to); if(!to){ document.body.classList.remove('has-pred'); return; }
+  const bd=document.body;
+  if(!f){ bd.classList.remove('has-pred','has-fc'); return; }
+  const to=fpsParseDate(f.to); if(!to){ bd.classList.remove('has-pred','has-fc'); return; }
   const t=new Date(); t.setHours(0,0,0,0);
-  if(to<=t){ document.body.classList.remove('has-pred'); return; }   // already in effect, nothing ahead
+  if(to<=t){ bd.classList.remove('has-pred','has-fc'); return; }   // in effect now, so the banner is done (gone at midnight)
   FC=f;
-  let seen=''; try{ seen=localStorage.getItem('fps_pred_seen')||''; }catch(e){}
-  if(seen===f.to){ document.body.classList.remove('has-pred'); }   // already opened this one; keep it in Settings only
-  else { document.body.classList.add('has-pred'); }   // new prediction -> green wiggly tag appears
+  bd.classList.add('has-pred','has-fc');                              // teaser tag + Settings row; the move itself lives in the pump
 }
+function fcMoney(c){ let d=Math.abs(c)/100; if(d<0.01) d=0.01; return '$'+d.toFixed(2); }
+
+/* pump "ching" - synthesized bell; browsers only allow sound after a tap */
+let FC_AC=null;
+function fcChing(){
+  try{
+    FC_AC=FC_AC||new (window.AudioContext||window.webkitAudioContext)();
+    const ac=FC_AC, t=ac.currentTime, out=ac.createGain(); out.gain.value=0.18; out.connect(ac.destination);
+    [[1850,.9],[2790,.5],[4630,.3],[6200,.15]].forEach(function(p){
+      const o=ac.createOscillator(), g=ac.createGain(); o.type='sine'; o.frequency.value=p[0];
+      g.gain.setValueAtTime(p[1],t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.45);
+      o.connect(g); g.connect(out); o.start(t); o.stop(t+0.5);
+    });
+  }catch(e){}
+}
+
+/* short mechanical tick while the wheels spin */
+function fcTick(){
+  try{
+    FC_AC=FC_AC||new (window.AudioContext||window.webkitAudioContext)();
+    const ac=FC_AC, t=ac.currentTime, o=ac.createOscillator(), g=ac.createGain();
+    o.type='square'; o.frequency.setValueAtTime(320,t); o.frequency.exponentialRampToValueAtTime(90,t+0.03);
+    g.gain.setValueAtTime(0.027,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+0.06);
+  }catch(e){}
+}
+
+let FC_TIMERS=[];
+function closeFc(){ FC_TIMERS.forEach(clearTimeout); FC_TIMERS=[]; document.getElementById('fcpop').style.display='none'; }
 function openFc(){
   const f=FC; if(!f) return;
-  document.body.classList.remove('has-pred');   // tag done its job; prediction still lives in Settings
   try{ if(f.to) localStorage.setItem('fps_pred_seen', f.to); }catch(e){}
-  const c=f.cents, a=Math.abs(c), day=fpsDayName(fpsParseDate(f.to));
-  const moved=Math.max(f.up,f.down), share=Math.round(100*moved/f.stores);
-  const way=f.up>=f.down?'up':'down';
-  let conf;
-  if(a<0.5) conf='Love\'s prices barely changed, so expect about the same tomorrow.';
-  else if(a>=2) conf='Since 2014, when Love\'s moved 2\u00A2 or more, TA and Petro moved the same way 93\u201398% of the time, by about the same amount.';
-  else conf='Since 2014, when Love\'s moved this much, TA and Petro moved the same way about 9 times in 10.';
-  const wide = a<0.5 ? '' : (share>=80
-    ? '<br><br>'+share+'% of Love\'s stores went '+way+' together, so this looks <b>market-wide</b>.'
-    : '<br><br>Only '+share+'% of Love\'s stores went '+way+', so it\'s <b>mixed</b> \u2013 less sure.');
-  document.getElementById('fctext').innerHTML=
-    'Love\'s sent its price sheet for <b>'+day+'</b>. Across '+f.stores+' stores, the typical discount price moved <b>'
-    +(c>0?'+':'')+c.toFixed(1)+'\u00A2</b> ('+f.up+' up, '+f.down+' down).<br><br>'+conf+wide
-    +'<br><br><i>Trend estimate, not a guarantee.</i>';
+  closeFc();
+  const c=+f.cents||0, a=Math.abs(c), day=fpsDayName(fpsParseDate(f.to)), up=c>0, flat=a<0.5;
+  const col=flat?'#9fb0c8':(up?'#ff5a4f':'#3ab54a');
+  document.getElementById('fchead').textContent='Price forecast for '+day;
+  const way=document.getElementById('fcway');
+  way.textContent=flat?'About the same as today':(up?'Expect diesel to go UP':'Expect diesel to go DOWN'); way.style.color=col;
+
+  // stat boxes: our track record (from the feed when it has it) + how widely it moved
+  const stores=+f.stores||0, moved=Math.max(+f.up||0,+f.down||0), share=stores?Math.round(100*moved/stores):0;
+  let rec, recLbl;
+  if(f.calls>0){ rec=Math.round(100*f.hits/f.calls)+'%'; recLbl='Forecast accuracy ('+f.hits+' of '+f.calls+')'; }
+  else { rec=(a>=2?'93\u201398%':'~90%'); recLbl='Forecast accuracy since 2014'; }
+  let box='<div class="fcstat"><b>'+rec+'</b><span>'+recLbl+'</span></div>';
+  if(!flat && stores) box+='<div class="fcstat"><b style="color:#f5c518">'+share+'%</b><span>of stations moved '+(up?'up':'down')+' together</span></div>';
+  document.getElementById('fcstats').innerHTML=box;
+  document.getElementById('fcnote').innerHTML = flat
+    ? 'Prices barely moved in our early signal, so tomorrow should look a lot like today.'
+    : (share>=80 ? 'This looks <b>market-wide</b>, so it\u2019s a stronger call.' : 'Only some stations moved, so this one is <b>mixed</b> \u2013 less sure.')
+      + (up ? ' If you can, fill up today.' : ' If you can wait, tomorrow should be cheaper.');
+
+  // 1-2 week trend graph, drawn only when the feed sends history: [{d:'YYYY-MM-DD', c:cents}]
+  const g=document.getElementById('fcgraph'), h=(f.history||[]).slice(-14);
+  if(h.length>=3){
+    const W=320,H=110,mid=58,mx=Math.max(1,...h.map(x=>Math.abs(+x.c||0))), bw=W/h.length;
+    let bars='<line x1="0" y1="'+mid+'" x2="'+W+'" y2="'+mid+'" stroke="#1f3552"/>';
+    h.forEach(function(x,i){
+      const v=+x.c||0, bh=Math.max(2,Math.round(44*Math.abs(v)/mx)), y=v>0?mid-bh:mid;
+      bars+='<rect x="'+(i*bw+bw*.18)+'" y="'+y+'" width="'+(bw*.64)+'" height="'+bh+'" rx="2" fill="'+(v>0?'#ff5a4f':(v<0?'#3ab54a':'#9fb0c8'))+'"/>';
+    });
+    g.innerHTML='<div style="font-size:12px;color:#e8eef6;margin-bottom:4px">Last '+h.length+' days (red = up, green = down)</div><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Recent daily price moves">'+bars+'</svg>';
+  } else g.innerHTML='';
+
+  // price wheels: blurred whirl, then tick up a penny at a time with a ching, slowing as it lands; arrow last
+  const odo=document.getElementById('fcodo'), ar=document.getElementById('fcarrow'), drums=[...odo.querySelectorAll('.drum')];
+  const lowCol=flat?'#4a5d7a':(up?'#d63a2f':'#1f9d3a'); way.style.color=lowCol;
+  odo.classList.remove('up','down'); ar.classList.remove('show'); ar.textContent=flat?'':(up?'\u25B2':'\u25BC'); ar.style.color=col;
   document.getElementById('fcpop').style.display='flex';
+  const target=flat?0:Math.max(1,Math.round(a)), reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cur=[0,0,0];
+  function setDrum(i,d,snap){ const st=drums[i].querySelector('.strip'); if(snap) st.style.transition='none'; st.style.transform='translateY('+(-50*d)+'px)'; if(snap){ void st.offsetHeight; st.style.transition=''; } cur[i]=d%10; }
+  function show(cents,snap){                                   // cents -> $D.CC on the three wheels
+    const ds=[Math.floor(cents/100)%10, Math.floor(cents/10)%10, cents%10];
+    ds.forEach((d,i)=>{
+      if(d===cur[i]) return;
+      if(!snap && d===0 && cur[i]===9){ setDrum(i,10,false); FC_TIMERS.push(setTimeout(()=>setDrum(i,0,true),130)); }  // roll 9 -> 0 forward
+      else setDrum(i,d,snap);
+    });
+  }
+  drums.forEach(d=>d.classList.remove('whirl')); [0,1,2].forEach(i=>setDrum(i,0,true));
+  function land(){ show(target,true); if(!flat) odo.classList.add(up?'up':'down'); FC_TIMERS.push(setTimeout(()=>ar.classList.add('show'),250)); }
+  if(reduce){ land(); return; }
+  drums.forEach(d=>d.classList.add('whirl'));
+  let t=650;
+  for(let tk=0; tk<t+2*140; tk+=140){ FC_TIMERS.push(setTimeout(fcTick,tk)); }   // mechanical clicking while the wheels spin
+  drums.forEach((d,i)=>FC_TIMERS.push(setTimeout(()=>{ d.classList.remove('whirl'); setDrum(i,0,true); }, t+i*140)));  // wheels stop left to right
+  t+=2*140+150;
+  if(!flat) FC_TIMERS.push(setTimeout(()=>odo.classList.add(up?'up':'down'),t));
+  const steps=Math.min(target,20);
+  for(let k=1;k<=steps;k++){
+    t+=180+Math.round(630*Math.pow(k/steps,2));               // slows down toward the end
+    const val=k===steps?target:k;
+    FC_TIMERS.push(setTimeout(()=>{ show(val,false); fcTick(); },t));   // click on each penny, no bell
+  }
+  FC_TIMERS.push(setTimeout(land,t+250));
 }
+
+/* preview: add ?fcdemo=4 (up 4 cents) or ?fcdemo=-3 to the address to see the banner with test numbers */
+(function(){ try{
+  const m=location.search.match(/[?&]fcdemo=(-?\d+(\.\d+)?)/); if(!m) return;
+  const d=new Date(); d.setDate(d.getDate()+1);
+  const to=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const c=parseFloat(m[1]), hist=[]; for(let i=13;i>=0;i--) hist.push({c:Math.round((Math.sin(i*1.7)*4)*10)/10});
+  window.addEventListener('load',()=>showForecast({to:to,cents:c,up:c>0?160:12,down:c>0?12:160,stores:181,history:hist}));
+}catch(e){} })();
 
 
 /* ---- SETTINGS: rank by pre-tax cost or by discount price ---- */
@@ -2022,6 +2172,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-09', items:[
+    'New \u201cTomorrow\u2019s price forecast\u201d tag in the header: tap it to see tomorrow\u2019s expected move on the pump (red arrow = up, green arrow = down) until midnight',
+    'Tap the forecast for the full report: the call, our accuracy, and the recent trend'
+  ]},
   { date:'2026-10-08', items:[
     'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
     'Locked-out screen now has a Request access button that opens a sign-up form',
