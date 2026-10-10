@@ -2612,5 +2612,123 @@ async function vsLookup(d){
   vsConv(d); vsTotal(); vsSave();
 }
 </script>
+<script>
+/* ===== Vehicle specs add-on: paste parser + Enter-to-lookup + missing-field popup ===== */
+/* Self-contained. Sits at the end of the page. Nothing else in the app changes. */
+(function(){
+  // Which words in pasted/Gemini text map to which field. First match wins.
+  var VSPASTE = [
+    ['curb_weight', [/curb\s*weight/i, /kerb\s*weight/i, /base\s*weight/i]],
+    ['height',      [/overall\s*height/i, /height/i]],
+    ['length',      [/overall\s*length/i, /length/i]],
+    ['wheel_base',  [/wheel\s*base/i, /wheelbase/i]],
+    ['ground_clearance', [/ground\s*clearance/i, /clearance/i]]
+  ];
+
+  // Pull the first sensible number that appears right after a label.
+  function grabNum(text, res){
+    for(var r=0;r<res.length;r++){
+      var m = text.match(res[r]);
+      if(!m) continue;
+      var after = text.slice(m.index + m[0].length, m.index + m[0].length + 40);
+      var num = after.match(/[-+]?\d[\d,]*(\.\d+)?/);
+      if(num){
+        var v = parseFloat(num[0].replace(/,/g,''));
+        if(isFinite(v) && v>0) return v;
+      }
+    }
+    return 0;
+  }
+
+  function parseInto(d, text){
+    if(!text || !text.trim()) return 0;
+    var filled=0;
+    VSPASTE.forEach(function(pair){
+      var k=pair[0], box=d.querySelector('input[data-k="'+k+'"]');
+      if(!box) return;
+      var v=grabNum(text, pair[1]);
+      if(v){ box.value=v; filled++; }
+    });
+    if(filled){ if(window.vsConv)vsConv(d); if(window.vsTotal)vsTotal(); if(window.vsSave)vsSave(); }
+    return filled;
+  }
+
+  // Lightweight popup used for missing fields and paste results.
+  function popup(msg){
+    var o=document.createElement('div');
+    o.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(6,16,30,.78);display:flex;align-items:center;justify-content:center;padding:24px';
+    o.innerHTML='<div style="max-width:380px;background:#10233f;border:1.5px solid #4f7bb0;border-radius:14px;padding:22px;color:#e8eef6;font-family:system-ui,Arial,sans-serif">'+
+      '<div style="font-size:16px;line-height:1.45">'+msg+'</div>'+
+      '<button style="margin-top:18px;width:100%;padding:12px;border:0;border-radius:10px;background:#f26a21;color:#fff;font-size:16px;font-weight:700">OK</button></div>';
+    o.querySelector('button').onclick=function(){ o.remove(); };
+    o.addEventListener('click',function(e){ if(e.target===o) o.remove(); });
+    document.body.appendChild(o);
+  }
+
+  var CRIT=['curb_weight','height','length'];   // the three that matter for loading
+  function missingNames(d){
+    var out=[];
+    CRIT.forEach(function(k){
+      var box=d.querySelector('input[data-k="'+k+'"]');
+      if(box && !box.value.trim()) out.push(k==='curb_weight'?'curb weight':k);
+    });
+    return out;
+  }
+
+  // Add the paste box + wire Enter and the missing-field check onto one row.
+  function enhance(d){
+    if(d.__vsx) return; d.__vsx=true;
+
+    // Enter in any of the three top boxes fires Look up.
+    ['year','make','model'].forEach(function(k){
+      var b=d.querySelector('input[data-k="'+k+'"]');
+      if(b) b.addEventListener('keydown',function(e){
+        if(e.key==='Enter'){ e.preventDefault(); var lk=d.querySelector('.vslook'); if(lk) lk.click(); }
+      });
+    });
+
+    // Paste box, tucked under the message line.
+    var msg=d.querySelector('.vsmsg');
+    if(msg && !d.querySelector('.vspaste')){
+      var wrap=document.createElement('div');
+      wrap.innerHTML='<textarea class="vspaste" rows="3" placeholder="Or paste the specs from a web search here, then tap Fill" '+
+        'style="width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #4f7bb0;background:#1d3a5e;color:#fff;font-size:15px"></textarea>'+
+        '<button class="vsfill" type="button" style="width:100%;margin-top:6px;padding:11px;border:1px solid #4f7bb0;border-radius:10px;background:transparent;color:#e8eef6;font-size:15px">Fill from paste</button>';
+      msg.parentNode.insertBefore(wrap, msg.nextSibling);
+      wrap.querySelector('.vsfill').onclick=function(){
+        var n=parseInto(d, wrap.querySelector('.vspaste').value);
+        if(!n){ popup('Couldn\'t find any numbers in that paste. Make sure you copied the curb weight, height and length.'); return; }
+        var miss=missingNames(d);
+        popup('Filled '+n+' field'+(n===1?'':'s')+'.'+(miss.length?'<br><br>Still missing: <b>'+miss.join(', ')+'</b>. Add it by hand or paste more.':'<br><br>Got everything. Double-check before you load.'));
+      };
+    }
+
+    // After a Look up, if a critical field is blank, pop it up with a Search link.
+    var lk=d.querySelector('.vslook');
+    if(lk){
+      lk.addEventListener('click',function(){
+        setTimeout(function(){
+          var miss=missingNames(d);
+          var g=function(k){var b=d.querySelector('input[data-k="'+k+'"]');return b?b.value.trim():'';};
+          if(miss.length && (g('year')||g('make')||g('model'))){
+            var q=encodeURIComponent(g('year')+' '+g('make')+' '+g('model')+' curb weight height length');
+            popup('Missing <b>'+miss.join(', ')+'</b> for this vehicle.<br><br>'+
+              '<a href="https://www.google.com/search?q='+q+'" target="_blank" rel="noopener" style="color:#f26a21;font-weight:700">Search the web</a>, '+
+              'copy the result, and paste it into the box below — then tap Fill.');
+          }
+        }, 1700);   // wait for the lookup to come back and fill what it can
+      });
+    }
+  }
+
+  function scan(){ document.querySelectorAll('#vsrows .vsrow').forEach(enhance); }
+  // Catch rows added later (Add vehicle).
+  var box=document.getElementById('vsrows');
+  if(box){ new MutationObserver(scan).observe(box,{childList:true}); }
+  document.addEventListener('click',function(e){ if(e.target.closest('#vspop')) setTimeout(scan,50); });
+  setTimeout(scan, 600);
+  window.vsxScan=scan;
+})();
+</script>
 </body>
 </html>
