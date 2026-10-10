@@ -2821,5 +2821,219 @@ async function vsLookup(d){
 })();
 
 </script>
+<script>
+
+/* ===== Unladen weight + legal-max summary add-on ===== */
+(function(){
+  var LEGAL=80000, KEY='fps_unladen_v1';
+  function get(){ var v=parseFloat((localStorage.getItem(KEY)||'').replace(/[^0-9.]/g,'')); return isFinite(v)?v:0; }
+  function set(v){ try{ localStorage.setItem(KEY,String(v)); }catch(e){} }
+  function cm(n){ return Math.round(n).toLocaleString(); }
+
+  var st=document.createElement('style');
+  st.textContent=
+    '#vsunbtn{width:100%;box-sizing:border-box;border:1.5px solid #4f7bb0;border-radius:10px;background:#17304f;color:#e8eef6;padding:12px;text-align:center;font-size:16px;font-weight:bold;line-height:1.35}'+
+    '#vsunbtn small{display:block;font-weight:normal;font-size:12px;color:#9fc0e8;margin-top:3px}'+
+    '#vstotal{background:none!important;border:none!important;padding:0!important}'+'.vssum{margin-top:4px;background:#132c4a;border:1px solid #2b4a70;border-radius:10px;padding:12px 14px;font-size:14px;color:#cfe0f3;line-height:1.7}'+
+    '.vssum .r{display:flex;justify-content:space-between}'+
+    '.vssum .hd{font-size:12px;color:#9fb0c8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}'+
+    '.vssum .big{font-size:16px;font-weight:bold;color:#e8eef6;margin-top:6px;border-top:1px solid #2b4a70;padding-top:8px}'+
+    '.vssum .ok{color:#3ab54a;font-weight:bold}.vssum .over{color:#ff6a5a;font-weight:bold}';
+  document.head.appendChild(st);
+
+  // Replace the "max load" box with the unladen-weight button.
+  var mx=document.getElementById('vsmaxin');
+  if(mx){
+    var wrap=mx.closest('.vsmax')||mx.parentNode;
+    var btn=document.createElement('button'); btn.type='button'; btn.id='vsunbtn';
+    wrap.parentNode.replaceChild(btn,wrap);
+    function label(){ var v=get(); btn.innerHTML= v? ('Unladen weight: '+cm(v)+' lbs<small>Tap here to change</small>') : ('Set your unladen weight (truck + trailer)<small>Tap here to enter it</small>'); }
+    btn.onclick=function(){
+      var cur=get(); var r=prompt('Your unladen weight in pounds (truck + trailer, empty).\nUpdate it if your fuel load changed.', cur? String(cur):'');
+      if(r===null) return; var n=parseFloat(r.replace(/[^0-9.]/g,'')); if(!isFinite(n)||n<=0){ if(r.trim()==='') { set(0);} } else set(n);
+      label(); render();
+    };
+    label();
+    // keep a hidden input alive so core vsState/vsLoad don't choke
+    var hid=document.createElement('input'); hid.type='hidden'; hid.id='vsmaxin'; document.body.appendChild(hid);
+  }
+
+  function render(){
+    var box=document.getElementById('vstotal'); if(!box) return;
+    var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow'));
+    var cars=0, have=0;
+    rows.forEach(function(r){ var w=parseFloat((r.querySelector('input[data-k="curb_weight"]').value||'').replace(/[^0-9.]/g,'')); if(isFinite(w)&&w){ cars+=w; have++; } });
+    var un=get(), total=un+cars, room=LEGAL-total;
+    var h='<div class="vssum"><div class="hd">Weight check</div>';
+    h+='<div class="r"><span>Legal max (commercial)</span><span>'+cm(LEGAL)+' lbs</span></div>';
+    h+='<div class="r"><span>Your unladen weight</span><span>'+(un?cm(un):'\u2014')+' lbs</span></div>';
+    h+='<div class="r"><span>Cars loaded ('+have+')</span><span>'+cm(cars)+' lbs</span></div>';
+    if(have<rows.length) h+='<div class="r" style="color:#9fb0c8"><span>'+(rows.length-have)+' still need a weight</span><span></span></div>';
+    h+='<div class="r big"><span>Total weight</span><span>'+cm(total)+' lbs</span></div>';
+    if(!un){ h+='<div class="r" style="color:#9fb0c8;margin-top:6px"><span>Set your unladen weight to check.</span><span></span></div>'; }
+    else { h+= room>=0 ? '<div class="big ok" style="text-align:center;border:none">You\u2019re UNDER by '+cm(room)+' lbs</div>'
+                       : '<div class="big over" style="text-align:center;border:none">OVER by '+cm(-room)+' lbs</div>'; }
+    box.innerHTML=h+'</div>';
+  }
+
+  // re-render whenever weights change or rows move
+  document.addEventListener('input',function(e){ if(e.target && e.target.matches && e.target.matches('#vsrows input[data-k="curb_weight"]')) render(); });
+  var rows=document.getElementById('vsrows'); if(rows) new MutationObserver(render).observe(rows,{childList:true,subtree:true});
+  // wrap vsTotal so core calls also refresh our summary
+  if(typeof vsTotal==='function' && !vsTotal.__un){ var o=vsTotal; vsTotal=function(){ try{o();}catch(e){} render(); }; vsTotal.__un=true; }
+  setTimeout(render,800);
+})();
+
+</script>
+<script>
+/* ===== Vehicle specs add-on: collapse cards, collapse/expand all, clear all, load report ===== */
+(function(){
+  var pop=document.getElementById('vspop'); if(!pop) return;
+  function q(s,r){ return (r||document).querySelector(s); }
+  function qa(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function val(d,k){ var i=q('input[data-k="'+k+'"]',d); return i? i.value.trim() : ''; }
+  function num(v){ var n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+  function cm(n){ return Math.round(n).toLocaleString(); }
+  function ft(v){ return (typeof vsFeet==='function')? vsFeet(v) : ''; }
+  function name(d){ return [val(d,'year'),val(d,'make'),val(d,'model')].filter(Boolean).join(' '); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  var st=document.createElement('style');
+  st.textContent=
+    '.vstotal{position:static!important;bottom:auto!important}'+
+    '.vscol{background:#2b4a70;border:none;color:#e8eef6;font-size:15px;width:34px;height:34px;border-radius:8px;margin-right:6px}'+
+    '.vstop .vsbtnr{display:flex;align-items:center}'+
+    '.vsline{display:none;flex:1;min-width:0;margin:0 8px 0 2px;color:#e8eef6;font-size:15px;font-weight:bold}'+
+    '.vsline em{font-style:normal;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+    '.vsline span{display:block;color:#9fc0e8;font-weight:normal;font-size:13px;margin-top:1px}'+
+    '.vsrow.vsc .vsnum{display:none}'+
+    '.vsrow.vsc{background:#1d3a5e;border-color:#4f7bb0;padding:8px 10px}'+
+    '.vsrow.vsc > *:not(.vstop){display:none!important}'+
+    '.vsrow.vsc .vstop{margin:0;cursor:pointer}'+
+    '.vsrow.vsc .vsline{display:block}'+
+    '.vstools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}'+
+    '.vstools button{height:44px;border-radius:9px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:15px;font-weight:bold}'+
+    '.vstools .vsclr{border-color:#7a3a3a;color:#ffb3a8}'+
+    '#vspop.vsallc #vsaddbtn{display:block!important}'+
+    '.vsrepbtn{width:100%;height:50px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-size:16px;font-weight:bold;margin:4px 0 10px}'+
+    '#vsrep{position:fixed;inset:0;z-index:9700;background:rgba(5,15,30,.82);display:none;overflow:auto;padding:14px;box-sizing:border-box}'+
+    '#vsrep.on{display:block}'+
+    '#vsrep .sheet{max-width:640px;margin:0 auto;background:#fff;color:#111;border-radius:12px;padding:18px 16px;font-family:Arial,Helvetica,sans-serif}'+
+    '#vsrep h2{margin:0 0 2px;font-size:20px}#vsrep .dt{color:#555;font-size:13px;margin-bottom:12px}'+
+    '#vsrep .car{border-top:1px solid #ccc;padding:10px 0}'+
+    '#vsrep .car b{font-size:16px}'+
+    '#vsrep table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px}'+
+    '#vsrep td{padding:3px 0}#vsrep td:last-child{text-align:right}'+
+    '#vsrep .chk{display:inline-block;width:14px;height:14px;border:1.5px solid #333;margin-right:8px;vertical-align:-2px}'+
+    '#vsrep .wt{border-top:2px solid #111;margin-top:6px;padding-top:10px;font-size:15px}'+
+    '#vsrep .verdict{font-size:18px;font-weight:bold;text-align:center;margin-top:10px;padding:8px;border-radius:8px}'+
+    '#vsrep .verdict.ok{background:#e3f6e5;color:#1c7a2a}#vsrep .verdict.over{background:#fde4e1;color:#b3261e}'+
+    '#vsrep .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:640px;margin:12px auto 30px}'+
+    '#vsrep .acts button{height:50px;border-radius:10px;font-size:16px;font-weight:bold;border:none}'+
+    '#vsrep .pr{background:var(--orange);color:#fff}#vsrep .cl{background:#17304f;color:#e8eef6;border:1.5px solid #4f7bb0!important}'+
+    '@media print{ body.vsprint > *:not(#vsrep){display:none!important}'+
+    ' body.vsprint{background:#fff!important}'+
+    ' body.vsprint #vsrep{position:static;display:block;background:#fff;padding:0;overflow:visible}'+
+    ' body.vsprint #vsrep .acts{display:none}'+
+    ' body.vsprint #vsrep .sheet{border-radius:0;padding:0;max-width:none} }';
+  document.head.appendChild(st);
+
+  /* ---- per-card collapse ---- */
+  function line(d){
+    var w=num(val(d,'curb_weight')), n=name(d)||'No vehicle entered';
+    var idx=qa('#vsrows .vsrow').indexOf(d)+1;
+    var ln=q('.vsline',d); if(ln) ln.innerHTML='<em>'+idx+'. '+esc(n)+'</em><span>'+(w? cm(w)+' lbs' : 'no weight')+'</span>';
+  }
+  function setC(d,on){
+    d.classList.toggle('vsc',on);
+    var b=q('.vscol',d); if(b){ b.textContent= on? '\u25BC' : '\u25B2'; b.setAttribute('aria-label', on?'Open vehicle':'Collapse vehicle'); }
+    line(d); sync();
+  }
+  function filled(d){ return !!(val(d,'year') && val(d,'make') && val(d,'model')); }
+  function wire(d){
+    if(d.__vscol) return; d.__vscol=true;
+    var top=q('.vstop',d), del=q('.vsdel',d); if(!top||!del) return;
+    var ln=document.createElement('div'); ln.className='vsline';
+    top.insertBefore(ln, del);
+    var grp=document.createElement('div'); grp.className='vsbtnr';
+    var col=document.createElement('button'); col.type='button'; col.className='vscol';
+    top.replaceChild(grp, del); grp.appendChild(col); grp.appendChild(del);
+    col.onclick=function(e){ e.stopPropagation(); setC(d,!d.classList.contains('vsc')); };
+    top.addEventListener('click',function(e){ if(d.classList.contains('vsc') && !e.target.closest('.vsdel')) setC(d,false); });
+    d.addEventListener('input',function(){ line(d); });
+    setC(d, d.__startC===true);
+  }
+  function sync(){
+    var rows=qa('#vsrows .vsrow');
+    var open=rows.filter(function(r){ return !r.classList.contains('vsc'); }).length;
+    pop.classList.toggle('vsallc', rows.length>0 && open===0 && rows.length<(window.VS_MAX||12));
+    if(togAll) togAll.textContent = open===0 ? 'Expand all' : 'Collapse all';
+  }
+
+  /* ---- toolbar: Collapse all / Expand all + Clear all ---- */
+  var rowsBox=document.getElementById('vsrows');
+  var tools=document.createElement('div'); tools.className='vstools';
+  var togAll=document.createElement('button'); togAll.type='button'; togAll.textContent='Collapse all';
+  var clr=document.createElement('button'); clr.type='button'; clr.className='vsclr'; clr.textContent='Clear all';
+  tools.appendChild(togAll); tools.appendChild(clr);
+  rowsBox.parentNode.insertBefore(tools, rowsBox);
+  togAll.onclick=function(){ var rows=qa('#vsrows .vsrow'); var anyOpen=rows.some(function(r){return !r.classList.contains('vsc');}); rows.forEach(function(r){ setC(r,anyOpen); }); };
+  clr.onclick=function(){
+    if(!confirm('Clear all vehicles and start a new load?')) return;
+    rowsBox.innerHTML=''; rowsBox.appendChild(vsRow({}));
+    if(typeof vsRenum==='function') vsRenum(); if(typeof vsTotal==='function') vsTotal(); if(typeof vsSave==='function') vsSave();
+  };
+
+  /* ---- View report button (above the weight check) ---- */
+  var tot=document.getElementById('vstotal');
+  var rb=document.createElement('button'); rb.type='button'; rb.className='vsrepbtn'; rb.textContent='View report';
+  tot.parentNode.insertBefore(rb, tot);
+
+  var rep=document.createElement('div'); rep.id='vsrep'; document.body.appendChild(rep);
+  function unladen(){ var v=num(localStorage.getItem('fps_unladen_v1')); return v; }
+  function build(){
+    var rows=qa('#vsrows .vsrow').filter(function(r){ return name(r); });
+    var dt=new Date().toLocaleString([], {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+    var h='<div class="sheet"><h2>Load report</h2><div class="dt">'+esc(dt)+' \u00b7 '+rows.length+' vehicle'+(rows.length===1?'':'s')+'</div>';
+    var cars=0;
+    rows.forEach(function(r,i){
+      var w=num(val(r,'curb_weight')); cars+=w;
+      function rowIn(lbl,k){ var v=val(r,k); return '<tr><td>'+lbl+'</td><td>'+(v? esc(v)+' in'+(ft(v)?' ('+ft(v)+')':'') : '\u2014')+'</td></tr>'; }
+      h+='<div class="car"><span class="chk"></span><b>'+(i+1)+'. '+esc(name(r))+'</b><table>'+
+         '<tr><td>Curb weight</td><td>'+(w? cm(w)+' lbs' : '\u2014')+'</td></tr>'+
+         rowIn('Height','height')+rowIn('Length','length')+rowIn('Wheelbase','wheel_base')+rowIn('Ground clearance','ground_clearance')+
+         '</table></div>';
+    });
+    if(!rows.length) h+='<div class="car">No vehicles entered yet.</div>';
+    var un=unladen(), total=un+cars, room=80000-total;
+    h+='<div class="wt"><table>'+
+       '<tr><td>Commercial vehicle legal max</td><td>80,000 lbs</td></tr>'+
+       '<tr><td>Unladen weight (truck + trailer)</td><td>'+(un? cm(un)+' lbs':'not set')+'</td></tr>'+
+       '<tr><td>Vehicles on this load</td><td>'+cm(cars)+' lbs</td></tr>'+
+       '<tr><td><b>Total weight</b></td><td><b>'+cm(total)+' lbs</b></td></tr></table>';
+    if(un) h+= room>=0 ? '<div class="verdict ok">UNDER by '+cm(room)+' lbs</div>' : '<div class="verdict over">OVERWEIGHT by '+cm(-room)+' lbs</div>';
+    h+='</div></div><div class="acts"><button type="button" class="cl">Close</button><button type="button" class="pr">Print</button></div>';
+    rep.innerHTML=h;
+    q('.cl',rep).onclick=function(){ rep.classList.remove('on'); };
+    q('.pr',rep).onclick=function(){ document.body.classList.add('vsprint'); setTimeout(function(){ window.print(); },50); };
+  }
+  window.addEventListener('afterprint',function(){ document.body.classList.remove('vsprint'); });
+  rb.onclick=function(){ build(); rep.classList.add('on'); };
+
+  /* ---- collapse finished cards when he adds the next one ---- */
+  if(typeof vsAdd==='function' && !vsAdd.__vscol){
+    var oa=vsAdd;
+    vsAdd=function(){ qa('#vsrows .vsrow').forEach(function(r){ if(filled(r)) setC(r,true); }); oa(); };
+    vsAdd.__vscol=true;
+  }
+
+  function scan(){ qa('#vsrows .vsrow').forEach(function(d){ if(!d.__vscol){ d.__startC = filled(d) && !!rowsBox.__loaded; wire(d); } }); sync(); }
+  new MutationObserver(scan).observe(rowsBox,{childList:true});
+  // On open: saved loads come in collapsed so the page reads clean.
+  document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('#vspop')) setTimeout(scan,80); });
+  setTimeout(function(){ qa('#vsrows .vsrow').forEach(function(d){ wire(d); if(filled(d)) setC(d,true); }); rowsBox.__loaded=true; sync(); },900);
+})();
+
+</script>
 </body>
 </html>
