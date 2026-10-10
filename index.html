@@ -41,6 +41,40 @@
   .nearlbl{display:block;font-size:13px;color:#9fb0c8;margin:0 0 6px}
   #nearcity{width:100%;padding:13px 14px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff;margin-bottom:16px}
   #nearcity::placeholder{color:#9fb4ce}
+
+  /* ---- Tools page + Vehicle specs ---- */
+  #toolsbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:64px;margin:0 0 12px;border-radius:10px;font-size:19px;font-weight:bold;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;cursor:pointer}
+  #toolspop,#vspop{position:fixed;inset:0;z-index:9400;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #vspop{z-index:9500}
+  #toolspop.show,#vspop.show{display:block}
+  .tlcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#17304f;border:1.5px solid #4f7bb0;border-radius:12px;padding:14px;margin:0 0 12px;color:#fff;cursor:pointer}
+  .tlcard .tlt{font-size:18px;font-weight:bold}
+  .tlcard .tls{font-size:13px;color:#9fb4ce;margin-top:3px}
+  .tlcard.soon{opacity:.55;cursor:default}
+  .tlcard .soontag{margin-left:auto;font-size:11px;font-weight:800;color:#f26a21;border:1px solid #f26a21;border-radius:6px;padding:3px 7px;white-space:nowrap}
+  .tlico{flex:0 0 46px;height:46px;border-radius:10px;background:#10233f;display:flex;align-items:center;justify-content:center}
+  .vshead{display:flex;align-items:center;gap:12px}
+  .vsmax{display:flex;align-items:center;gap:10px;margin:0 0 14px;color:#9fb4ce;font-size:14px}
+  .vsmax input{width:120px}
+  .vsrow{background:#132c4a;border:1.5px solid #2b4a70;border-radius:12px;padding:12px;margin:0 0 12px}
+  .vstop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .vsnum{color:#f26a21;font-weight:800;font-size:15px}
+  .vsdel{background:#2b4a70;border:none;color:#9fb4ce;font-size:18px;width:34px;height:34px;border-radius:8px}
+  .vsymm{display:grid;grid-template-columns:78px 1fr 1fr;gap:8px}
+  #vspop input{width:100%;box-sizing:border-box;padding:12px;font-size:16px;border:1px solid #4f7bb0;border-radius:9px;background:#1d3a5e;color:#fff}
+  #vspop input::placeholder{color:#9fb4ce}
+  .vslook{width:100%;height:46px;margin:10px 0 0;border:none;border-radius:9px;background:var(--orange);color:#fff;font-size:15px;font-weight:bold}
+  .vsspecs{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:12px}
+  .vsspecs label{display:block;font-size:12px;color:#9fb4ce;margin-bottom:3px}
+  .vsspecs .cv{font-size:11px;color:#9fb4ce;margin-top:2px;min-height:13px}
+  .vsnote{margin-top:10px;font-size:14px;color:#e8eef6}
+  .vsweb{display:inline-block;margin-top:8px;padding:10px 14px;border-radius:9px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;font-weight:bold;font-size:14px;text-decoration:none}
+  .vsadd{width:100%;height:52px;border-radius:10px;background:transparent;border:2px dashed var(--orange);color:var(--orange);font-size:16px;font-weight:bold;margin:2px 0 14px}
+  .vstotal{position:sticky;bottom:78px;background:#10233f;border:2px solid #2b4a70;border-radius:12px;padding:12px 14px;margin-top:8px}
+  .vstotal .big{font-size:20px;font-weight:800}
+  .vstotal .ok{color:#3ab54a;font-weight:bold;margin-top:4px}
+  .vstotal .over{color:#ff4a4a;font-weight:bold;margin-top:4px}
+  .vstotal .mut{color:#9fb4ce;font-size:13px;margin-top:4px}
   #nearcity:placeholder-shown{padding-left:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cpath d='M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z' fill='%23f26a21'/%3E%3Ccircle cx='8' cy='7.5' r='2.4' fill='%231d3a5e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:13px center;background-size:15px 19px}
   #nearsug{top:50px;max-height:260px;overflow-y:auto}
   .nearmi > *{flex:1 1 0;min-width:0}
@@ -680,6 +714,7 @@
     </div>
   </div>
   <button id="planbtn" onclick="openPlan()"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button>
+  <button id="toolsbtn" onclick="openTools()"><svg viewBox="0 0 40 32" width="40" height="32" aria-hidden="true"><path d="M14 9V5.5A2.5 2.5 0 0 1 16.5 3h7A2.5 2.5 0 0 1 26 5.5V9" fill="none" stroke="#f26a21" stroke-width="2.6"/><rect x="3" y="9" width="34" height="20" rx="3" fill="#f26a21"/><rect x="3" y="16" width="34" height="2.4" fill="#10233f"/><rect x="16.5" y="14" width="7" height="6.5" rx="1.4" fill="#10233f"/><rect x="18.3" y="15.6" width="3.4" height="3.2" rx=".6" fill="#f26a21"/></svg><span>Tools</span></button>
   </div>
   <div id="opthint"></div>
 </div>
@@ -2054,7 +2089,8 @@ const CHANGELOG = [
   { date:'2026-10-10', items:[
     'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
     'Fuel near me now offers 50, 75 and 100 mile circles',
-    'Fuel near me box shows the orange pin and suggests cities as you type'
+    'Fuel near me box shows the orange pin and suggests cities as you type',
+    'New Tools button: Vehicle specs looks up the size and weight of each car on your load and totals it'
   ]},
   { date:'2026-10-08', items:[
     'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
@@ -2141,6 +2177,16 @@ function stepBack(){
   if(document.body.classList.contains('on-trip')){
     document.body.classList.remove('on-trip');
     document.getElementById('trippop').classList.remove('show');
+    return true;
+  }
+  if(document.body.classList.contains('on-vspec')){
+    document.body.classList.remove('on-vspec');
+    document.getElementById('vspop').classList.remove('show');
+    return true;
+  }
+  if(document.body.classList.contains('on-tools')){
+    document.body.classList.remove('on-tools');
+    document.getElementById('toolspop').classList.remove('show');
     return true;
   }
   if(document.body.classList.contains('on-plan')){
@@ -2430,11 +2476,141 @@ async function optimizeStops(){
       <button class="back" onclick="closeTrip()">Back</button>
     </div>
   </div>
+  <div id="toolspop"><div class="plwrap">
+    <h2>Tools</h2>
+    <div class="plsub">Extra helpers for your loads. More are on the way.</div>
+    <button class="tlcard" onclick="openVspec()"><span class="tlico"><svg viewBox="0 0 48 24" width="44" height="22" aria-hidden="true"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/></svg></span><span><span class="tlt">Vehicle specs</span><span class="tls" style="display:block">Weight and size of each car on your load</span></span></button>
+    <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 20V9h4v11zM10 20V4h4v16zM16 20v-7h4v7z" fill="#9fc0e8"/></svg></span><span><span class="tlt">Fuel mileage</span><span class="tls" style="display:block">Track your miles per gallon</span></span><span class="soontag">COMING SOON</span></div>
+    <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#9fc0e8" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#9fc0e8" stroke-width="2"/></svg></span><span><span class="tlt">Accounting</span><span class="tls" style="display:block">Expenses and settlements</span></span><span class="soontag">COMING SOON</span></div>
+  </div>
+    <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
+  </div>
+  <div id="vspop"><div class="plwrap">
+    <div class="vshead"><svg viewBox="0 0 48 24" width="44" height="22" aria-hidden="true"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/></svg><h2>Vehicle specs</h2></div>
+    <div class="plsub">Add each vehicle on your load. Tap Look up to fill in its size and weight.</div>
+    <div class="vsmax"><span>Your max load (lbs)</span><input id="vsmaxin" type="text" inputmode="numeric" placeholder="Optional"></div>
+    <div id="vsrows"></div>
+    <button class="vsadd" id="vsaddbtn" onclick="vsAdd()">+ Add vehicle</button>
+    <div class="vstotal" id="vstotal"></div>
+  </div>
+    <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
+  </div>
 <div id="mvpop" onclick="if(event.target===this)closeMove()"><div class="mvbox" role="dialog" aria-modal="true" aria-labelledby="mvtitle">
   <div id="mvtitle">Move this stop</div>
   <button class="mvchoice" id="mvup" type="button" onclick="doMove(-1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 16V3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 8l5-5 5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up</button>
   <button class="mvchoice" id="mvdn" type="button" onclick="doMove(1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 2v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 10l5 5 5-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Down</button>
   <button class="mvcancel" type="button" onclick="closeMove()">Cancel</button>
 </div></div>
+<script>
+// ---------- Tools page + Vehicle specs (phase one: specs and weight) ----------
+const VSPEC_URL='https://script.google.com/macros/s/AKfycbyETR5rUpf2j3Z7fBHObPn2xKssen156tpgVEGPpbp8aMwk4ikBF3gfAywTXDABkjpr/exec?page=vspec';   // FPS Access relay
+const VS_MAX=12, VS_KEY='fps_vspec_v1';
+const VS_FIELDS=[['curb_weight','Curb weight','lbs'],['height','Height','in'],['length','Length','in'],['wheel_base','Wheelbase','in'],['ground_clearance','Ground clearance','in']];
+function openTools(){ enterScreen(); document.getElementById('toolspop').classList.add('show'); document.body.classList.add('on-tools'); document.getElementById('toolspop').scrollTop=0; }
+function openVspec(){ enterScreen(); vsLoad(); document.getElementById('vspop').classList.add('show'); document.body.classList.add('on-vspec'); document.getElementById('vspop').scrollTop=0; }
+function vsNum(v){ const n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+function vsFeet(inches){ const n=vsNum(inches); if(!n) return ''; const f=Math.floor(n/12), i=Math.round(n-f*12); return i===12? (f+1)+"' 0\"" : f+"' "+i+'"'; }
+function vsState(){
+  return { max: document.getElementById('vsmaxin').value,
+    rows: [...document.querySelectorAll('#vsrows .vsrow')].map(r=>{
+      const o={}; r.querySelectorAll('input[data-k]').forEach(i=>o[i.dataset.k]=i.value); return o; }) };
+}
+function vsSave(){ try{ localStorage.setItem(VS_KEY, JSON.stringify(vsState())); }catch(e){} }
+function vsLoad(){
+  const box=document.getElementById('vsrows'); if(box.children.length) return;
+  let st=null; try{ st=JSON.parse(localStorage.getItem(VS_KEY)||'null'); }catch(e){}
+  const mx=document.getElementById('vsmaxin');
+  if(!mx._wired){ mx._wired=1; mx.addEventListener('input',()=>{ vsTotal(); vsSave(); }); }
+  if(st && st.max) mx.value=st.max;
+  const rows=(st && st.rows && st.rows.length)? st.rows : [{}];
+  rows.slice(0,VS_MAX).forEach(r=>box.appendChild(vsRow(r)));
+  vsRenum(); vsTotal();
+}
+function vsRow(v){
+  v=v||{};
+  const d=document.createElement('div'); d.className='vsrow';
+  let h='<div class="vstop"><span class="vsnum"></span><button class="vsdel" type="button" aria-label="Remove vehicle">&times;</button></div>'+
+    '<div class="vsymm"><input data-k="year" type="text" inputmode="numeric" maxlength="4" placeholder="Year">'+
+    '<input data-k="make" type="text" autocapitalize="words" placeholder="Make">'+
+    '<input data-k="model" type="text" autocapitalize="words" placeholder="Model"></div>'+
+    '<button class="vslook" type="button">Look up</button><div class="vsmsg"></div><div class="vsspecs">';
+  VS_FIELDS.forEach(([k,lbl,u])=>{ h+='<div><label>'+lbl+' ('+u+')</label><input data-k="'+k+'" type="text" inputmode="decimal"><div class="cv"></div></div>'; });
+  d.innerHTML=h+'</div>';
+  d.querySelectorAll('input[data-k]').forEach(i=>{ if(v[i.dataset.k]!=null) i.value=v[i.dataset.k];
+    i.addEventListener('input',()=>{ vsConv(d); vsTotal(); vsSave(); }); });
+  d.querySelector('.vsdel').onclick=()=>{
+    const box=document.getElementById('vsrows');
+    if(box.children.length<=1){ d.querySelectorAll('input').forEach(i=>i.value=''); d.querySelector('.vsmsg').innerHTML=''; }
+    else d.remove();
+    vsRenum(); vsConv(d); vsTotal(); vsSave();
+  };
+  d.querySelector('.vslook').onclick=()=>vsLookup(d);
+  vsConv(d);
+  return d;
+}
+function vsConv(d){
+  d.querySelectorAll('.vsspecs input').forEach(i=>{
+    const cv=i.nextElementSibling; const k=i.dataset.k;
+    cv.textContent = (k==='length'||k==='height'||k==='wheel_base') ? vsFeet(i.value) : '';
+  });
+}
+function vsRenum(){
+  const rows=[...document.querySelectorAll('#vsrows .vsrow')];
+  rows.forEach((r,i)=>r.querySelector('.vsnum').textContent='Vehicle '+(i+1));
+  document.getElementById('vsaddbtn').style.display = rows.length>=VS_MAX ? 'none':'';
+}
+function vsAdd(){
+  const box=document.getElementById('vsrows'); if(box.children.length>=VS_MAX) return;
+  const r=vsRow({}); box.appendChild(r); vsRenum(); vsSave();
+  r.querySelector('input[data-k="year"]').focus();
+}
+function vsTotal(){
+  const rows=[...document.querySelectorAll('#vsrows .vsrow')];
+  let tot=0, have=0;
+  rows.forEach(r=>{ const w=vsNum(r.querySelector('input[data-k="curb_weight"]').value); if(w){ tot+=w; have++; } });
+  const max=vsNum(document.getElementById('vsmaxin').value);
+  let h='<div class="big">Total weight: '+Math.round(tot).toLocaleString()+' lbs</div>';
+  if(have<rows.length) h+='<div class="mut">'+(rows.length-have)+' of '+rows.length+' vehicle'+(rows.length===1?'':'s')+' still need a weight</div>';
+  if(max){
+    const diff=Math.round(max-tot);
+    h+= diff>=0 ? '<div class="ok">Under your max by '+diff.toLocaleString()+' lbs</div>'
+                : '<div class="over">OVER your max by '+(-diff).toLocaleString()+' lbs</div>';
+  } else h+='<div class="mut">Enter your max load above to check if you\u2019re over.</div>';
+  document.getElementById('vstotal').innerHTML=h;
+}
+// Several trims can come back; take the biggest number on each so the weight check stays on the safe side.
+function vsPick(list){
+  const out={};
+  VS_FIELDS.forEach(([k])=>{ let best=0; (list||[]).forEach(x=>{ const n=vsNum(x[k]); if(n>best) best=n; }); if(best) out[k]=best; });
+  return out;
+}
+async function vsFetch(y,mk,md){
+  const q='year='+encodeURIComponent(y)+'&make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(md);
+  const tries=[];
+  if(VSPEC_URL) tries.push(VSPEC_URL+(VSPEC_URL.includes('?')?'&':'?')+q);
+  for(const u of tries){
+    try{ const r=await fetch(u); if(!r.ok) continue; const j=await r.json();
+      const list=j.specs? [j.specs] : Array.isArray(j)? j : (j.data||[j]); const got=vsPick(list);
+      if(Object.keys(got).length) return got; }catch(e){}
+  }
+  return null;
+}
+async function vsLookup(d){
+  const g=k=>d.querySelector('input[data-k="'+k+'"]').value.trim();
+  const y=g('year'), mk=g('make'), md=g('model'), msg=d.querySelector('.vsmsg');
+  if(!y||!mk||!md){ msg.innerHTML='<div class="vsnote">Fill in year, make and model first.</div>'; return; }
+  const btn=d.querySelector('.vslook'); btn.disabled=true; btn.textContent='Looking up\u2026';
+  const got=await vsFetch(y,mk,md);
+  btn.disabled=false; btn.textContent='Look up';
+  if(got){
+    VS_FIELDS.forEach(([k])=>{ if(got[k]) d.querySelector('input[data-k="'+k+'"]').value=got[k]; });
+    msg.innerHTML='<div class="vsnote" style="color:#3ab54a">Found it. Double-check before you load.</div>';
+  } else {
+    const web='https://www.google.com/search?q='+encodeURIComponent(y+' '+mk+' '+md+' curb weight height length wheelbase ground clearance');
+    msg.innerHTML='<div class="vsnote">No data on file for this vehicle yet.</div><a class="vsweb" href="'+web+'" target="_blank" rel="noopener">Search the web</a><div class="vsnote" style="font-size:12px;color:#9fb4ce">Then type the numbers into the boxes below.</div>';
+  }
+  vsConv(d); vsTotal(); vsSave();
+}
+</script>
 </body>
 </html>
