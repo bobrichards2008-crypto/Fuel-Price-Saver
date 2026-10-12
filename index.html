@@ -3626,11 +3626,30 @@ async function vsLookup(d){
   /* ---------- the car icon: look it up on the web ---------- */
   // Builds an image search for exactly what's on the card, e.g. "2019 Ford F150 SuperCab".
   function webUrl(d){ var nm=nameOf(d); return nm? 'https://www.google.com/search?udm=2&q='+encodeURIComponent(nm) : ''; }
+  // Installed app: open the search in the SAME window, so Android shows its own bar with an X
+  // that closes the search and drops the driver back on the vehicle page. Browser tab: new tab.
+  function isApp(){ try{ return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone===true; }catch(e){ return false; } }
   function lookUp(d){
     var u=webUrl(d); if(!u) return;
+    if(isApp()){
+      try{ if(typeof vsSave==='function') vsSave();
+        var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow')), pop=document.getElementById('vspop');
+        localStorage.setItem('fps_vs_back', JSON.stringify({t:Date.now(), i:rows.indexOf(d), y:pop?pop.scrollTop:0}));
+      }catch(e){}
+      location.href=u; return;
+    }
     var w=null; try{ w=window.open(u,'_blank'); if(w) w.opener=null; }catch(e){}
     if(!w){ var l=document.createElement('a'); l.href=u; l.target='_blank'; l.rel='noopener'; document.body.appendChild(l); l.click(); l.remove(); }
   }
+  // Coming back from the search: reopen the vehicle page where the driver left it.
+  function backFromSearch(){
+    var b=null; try{ b=JSON.parse(localStorage.getItem('fps_vs_back')||'null'); localStorage.removeItem('fps_vs_back'); }catch(e){}
+    if(!b || !(Date.now()-b.t < 6*3600*1000)) return;
+    if(document.getElementById('vspop') && document.getElementById('vspop').classList.contains('show')) return;
+    try{ openVspec(); }catch(e){ return; }
+    setTimeout(function(){ var pop=document.getElementById('vspop'); if(pop) pop.scrollTop=b.y||0; }, 250);
+  }
+  if(document.readyState==='complete') setTimeout(backFromSearch,300); else window.addEventListener('load',function(){ setTimeout(backFromSearch,300); });
   function paint(d){
     var nm=nameOf(d), on=!!(val(d,'year') && val(d,'make'));
     var lbl=on? 'Look up photos of '+nm : 'Enter year and make to look up photos';
