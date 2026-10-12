@@ -2562,7 +2562,7 @@ function vsRow(v){
     i.addEventListener('input',()=>{ vsConv(d); vsTotal(); vsSave(); }); });
   d.querySelector('.vsdel').onclick=()=>vsTrash(d,()=>{
     const box=document.getElementById('vsrows');
-    if(box.children.length<=1){ d.querySelectorAll('input').forEach(i=>i.value=''); d.querySelector('.vsmsg').innerHTML=''; }
+    if(box.children.length<=1){ d.querySelectorAll('input').forEach(i=>i.value=''); d.querySelector('.vsmsg').innerHTML=''; if(window.vsPaint) vsPaint(d); }
     else d.remove();
     vsRenum(); vsConv(d); vsTotal(); vsSave();
   });
@@ -2571,7 +2571,7 @@ function vsRow(v){
   return d;
 }
 function vsConv(d){
-  d.querySelectorAll('.vsspecs input').forEach(i=>{
+  d.querySelectorAll('.vsspecs input').forEach(i=>{ if(!VS_FIELDS.some(f=>f[0]===i.dataset.k)) return;
     const cv=i.nextElementSibling; const k=i.dataset.k;
     cv.textContent = (k==='length'||k==='height'||k==='wheel_base') ? vsFeet(i.value) : '';
   });
@@ -2613,7 +2613,7 @@ async function vsFetch(y,mk,md){
   for(const u of tries){
     try{ const r=await fetch(u); if(!r.ok) continue; const j=await r.json();
       const list=j.specs? [j.specs] : Array.isArray(j)? j : (j.data||[j]); const got=vsPick(list);
-      if(Object.keys(got).length) return got; }catch(e){}
+      if(Object.keys(got).length){ try{ Object.defineProperty(got,'__raw',{value:j}); }catch(e){} return got; } }catch(e){}
   }
   return null;
 }
@@ -2623,6 +2623,7 @@ async function vsLookup(d){
   if(!y||!mk||!md){ msg.innerHTML='<div class="vsnote">Fill in year, make and model first.</div>'; return; }
   const btn=d.querySelector('.vslook'); btn.disabled=true; btn.textContent='Looking up\u2026';
   const got=await vsFetch(y,mk,md);
+  d.__rdRaw=(got&&got.__raw)||null;
   btn.disabled=false; btn.textContent='Look up';
   if(got){
     VS_FIELDS.forEach(([k])=>{ if(got[k]) d.querySelector('input[data-k="'+k+'"]').value=got[k]; });
@@ -2705,7 +2706,7 @@ async function vsLookup(d){
     ['year','make','model'].forEach(function(k){
       var b=d.querySelector('input[data-k="'+k+'"]');
       if(b) b.addEventListener('keydown',function(e){
-        if(e.key==='Enter'){ e.preventDefault(); var lk=d.querySelector('.vslook'); if(lk) lk.click(); }
+        if(e.key==='Enter'){ e.preventDefault(); }
       });
     });
 
@@ -2748,6 +2749,24 @@ async function vsLookup(d){
     (BY[y]=BY[y]||{}); (BY[y][mk]=BY[y][mk]||[]).push(md); }); }); });
   var MAKELIST=Object.keys(MAKES).sort(function(a,b){return a.toLowerCase()<b.toLowerCase()?-1:1;});
 
+  function srt(a,b){ return a.toLowerCase()<b.toLowerCase()?-1:1; }
+  var MYKEY='fps_mycars_v1';
+  function myCars(){ try{ return JSON.parse(localStorage.getItem(MYKEY)||'{}')||{}; }catch(e){ return {}; } }
+  function canonMake(v){ var l=v.toLowerCase(); for(var i=0;i<MAKELIST.length;i++) if(MAKELIST[i].toLowerCase()===l) return MAKELIST[i];
+    var mc=myCars(); for(var k in mc) if(k.toLowerCase()===l) return k; return v; }
+  function canonModel(mk,v){ var l=v.toLowerCase(); if(l==='no model') return 'No model';
+    var pool=(CARS[mk]? Object.keys(CARS[mk]) : []).concat(myCars()[mk]||[]);
+    for(var i=0;i<pool.length;i++) if(pool[i].toLowerCase()===l) return pool[i]; return v; }
+  // Capitalize the first letter of each word; leave the rest as typed (keeps "MDX", "F-150").
+  function caps(v){ return v.replace(/\s+/g,' ').trim().replace(/(^|[\s\-\/])([a-z])/g,function(m,a,b){ return a+b.toUpperCase(); }); }
+  function myYears(){ try{ return JSON.parse(localStorage.getItem('fps_mycars_yrs_v1')||'{}')||{}; }catch(e){ return {}; } }
+  function myForYear(y){ var out={}, my=myYears(); Object.keys(my).forEach(function(k){ if(my[k].indexOf(+y)<0) return; var p=k.split('|'); (out[p[0]]=out[p[0]]||[]).push(p[1]); }); return out; }
+  function saveCar(mk,md,y){ if(!mk||!md) return; y=+y||0;
+    var known=y && BY[y] && BY[y][mk] && BY[y][mk].some(function(m){return m.toLowerCase()===md.toLowerCase();});
+    if(known) return;                                   // that exact year/make/model is already in the list
+    if(y){ var my=myYears(), k=mk+'|'+md; my[k]=my[k]||[]; if(my[k].indexOf(y)<0) my[k].push(y); try{ localStorage.setItem('fps_mycars_yrs_v1',JSON.stringify(my)); }catch(e){} } var mc=myCars(); mc[mk]=mc[mk]||[]; if(!mc[mk].some(function(m){return m.toLowerCase()===md.toLowerCase();})) mc[mk].push(md);
+    try{ localStorage.setItem(MYKEY,JSON.stringify(mc)); }catch(e){} }
+
   var st=document.createElement('style');
   st.textContent=
     '.vsbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}'+
@@ -2765,17 +2784,34 @@ async function vsLookup(d){
     input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
     var list=document.createElement('div'); list.className='vsaclist'; wrap.appendChild(list);
     function render(){
-      var q=input.value.trim().toLowerCase(); var all=getList();
+      var nz=function(t){ return t.toLowerCase().replace(/[\s\-]+/g,''); };   // F-150, F 150 and F150 all match
+      var q=nz(input.value); var all=getList();
       var starts=[], has=[];
-      all.forEach(function(v){ var l=v.toLowerCase(); if(l.indexOf(q)===0) starts.push(v); else if(q && l.indexOf(q)>=0) has.push(v); });
+      all.forEach(function(v){ var l=nz(v); if(l.indexOf(q)===0) starts.push(v); else if(q && l.indexOf(q)>=0) has.push(v); });
       var out=(q? starts.concat(has) : all).slice(0,60);
       list.innerHTML=''; out.forEach(function(v){ var r=document.createElement('div'); r.textContent=v; r.onmousedown=function(e){ e.preventDefault(); }; r.onclick=function(){ input.value=v; input.__pk=1; input.dispatchEvent(new Event('input',{bubbles:true})); input.__pk=0; close(); if(onPick)onPick(v); }; list.appendChild(r); });
       list.classList.toggle('on', out.length>0);
+      hi=(q && starts.length)? 0 : -1; mark();
     }
-    function close(){ list.classList.remove('on'); }
+    function close(){ list.classList.remove('on'); hi=-1; }
+    var hi=-1;
+    function mark(){ var it=list.children; for(var i=0;i<it.length;i++) it[i].classList.toggle('hl',i===hi); if(it[hi]) it[hi].scrollIntoView({block:'nearest'}); }
     input.setAttribute('autocomplete','off'); input.addEventListener('focus',render);
-    input.addEventListener('input',function(){ if(!input.__pk) render(); });
-    input.addEventListener('blur',function(){ setTimeout(close,250); });
+    input.addEventListener('input',function(){ if(!input.__pk){ hi=-1; render(); } });
+    input.addEventListener('blur',function(){ setTimeout(close,150); });
+    input.addEventListener('keydown',function(e){
+      var it=list.children, open=list.classList.contains('on');
+      if(e.key==='Escape'){ close(); return; }
+      if(e.key==='Tab'||e.key==='Enter'){                      // take the highlighted pick, then move on
+        if(open && it.length && hi>=0){ if(e.key==='Enter') e.preventDefault(); it[hi].click(); return; }
+        if(e.key==='Tab'){ close(); return; }
+      }
+      if(!open||!it.length) return;
+      if(e.key==='ArrowDown'){ e.preventDefault(); hi=Math.min(hi+1,it.length-1); mark(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); hi=Math.max(hi-1,0); mark(); }
+    });
+    document.addEventListener('mousedown',function(e){ if(!wrap.contains(e.target)) close(); });
+    document.addEventListener('touchstart',function(e){ if(!wrap.contains(e.target)) close(); },{passive:true});
     return {render:render, close:close};
   }
 
@@ -2786,11 +2822,19 @@ async function vsLookup(d){
     var mkI=box.querySelector('input[data-k="make"]');
     var mdI=box.querySelector('input[data-k="model"]');
     yI.setAttribute('placeholder','Year'); mkI.setAttribute('placeholder','Make'); mdI.setAttribute('placeholder','Model');
+    function tidy(el,fn){ el.addEventListener('blur',function(){ var v=el.value; if(!v.trim()) return; var n=fn(caps(v)); if(n!==v){ el.value=n; el.__pk=1; el.dispatchEvent(new Event('input',{bubbles:true})); el.__pk=0; } }); }
+    tidy(mkI,function(v){ return canonMake(v); });
+    tidy(mdI,function(v){ return canonModel(canonMake(mkI.value.trim()),v); });
+    mdI.addEventListener('blur',function(){ setTimeout(function(){ var mk=canonMake(caps(mkI.value)), md=mdI.value.trim();
+      if(/^\d{4}$/.test(yI.value.trim()) && mk && md) saveCar(mk,md,yI.value.trim()); },400); });
 
-    attachAC(mkI, function(){ var y=yI.value.trim(); return (BY[y]? Object.keys(BY[y]).sort(function(a,b){return a.toLowerCase()<b.toLowerCase()?-1:1;}) : MAKELIST); },
+    attachAC(mkI, function(){ var y=yI.value.trim(); var first=Object.keys(BY[y]||{}).concat(Object.keys(myForYear(y))).sort(srt); var seen={}, out=[];
+      first.concat(MAKELIST, Object.keys(myCars()).sort(srt)).forEach(function(m){ var k=m.toLowerCase(); if(!seen[k]){ seen[k]=1; out.push(m); } }); return out; },
       function(){ mdI.value=''; mdI.dispatchEvent(new Event('input',{bubbles:true})); });
-    attachAC(mdI, function(){ var y=yI.value.trim(), mk=mkI.value.trim(); var l=(BY[y]&&BY[y][mk])? BY[y][mk].slice() : (CARS[mk]? Object.keys(CARS[mk]) : []); return l.sort(function(a,b){return a.toLowerCase()<b.toLowerCase()?-1:1;}); },
-      function(){ var lk=d.querySelector('.vslook'); if(lk) lk.click(); });
+    attachAC(mdI, function(){ var y=yI.value.trim(), mk=canonMake(mkI.value.trim()); var yr=((BY[y]&&BY[y][mk])||[]).concat(myForYear(y)[mk]||[]).sort(srt);
+      var all=CARS[mk]? Object.keys(CARS[mk]).sort(srt) : []; var mine=(myCars()[mk]||[]).slice().sort(srt); var seen={'no model':1}, out=['No model'];
+      mine.concat(yr, all).forEach(function(m){ var k=m.toLowerCase(); if(!seen[k]){ seen[k]=1; out.push(m); } }); return out; },
+      function(){});
 
     // Side-by-side: [Add a vehicle] [Look up]
     var look=d.querySelector('.vslook');
@@ -2993,7 +3037,7 @@ async function vsLookup(d){
     var w=num(val(d,'curb_weight')), n=name(d)||'No vehicle entered';
     var idx=qa('#vsrows .vsrow').indexOf(d)+1;
     var ht=num(val(d,'height')), ln2=num(val(d,'length'));
-    function ins(x){ if(!x) return ''; var f=Math.floor(x/12), i=Math.round(x%12); return f+"' "+(i?i+'"':'0"'); }
+    function ins(x){ if(!x) return ''; x=Math.round(x); var f=Math.floor(x/12), i=x%12; return f+"' "+(i?i+'"':'0"'); }
     var cells=[];
     cells.push('<b>'+(w? cm(w)+' lbs' : 'no weight')+'</b>');
     cells.push(ln2? 'L '+ins(ln2) : 'L \u2014');
@@ -3078,10 +3122,12 @@ async function vsLookup(d){
     rows.forEach(function(r,i){
       var w=num(val(r,'curb_weight')); cars+=w;
       function rowIn(lbl,k){ var v=val(r,k); return '<tr><td>'+lbl+'</td><td>'+(v? esc(v)+' in'+(ft(v)?' ('+ft(v)+')':'') : '\u2014')+'</td></tr>'; }
-      h+='<div class="car"><span class="chk"></span><b>'+(i+1)+'. '+esc(name(r))+'</b><table>'+
+      function rowTx(lbl,k){ var v=val(r,k); return v? '<tr><td>'+lbl+'</td><td>'+esc(v)+'</td></tr>' : ''; }
+      h+='<div class="car"><span class="chk"></span><b>'+(i+1)+'. '+esc(name(r))+'</b><div class="crow"><table>'+
          '<tr><td>Curb weight</td><td>'+(w? cm(w)+' lbs' : '\u2014')+'</td></tr>'+
-         rowIn('Height','height')+rowIn('Length','length')+rowIn('Wheelbase','wheel_base')+rowIn('Ground clearance','ground_clearance')+
-         '</table></div>';
+         rowIn('Length','length')+rowIn('Height','height')+rowIn('Wheelbase','wheel_base')+rowIn('Ground clearance','ground_clearance')+
+         rowTx('Pickup','pickup')+rowTx('Delivery','delivery')+
+         '</table>'+(window.vsRepPhoto? vsRepPhoto(r) : '')+'</div></div>';
     });
     if(!rows.length) h+='<div class="car">No vehicles entered yet.</div>';
     var un=unladen(), total=un+cars, room=80000-total;
@@ -3158,6 +3204,533 @@ async function vsLookup(d){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
+</script>
+<script>
+/* ===== Vehicle specifications add-on: Rodney fires on typed cars + "Rodney's looking" wheel ===== */
+/* Typed-in year/make/model now fires Rodney on tap-out, same as a dropdown pick.          */
+/* The wheel only turns while Rodney is actually working. No wheel = he never fired.        */
+(function(){
+  var st=document.createElement('style');
+  st.textContent=
+    '.vsrodney{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:9px;background:#13294a;border:1px solid #4f7bb0;color:#e8eef6;font-size:15px}'+
+    '.vswheel{width:20px;height:20px;flex:0 0 20px;border-radius:50%;border:3px solid #27456b;border-top-color:#f26a21;animation:vsspin .8s linear infinite}'+
+    '@keyframes vsspin{to{transform:rotate(360deg)}}'+
+    '@media (prefers-reduced-motion: reduce){.vswheel{animation-duration:2.4s}}'+
+    '.vsrodney.no{border-color:#c8554c}';
+  document.head.appendChild(st);
+
+  function val(d,k){ var i=d.querySelector('input[data-k="'+k+'"]'); return i? i.value.trim() : ''; }
+  function keyOf(d){ return [val(d,'year'),val(d,'make'),val(d,'model')].join('|').toLowerCase(); }
+  function ready(d){ return /^\d{4}$/.test(val(d,'year')) && val(d,'make') && val(d,'model'); }
+
+  // Wrap the lookup: show the wheel while Rodney works, remember what was looked up.
+  if(typeof vsLookup==='function' && !vsLookup.__rd){
+    var orig=vsLookup;
+    vsLookup=async function(d){
+      if(!d || d.__rdBusy) return;
+      if(!ready(d)) return orig(d);
+      d.__rdBusy=true; d.__rdLast=keyOf(d);
+      var msg=d.querySelector('.vsmsg');
+      if(msg) msg.innerHTML='';
+      if(window.vsCarGo) vsCarGo();
+      try{ await orig(d); }
+      finally{
+        d.__rdBusy=false; if(window.vsCarStop) vsCarStop();
+        if(msg && (!msg.textContent.trim() || /No data on file/.test(msg.textContent)))
+          msg.innerHTML='<div class="vsrodney no"><span>Couldn\u2019t find this one. Check the year, or enter the numbers by hand.</span></div>';
+      }
+    };
+    vsLookup.__rd=true;
+  }
+
+  // Tap-out trigger: once year, make and model are all filled (typed or picked), fire Rodney.
+  function wire(d){
+    return;   /* replaced by the quiet-timer trigger in the card redesign add-on */
+    ['year','make','model'].forEach(function(k){
+      var i=d.querySelector('input[data-k="'+k+'"]'); if(!i) return;
+      i.addEventListener('blur',function(){
+        setTimeout(function(){                      // let a dropdown pick land first
+          if(d.__rdBusy || !ready(d)) return;
+          if(d.__rdLast===keyOf(d)) return;         // already looked this exact car up
+          var a=document.activeElement;             // still moving between year/make/model? wait
+          if(a && d.contains(a) && /^(year|make|model)$/.test(a.getAttribute('data-k')||'')) return;
+          vsLookup(d);
+        },350);
+      });
+    });
+  }
+  function scan(){ document.querySelectorAll('#vsrows .vsrow').forEach(wire); }
+  function start(){
+    var box=document.getElementById('vsrows'); if(!box) return setTimeout(start,300);
+    scan(); new MutationObserver(scan).observe(box,{childList:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+</script>
+<script>
+/* ===== Vehicle specifications add-on: "Weight may vary" caption + one Next vehicle button ===== */
+(function(){
+  var RKEY='fps_rdrange_v1';
+  var st=document.createElement('style');
+  st.textContent=
+    '.vsvary{margin-top:5px;font-size:12.5px;line-height:1.35;color:#c9d6e6}'+
+    '.vsvary b{color:#e8eef6}'+
+    '#vsallbtns.vsnext1{grid-template-columns:1fr 1fr 1fr}'+'#vsallbtns.vsnext1 button{height:50px;border-radius:10px;font-size:15px;font-weight:bold;padding:0 4px}'+'#vsallbtns .dn{border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6}'+'#vsallbtns .b{border:none;background:var(--orange);color:#fff}'+'#vspop > .trbar{display:none!important}'+
+    '#vsallbtns .n{border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6}'+
+    '.vsnextmsg{font-size:13px;color:#c9d6e6;text-align:center;margin:-2px 0 8px}';
+  document.head.appendChild(st);
+
+  function val(d,k){ var i=d.querySelector('input[data-k="'+k+'"]'); return i? i.value.trim() : ''; }
+  function keyOf(d){ return [val(d,'year'),val(d,'make'),val(d,'model')].join('|').toLowerCase(); }
+  function cm(n){ return Math.round(n).toLocaleString(); }
+  function load(){ try{ return JSON.parse(localStorage.getItem(RKEY)||'{}')||{}; }catch(e){ return {}; } }
+  function save(m){ try{ localStorage.setItem(RKEY, JSON.stringify(m)); }catch(e){} }
+
+  // Rodney already sends the low and high he found. Catch them on the way in.
+  var cur=null;
+  if(window.fetch && !window.fetch.__rdr){
+    var of=window.fetch;
+    window.fetch=function(u){
+      var p=of.apply(this,arguments), d=cur;
+      if(!d || String(u&&u.url||u).indexOf('page=vspec')<0) return p;
+      return p.then(function(r){
+        return r.clone().json().then(function(j){ if(j && j.ok && j.range) d.__rdRange=j.range; return r; }, function(){ return r; });
+      });
+    };
+    window.fetch.__rdr=true;
+  }
+
+  // Wide spread on weight = flag it. Tight spread = say nothing.
+  function wide(lo,hi){ return hi-lo >= 400 || (lo>0 && (hi-lo)/lo >= 0.08); }
+  function show(d,rg){
+    var old=d.querySelector('.vsvary'); if(old) old.remove();
+    var w=d.querySelector('input[data-k="curb_weight"]'); if(!w || !rg) return;
+    var lo=+rg[0], hi=+rg[1]; if(!(lo>0 && hi>0) || !wide(lo,hi)) return;
+    var c=document.createElement('div'); c.className='vsvary';
+    c.innerHTML='Weight may vary: <b>'+cm(lo)+'\u2013'+cm(hi)+' lbs</b> depending on body. Check before you load.';
+    w.parentNode.appendChild(c);
+  }
+  function wireRow(d){
+    if(d.__rdv) return; d.__rdv=true;
+    var w=d.querySelector('input[data-k="curb_weight"]');
+    if(w) w.addEventListener('input',function(){        // driver typed his own weight = he's handled it
+      var c=d.querySelector('.vsvary'); if(c) c.remove();
+      var m=load(); if(m[keyOf(d)]){ delete m[keyOf(d)]; save(m); }
+    });
+    var m=load(), rg=m[keyOf(d)]; if(rg && val(d,'curb_weight')) show(d,rg);
+  }
+
+  if(typeof vsLookup==='function' && !vsLookup.__rdv){
+    var orig=vsLookup;
+    vsLookup=async function(d){
+      if(!d) return orig(d);
+      d.__rdRaw=null; var c=d.querySelector('.vsvary'); if(c) c.remove();
+      cur=d;
+      try{ await orig(d); } finally{ if(cur===d) cur=null; }
+      var rg=d.__rdRaw && d.__rdRaw.range && d.__rdRaw.range.curb_weight;
+      var m=load(), k=keyOf(d);
+      if(rg && val(d,'curb_weight')){ m[k]=rg; show(d,rg); } else delete m[k];
+      save(m);
+    };
+    vsLookup.__rdv=true;
+  }
+
+  // One Next vehicle button replaces Add a vehicle + Look up (Rodney fires on his own now).
+  function nextBtn(){
+    var bar=document.getElementById('vsallbtns'); if(!bar) return setTimeout(nextBtn,300);
+    if(bar.__next) return; bar.__next=true;
+    bar.classList.add('vsnext1');
+    bar.innerHTML='<button type="button" class="b">Back</button><button type="button" class="dn">Done</button><button type="button" class="n">Next vehicle</button>';
+    bar.querySelector('.dn').onclick=function(){            // finished: fold every card, stay in the vehicle screen
+      say('');
+      if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      setTimeout(function(){
+        var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow'));
+        var t=document.querySelector('#vspop .vstog');
+        if(t && rows.some(function(r){ return !r.classList.contains('vsc'); })) t.click();
+        var top=document.querySelector('#vspop .plwrap'); if(top) top.scrollIntoView({block:'start'});
+      },60);
+    };
+    bar.querySelector('.b').onclick=function(){ history.back(); };
+    var note=document.createElement('div'); note.className='vsnextmsg'; note.style.display='none';
+    bar.parentNode.insertBefore(note, bar.nextSibling);
+    function say(t){ note.textContent=t; note.style.display=t?'':'none'; }
+    var rb=document.getElementById('vsrows'); if(rb) rb.addEventListener('input',function(){ say(''); });
+    bar.querySelector('.n').onclick=function(){
+      say('');
+      var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow'));
+      var open=rows.filter(function(r){ return !r.classList.contains('vsc'); });
+      var d=open[open.length-1];
+      if(d && !(val(d,'year') && val(d,'make') && val(d,'model'))){   // don't stack up empty cards
+        var y=d.querySelector('input[data-k="'+(val(d,'year')? (val(d,'make')?'model':'make') : 'year')+'"]');
+        if(y) y.focus(); d.scrollIntoView({block:'center'});
+        say('Finish this vehicle first: year, make and model.'); return;
+      }
+      if(rows.length >= (window.VS_MAX||12)){ say('That\u2019s the most vehicles one load can hold.'); return; }
+      if(typeof vsAdd==='function') vsAdd();
+      setTimeout(function(){
+        var r=document.querySelectorAll('#vsrows .vsrow'), n=r[r.length-1];
+        if(n){ var y=n.querySelector('input[data-k="year"]'); if(y) y.focus(); n.scrollIntoView({block:'center'}); }
+      },80);
+    };
+  }
+
+  function scan(){ document.querySelectorAll('#vsrows .vsrow').forEach(wireRow); }
+  function start(){
+    var box=document.getElementById('vsrows'); if(!box) return setTimeout(start,300);
+    scan(); new MutationObserver(scan).observe(box,{childList:true});
+    document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('#vspop')) setTimeout(scan,100); });
+    nextBtn();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+</script>
+<script>
+/* ===== Vehicle specifications add-on: "No model" = look up by year + make ===== */
+(function(){
+  if(!window.fetch || window.fetch.__nomodel) return;
+  var of=window.fetch;
+  window.fetch=function(u){
+    var s=String(u&&u.url||u);
+    if(typeof u==='string' && s.indexOf('page=vspec')>=0 && /[?&]model=no(%20|\+|\s)model(&|$)/i.test(s)){
+      arguments[0]=s.replace(/([?&]model=)no(%20|\+|\s)model(?=&|$)/i,'$1'+encodeURIComponent('all models'));
+    }
+    return of.apply(this,arguments);
+  };
+  window.fetch.__nomodel=true;
+})();
+</script>
+<script>
+/* ===== Vehicle specifications add-on: bouncing car + save a load on Clear + saved loads menu ===== */
+(function(){
+  var LKEY='fps_vsloads_v1', LMAX=40;
+  var st=document.createElement('style');
+  st.textContent=
+    /* the parked car up top bounces while a lookup is running; always ends on a whole bounce */
+    '.vscarpark .vscar{transform-origin:50% 100%}'+
+    '.vscarpark .vscar.vsbnc{animation:vsbnc .6s ease-in-out infinite}'+
+    '@keyframes vsbnc{0%{transform:translateY(0)}25%{transform:translateY(-11px) rotate(-5deg)}50%{transform:translateY(0) scaleY(.92)}62%{transform:translateY(-3px)}100%{transform:translateY(0)}}'+
+    '@media (prefers-reduced-motion: reduce){.vscarpark .vscar.vsbnc{animation-duration:1.4s}}'+
+    '.vsrodney{display:none}'+
+    /* saved loads button in the top toolbar */
+    '.vsldbtn{flex:0 0 auto;height:44px;border-radius:9px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:15px;font-weight:bold;padding:0 14px;margin-left:auto}'+
+    '.vsldbtn[hidden]{display:none}'+
+    '.vsldbtn:not([hidden]) + .vstogwrap{margin-left:0}'+
+    /* pop-ups */
+    '.vsld{position:fixed;inset:0;z-index:9800;background:rgba(5,15,30,.82);display:none;align-items:center;justify-content:center;padding:18px}'+
+    '.vsld.on{display:flex}'+
+    '.vsld .card{width:100%;max-width:420px;max-height:86vh;overflow:auto;background:#132c4a;border:1px solid #2b4a70;border-radius:14px;padding:18px}'+
+    '.vsld .h{font-size:19px;font-weight:800;color:#e8eef6;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px}'+
+    '.vsld .x{width:34px;height:34px;flex:0 0 34px;border:1px solid #4f7bb0;border-radius:8px;background:#17304f;color:#e8eef6;font-size:20px}'+
+    '.vsld .sub{font-size:14px;color:#c9d6e6;margin-bottom:14px;line-height:1.4}'+
+    '.vsld .lb{display:block;font-size:14px;color:#c9d6e6;font-weight:700;margin-bottom:6px}'+
+    '.vsld input{width:100%;box-sizing:border-box;padding:13px 12px;font-size:17px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff}'+
+    '.vsld .warn{min-height:18px;font-size:13px;color:#f2b37a;margin:6px 0 10px}'+
+    '.vsld .pri{width:100%;height:50px;border:none;border-radius:11px;background:var(--orange,#f26a21);color:#fff;font-size:17px;font-weight:800;margin-bottom:10px}'+
+    '.vsld .sec{width:100%;height:48px;border:1.5px solid #4f7bb0;border-radius:11px;background:#17304f;color:#e8eef6;font-size:16px;font-weight:700;margin-bottom:10px}'+
+    '.vsld .ter{width:100%;height:44px;border:none;background:none;color:#9fb0c8;font-size:16px;font-weight:700}'+
+    '.vsld .it{display:flex;align-items:stretch;gap:8px;margin-bottom:8px}'+
+    '.vsld .it .go{flex:1;text-align:left;border:1px solid #2b4a70;border-radius:10px;background:#17304f;color:#e8eef6;padding:11px 12px}'+
+    '.vsld .it .go b{display:block;font-size:16px}'+
+    '.vsld .it .go span{display:block;font-size:13px;color:#9fb0c8;margin-top:3px}'+
+    '.vsld .it .del{width:46px;flex:0 0 46px;border:1px solid #6b3a3a;border-radius:10px;background:#2a1d26;color:#f0b4ad;font-size:22px}'+
+    '.vsld .none{color:#9fb0c8;font-size:15px;padding:8px 0 14px}';
+  document.head.appendChild(st);
+
+  function q(s,r){ return (r||document).querySelector(s); }
+  function qa(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function val(d,k){ var i=q('input[data-k="'+k+'"]',d); return i? i.value.trim() : ''; }
+  function nameOf(r){ return [r.year,r.make,r.model].filter(function(x){ return x && x!=='No model'; }).join(' '); }
+
+  /* ---------- bouncing car ---------- */
+  var busy=0;
+  function car(){ return q('#vspop .vscarpark .vscar'); }
+  window.vsCarGo=function(){
+    busy++; var c=car(); if(!c) return;
+    c.__stop=false; c.classList.add('vsbnc');
+    if(!c.__wired){ c.__wired=1; c.addEventListener('animationiteration',function(){ if(c.__stop && busy<=0) c.classList.remove('vsbnc'); }); }
+  };
+  window.vsCarStop=function(){
+    busy=Math.max(0,busy-1); var c=car(); if(!c) return;
+    if(busy===0) c.__stop=true;                 // finish the bounce it's on, then settle
+  };
+
+  /* ---------- saved loads storage ---------- */
+  function loads(){ try{ var a=JSON.parse(localStorage.getItem(LKEY)||'[]'); return Array.isArray(a)? a : []; }catch(e){ return []; } }
+  function putLoads(a){ try{ localStorage.setItem(LKEY, JSON.stringify(a.slice(0,LMAX))); return true; }catch(e){ return false; } }
+  function current(){ return (typeof vsState==='function')? vsState() : {rows:[]}; }
+  function filled(stt){ return (stt.rows||[]).filter(function(r){ return r.year||r.make||r.model; }); }
+  function findIdx(a,n){ var l=n.trim().toLowerCase(); for(var i=0;i<a.length;i++) if(a[i].name.trim().toLowerCase()===l) return i; return -1; }
+
+  /* ---------- pop-ups ---------- */
+  var sv=document.createElement('div'); sv.className='vsld'; sv.id='vsldsave'; sv.innerHTML=
+    '<div class="card" role="dialog" aria-modal="true" aria-labelledby="vsldsh">'+
+    '<div class="h" id="vsldsh">Save this load?</div>'+
+    '<div class="sub">Save the vehicles and their specs so you can pull this load back up later without looking anything up again.</div>'+
+    '<label class="lb" for="vsldname">Load name</label><input id="vsldname" type="text" autocapitalize="sentences" maxlength="60">'+
+    '<div class="warn" id="vsldwarn"></div>'+
+    '<button type="button" class="pri" id="vsldsv">Save and clear</button>'+
+    '<button type="button" class="sec" id="vsldno">Clear without saving</button>'+
+    '<button type="button" class="ter" id="vsldcx">Cancel</button></div>';
+  var ls=document.createElement('div'); ls.className='vsld'; ls.id='vsldlist'; ls.innerHTML=
+    '<div class="card" role="dialog" aria-modal="true" aria-labelledby="vsldlh">'+
+    '<div class="h"><span id="vsldlh">Saved loads</span><button type="button" class="x" aria-label="Close">&times;</button></div>'+
+    '<div class="sub">Tap a load to put it back on screen.</div><div id="vsldits"></div></div>';
+  document.body.appendChild(sv); document.body.appendChild(ls);
+
+  function clearNow(){
+    var box=q('#vsrows'); if(!box) return;
+    box.innerHTML=''; box.appendChild(vsRow({}));
+    if(typeof vsRenum==='function') vsRenum(); if(typeof vsTotal==='function') vsTotal(); if(typeof vsSave==='function') vsSave();
+  }
+  function defName(stt){
+    var f=filled(stt), d=new Date().toLocaleDateString([], {month:'short',day:'numeric'});
+    var first=nameOf(f[0]||{})||'Load';
+    return d+': '+first+(f.length>1? ' + '+(f.length-1)+' more' : '');
+  }
+  function warnName(){
+    var n=q('#vsldname').value.trim();
+    q('#vsldwarn').textContent = n && findIdx(loads(),n)>=0 ? 'You already have a load with this name. Saving will replace it.' : '';
+  }
+  function openSave(){
+    var stt=current();
+    if(!filled(stt).length){ if(confirm('Clear all vehicles and start a new load?')) clearNow(); return; }
+    q('#vsldname').value=defName(stt); warnName(); sv.classList.add('on');
+    setTimeout(function(){ var i=q('#vsldname'); i.focus(); i.select(); },50);
+  }
+  function closeSave(){ sv.classList.remove('on'); }
+  q('#vsldname').addEventListener('input',warnName);
+  q('#vsldname').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); q('#vsldsv').click(); } });
+  q('#vsldsv').onclick=function(){
+    var n=q('#vsldname').value.trim(); if(!n){ q('#vsldwarn').textContent='Give the load a name first.'; return; }
+    var stt=current(), a=loads(), i=findIdx(a,n);
+    var rec={name:n, saved:Date.now(), max:stt.max||'', rows:filled(stt)};
+    if(i>=0) a.splice(i,1); a.unshift(rec);
+    if(!putLoads(a)){ q('#vsldwarn').textContent='Couldn\u2019t save on this phone. Storage is full.'; return; }
+    closeSave(); clearNow(); paintBtn();
+  };
+  q('#vsldno').onclick=function(){ closeSave(); clearNow(); };
+  q('#vsldcx').onclick=closeSave;
+  sv.addEventListener('click',function(e){ if(e.target===sv) closeSave(); });
+
+  function openList(){
+    var a=loads(), box=q('#vsldits');
+    if(!a.length){ box.innerHTML='<div class="none">No saved loads yet. When you clear a load, you can save it.</div>'; }
+    else box.innerHTML=a.map(function(l,i){
+      var dt=new Date(l.saved).toLocaleDateString([], {month:'short',day:'numeric',year:'numeric'}), c=l.rows.length;
+      return '<div class="it"><button type="button" class="go" data-i="'+i+'"><b>'+esc(l.name)+'</b><span>'+c+' vehicle'+(c===1?'':'s')+', saved '+esc(dt)+'</span></button>'+
+             '<button type="button" class="del" data-i="'+i+'" aria-label="Delete '+esc(l.name)+'">&times;</button></div>';
+    }).join('');
+    ls.classList.add('on');
+  }
+  function closeList(){ ls.classList.remove('on'); }
+  q('.x',ls).onclick=closeList;
+  ls.addEventListener('click',function(e){
+    if(e.target===ls){ closeList(); return; }
+    var b=e.target.closest('button[data-i]'); if(!b) return;
+    var a=loads(), i=+b.getAttribute('data-i'), l=a[i]; if(!l) return;
+    if(b.classList.contains('del')){
+      if(!confirm('Delete the saved load "'+l.name+'"?')) return;
+      a.splice(i,1); putLoads(a); paintBtn(); openList(); return;
+    }
+    if(filled(current()).length && !confirm('Replace the vehicles on screen with "'+l.name+'"?')) return;
+    putBack(l); closeList();
+  });
+
+  // Put a saved load back on screen. Specs come with it, so no lookups fire.
+  function putBack(l){
+    var box=q('#vsrows'); if(!box) return;
+    box.innerHTML='';
+    (l.rows.length? l.rows : [{}]).forEach(function(r){
+      var d=vsRow(r);
+      d.__rdLast=[r.year||'',r.make||'',r.model||''].join('|').toLowerCase();   // already looked up
+      box.appendChild(d);
+      if(typeof vsConv==='function') vsConv(d);
+    });
+    var mx=q('#vsmaxin'); if(mx && l.max) mx.value=l.max;
+    if(typeof vsRenum==='function') vsRenum(); if(typeof vsTotal==='function') vsTotal(); if(typeof vsSave==='function') vsSave();
+    var t=q('#vspop .vstog'); if(t && /Collapse/.test(t.textContent)) t.click();   // show the load folded up
+    var w=q('#vspop .plwrap'); if(w) w.scrollTop=0;
+  }
+
+  /* ---------- wire into the page ---------- */
+  var ldb;
+  function paintBtn(){ if(!ldb) return; var n=loads().length; ldb.hidden=!n; ldb.textContent='Saved loads'+(n? ' ('+n+')' : ''); }
+  function start(){
+    var clr=q('#vspop .vsclr2'), tools=q('#vspop .vstools');
+    if(!clr || !tools) return setTimeout(start,300);
+    clr.onclick=openSave;
+    ldb=document.createElement('button'); ldb.type='button'; ldb.className='vsldbtn'; ldb.onclick=openList;
+    tools.insertBefore(ldb, q('.vstogwrap',tools)); paintBtn();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ closeSave(); closeList(); } });
+})();
+</script>
+<script>
+/* ===== Vehicle card: layout, pickup/delivery, quiet-timer Rodney trigger, and the LOOK-IT-UP car icon =====
+   No photos are fetched or stored any more. The car icon opens a web image search for this exact
+   year/make/model; the driver looks and picks for himself, so the app never claims a year it didn't find.
+   On the installed (home-screen) app the search opens in the phone's in-app browser sheet, on top of FPS;
+   closing it drops him right back on his card. */
+(function(){
+  var QUIET=3500;                    // ms of no changes after the model is set before Rodney fires
+
+  function q(s,r){ return (r||document).querySelector(s); }
+  function qa(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function val(d,k){ var i=q('input[data-k="'+k+'"]',d); return i? i.value.trim() : ''; }
+  function keyOf(d){ return [val(d,'year'),val(d,'make'),val(d,'model')].join('|').toLowerCase(); }
+  function nameOf(d){ return [val(d,'year'),val(d,'make'),val(d,'model')].filter(function(x){ return x && x!=='No model'; }).join(' '); }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function save(){ if(typeof vsSave==='function') vsSave(); }
+
+  var CAR='<svg class="vsgen" viewBox="0 0 48 24" aria-hidden="true"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/></svg>';
+  var CHL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CHR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  var st=document.createElement('style');
+  st.textContent=
+    /* tighter card */
+    '#vsrows .vsrow:not(.vsc){padding:10px}'+
+    '#vsrows .vsrow:not(.vsc) .vstop{margin-bottom:6px}'+
+    '#vspop .vsrow input{padding:9px 10px}'+
+    /* spec + city + photo grid */
+    '#vsrows .vsspecs{grid-template-columns:1fr 1fr 1.3fr;grid-template-areas:"w w p" "l h d" "b c g";gap:6px 8px;margin-top:8px;align-items:start}'+
+    '#vsrows .vsspecs label{font-size:11.5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+    '#vsrows .vsspecs .cv{min-height:12px;margin-top:1px}'+
+    '.vsspecs .f-curb_weight{grid-area:w}.vsspecs .f-length{grid-area:l}.vsspecs .f-height{grid-area:h}'+
+    '.vsspecs .f-wheel_base{grid-area:b}.vsspecs .f-ground_clearance{grid-area:c}'+
+    '.vsspecs .f-pickup{grid-area:p}.vsspecs .f-delivery{grid-area:d}.vsspecs .vsgal{grid-area:g}'+
+    '.vsspecs .f-curb_weight input{font-weight:700}'+
+    '.vscw{position:relative}'+
+    '.vscw .suggest{top:100%;margin-top:2px;left:auto;right:0;width:250px;max-width:82vw;z-index:60}'+
+    /* look-it-up tile */
+    '.vsgal{align-self:stretch;min-height:96px;border-radius:9px;background:#10233f;border:1px solid #2b4a70;padding:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#9fc0e8;font-size:12px;font-weight:700;cursor:pointer}'+
+    '.vsgal .vsgen{width:62%;max-width:96px;height:auto}'+
+    '.vsgal:disabled{cursor:default;opacity:.45}'+
+    '.vsgal:not(:disabled):active{background:#17304f}'+
+    /* folded-card icon */
+    '.vsthumb{display:none;flex:0 0 54px;width:54px;height:36px;margin:0 8px 0 4px;border:1px solid #4f7bb0;border-radius:7px;background:#10233f;padding:0;align-items:center;justify-content:center;cursor:pointer}'+
+    '.vsrow.vsc .vsthumb{display:flex}'+
+    '.vsthumb .vsgen{width:40px;height:auto}'+
+    '.vsthumb:disabled{opacity:.45;cursor:default}'+
+    '.vsgal:focus-visible,.vsthumb:focus-visible{outline:2px solid #f26a21;outline-offset:2px}'+
+    /* load report */
+    '#vsrep .crow{display:flex;gap:14px;align-items:flex-start;margin-top:6px}'+
+    '#vsrep .crow table{flex:1;margin-top:0}'+
+    '#vsrep .crow td:last-child{white-space:nowrap;padding-left:8px}'+
+    '#vsrep .car{break-inside:avoid;page-break-inside:avoid}';
+  document.head.appendChild(st);
+
+  /* ---------- the car icon: look it up on the web ---------- */
+  // Builds an image search for exactly what's on the card, e.g. "2019 Ford F150 SuperCab".
+  function webUrl(d){ var nm=nameOf(d); return nm? 'https://www.google.com/search?udm=2&q='+encodeURIComponent(nm) : ''; }
+  function lookUp(d){
+    var u=webUrl(d); if(!u) return;
+    var w=null; try{ w=window.open(u,'_blank'); if(w) w.opener=null; }catch(e){}
+    if(!w){ var l=document.createElement('a'); l.href=u; l.target='_blank'; l.rel='noopener'; document.body.appendChild(l); l.click(); l.remove(); }
+  }
+  function paint(d){
+    var nm=nameOf(d), on=!!(val(d,'year') && val(d,'make'));
+    var lbl=on? 'Look up photos of '+nm : 'Enter year and make to look up photos';
+    [q('.vsgal',d), q('.vsthumb',d)].forEach(function(b){ if(!b) return; b.disabled=!on; b.setAttribute('aria-label',lbl); b.title=lbl; });
+  }
+  window.vsPaint=function(d){ paint(d); };
+  // Old builds saved photos on the phone; clear that space out once.
+  try{ if(window.indexedDB && !localStorage.getItem('fps_vsimg_gone')){ indexedDB.deleteDatabase('fps_vsimg'); localStorage.setItem('fps_vsimg_gone','1'); } }catch(e){}
+
+  /* ---------- weight with a thousands comma ---------- */
+  function fmtW(d){ var i=q('input[data-k="curb_weight"]',d); if(!i) return; var n=parseFloat(i.value.replace(/[^0-9.]/g,''));
+    if(isFinite(n) && n>0){ var f=Math.round(n).toLocaleString('en-US'); if(i.value!==f) i.value=f; } }
+
+  /* ---------- pickup / delivery on the route planner's city search ---------- */
+  function cityField(k,lbl,ph){
+    var w=document.createElement('div'); w.className='f-'+k;
+    w.innerHTML='<label>'+lbl+'</label><div class="vscw"><input data-k="'+k+'" type="text" autocomplete="off" autocapitalize="words" enterkeyhint="done" placeholder="'+ph+'"><div class="suggest" style="display:none"></div></div>';
+    var inp=q('input',w), sug=q('.suggest',w), t;
+    inp.addEventListener('input',function(){
+      clearTimeout(t); save();
+      if(typeof pickGuard==='function' && pickGuard(inp)){ sug.style.display='none'; return; }
+      var s=inp.value.trim(); if(s.length<2 || typeof lookup!=='function'){ sug.style.display='none'; return; }
+      t=setTimeout(function(){ lookup(s,sug,inp); },180);
+    });
+    inp.addEventListener('blur',function(){ setTimeout(function(){ sug.style.display='none'; },250); });
+    sug.addEventListener('click',function(){ [200,1700].forEach(function(ms){ setTimeout(save,ms); }); });
+    return w;
+  }
+
+  /* ---------- build the new card around the old one ---------- */
+  function build(d,v){
+    if(d.__v4) return; d.__v4=true; v=v||{};
+    var sp=q('.vsspecs',d); if(!sp) return;
+    var LBL={curb_weight:'Curb weight (lbs)',length:'Length (in)',height:'Height (in)',wheel_base:'Wheelbase (in)',ground_clearance:'Clearance (in)'};
+    var cells={};
+    qa(':scope > div',sp).forEach(function(c){ var i=q('input[data-k]',c); if(!i) return; var k=i.dataset.k; cells[k]=c; c.className='f-'+k;
+      var l=q('label',c); if(l && LBL[k]) l.textContent=LBL[k]; });
+    ['curb_weight','length','height','wheel_base','ground_clearance'].forEach(function(k){ if(cells[k]) sp.appendChild(cells[k]); }); // tab order = how he loads
+    var pu=cityField('pickup','Pickup','City'), de=cityField('delivery','Delivery','City');
+    sp.appendChild(pu); sp.appendChild(de);
+    var g=document.createElement('button'); g.type='button'; g.className='vsgal'; g.innerHTML=CAR+'<span>Look it up</span>'; sp.appendChild(g);
+    ['pickup','delivery'].forEach(function(k){ if(v[k]!=null) q('input[data-k="'+k+'"]',d).value=v[k]; });
+    g.onclick=function(){ lookUp(d); };
+    var w=q('input[data-k="curb_weight"]',d); if(w){ w.addEventListener('blur',function(){ fmtW(d); save(); }); }
+    fmtW(d);
+    // the quiet timer: fires once the model is set and nothing has changed for a few seconds
+    ['year','make','model'].forEach(function(k){
+      var i=q('input[data-k="'+k+'"]',d); if(!i) return;
+      i.addEventListener('input',function(){ arm(d); paint(d); });
+    });
+    paint(d);
+  }
+  function ready(d){ return /^\d{4}$/.test(val(d,'year')) && val(d,'make') && val(d,'model').length>=1; }
+  function arm(d){
+    clearTimeout(d.__qt);
+    if(!ready(d) || d.__rdLast===keyOf(d)) return;
+    d.__qt=setTimeout(function(){
+      if(!d.isConnected || !ready(d) || d.__rdLast===keyOf(d) || d.__rdBusy) return;
+      vsLookup(d);                       // runs in the background; never moves the cursor or the screen
+    },QUIET);
+  }
+  function thumb(d){
+    if(q('.vsthumb',d)) return; var ln=q('.vsline',d); if(!ln) return;
+    var b=document.createElement('button'); b.type='button'; b.className='vsthumb'; b.innerHTML=CAR;
+    ln.parentNode.insertBefore(b,ln.nextSibling);   // right side: after the measurements, before the arrow
+    b.addEventListener('click',function(e){ e.stopPropagation(); lookUp(d); });  // straight to the search, card stays folded
+    paint(d);
+  }
+
+  // Every new card goes through vsRow, including restored loads, so wrap it.
+  if(typeof vsRow==='function' && !vsRow.__v4){
+    var oRow=vsRow; vsRow=function(v){ var d=oRow(v); build(d,v); return d; }; vsRow.__v4=true;
+  }
+  // After a lookup: commas on the weight.
+  if(typeof vsLookup==='function' && !vsLookup.__v4){
+    var oLk=vsLookup;
+    vsLookup=async function(d){
+      if(!d) return oLk(d);
+      clearTimeout(d.__qt);
+      await oLk(d);
+      fmtW(d); save(); paint(d);
+    };
+    vsLookup.__v4=true;
+  }
+
+  function scan(){ qa('#vsrows .vsrow').forEach(function(d){ build(d,null); thumb(d); }); }
+  function start(){
+    var box=q('#vsrows'); if(!box) return setTimeout(start,300);
+    scan(); new MutationObserver(scan).observe(box,{childList:true,subtree:false});
+    setTimeout(scan,1000);                 // the fold bar is added a moment after load
+    document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('#vspop')) setTimeout(scan,120); });
+  }
+  if(typeof openVspec==='function' && !openVspec.__v4){ var oOp=openVspec; openVspec=function(){ oOp.apply(this,arguments); setTimeout(scan,50); }; openVspec.__v4=true; }
+
+  /* ---------- load report: specs only, no photo ---------- */
+  window.vsRepPhoto=function(){ return ''; };
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+
 </script>
 </body>
 </html>
