@@ -2128,6 +2128,17 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-13', items:[
+    'The home-screen app now keeps itself up to date: tap the icon and it loads the newest version on its own',
+    'A small banner says \u201cUpdated to the latest version\u201d after an update, or \u201cNew version ready\u201d if one arrives while the app is open',
+    'The app still opens with no signal, using the last version it loaded',
+    'The bottom of the home screen now shows which build you\u2019re on',
+    'Vehicle specifications: when a car\u2019s weight varies by trim, the card shows the range, like \u201cWeight varies, X to Y lbs\u201d',
+    'Vehicle specifications: each car can show a photo, and tapping it opens it full screen',
+    'Vehicle specifications: shows the miles from pickup to delivery',
+    'Vehicle specifications: enter your unladen weight (truck + trailer) to see the total with the load',
+    'Tomorrow\u2019s diesel prediction line now shows on the home screen'
+  ]},
   { date:'2026-10-10', items:[
     'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
     'Fuel near me now offers 50, 75 and 100 mile circles',
