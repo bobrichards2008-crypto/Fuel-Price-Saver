@@ -3669,7 +3669,7 @@ async function vsLookup(d){
     '.vsthumb{display:none;flex:0 0 54px;width:54px;height:36px;margin:0 8px 0 4px;border:1px solid #4f7bb0;border-radius:7px;background:#10233f;padding:0;align-items:center;justify-content:center;cursor:pointer}'+
     '.vsrow.vsc .vsthumb{display:flex}'+
     '.vsthumb .vsgen{width:40px;height:auto}'+
-    '.vsthumb:disabled{opacity:.45;cursor:default}'+
+    '.vsthumb:disabled{opacity:.45;cursor:default}'+'.vsthumb.vsthas{overflow:hidden;opacity:1}'+'.vsthumb.vsthas img{width:100%;height:100%;object-fit:contain;display:block;background:#0b1b30}'+
     '.vsgal:focus-visible,.vsthumb:focus-visible{outline:2px solid #f26a21;outline-offset:2px}'+
     /* load report */
     '#vsrep .crow{display:flex;gap:14px;align-items:flex-start;margin-top:6px}'+
@@ -3767,8 +3767,19 @@ async function vsLookup(d){
     if(!im){ im=document.createElement('img'); im.alt=''; im.loading='lazy'; g.appendChild(im); }
     im.onerror=function(){ clearPhoto(d); };     // dead link -> back to plain background
     if(im.src!==url) im.src=url;
+    thumbPhoto(d,url);
+  }
+  function thumbPhoto(d,url){
+    var t=q('.vsthumb',d); if(!t) return;
+    if(!url){ if(t.classList.contains('vsthas')){ t.classList.remove('vsthas'); t.innerHTML=CAR; } return; }
+    var ti=q('img',t);
+    if(!ti){ t.innerHTML=''; ti=document.createElement('img'); ti.alt=''; t.appendChild(ti); }
+    t.classList.add('vsthas');
+    ti.onerror=function(){ thumbPhoto(d,null); };   // dead link -> red car
+    if(ti.src!==url) ti.src=url;
   }
   function clearPhoto(d){
+    thumbPhoto(d,null);
     var g=q('.vsgal',d); if(!g) return;
     g.classList.add('vsempty'); g.classList.remove('vshas'); g.innerHTML='';
   }
@@ -3785,8 +3796,9 @@ async function vsLookup(d){
     if(q('.vsthumb',d)) return; var ln=q('.vsline',d); if(!ln) return;
     var b=document.createElement('button'); b.type='button'; b.className='vsthumb'; b.innerHTML=CAR;
     ln.parentNode.insertBefore(b,ln.nextSibling);   // right side: after the measurements, before the arrow
-    b.addEventListener('click',function(e){ e.stopPropagation(); lookUp(d); });  // straight to the search, card stays folded
+    b.addEventListener('click',function(e){ if(b.classList.contains('vsthas')) return; e.stopPropagation(); lookUp(d); });  // photo: tap opens the card; red car: search
     paint(d);
+    var gi=q('.vsgal img',d); if(gi && gi.getAttribute('src')) thumbPhoto(d, gi.getAttribute('src'));
   }
 
   // Every new card goes through vsRow, including restored loads, so wrap it.
