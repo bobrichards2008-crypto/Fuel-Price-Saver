@@ -3935,5 +3935,115 @@ async function vsLookup(d){
   window.fpsPhotoView=open;
 })();
 </script>
+<script>
+/* ===== Vehicle specifications add-on: report mode, pencil to edit, per-card clear ===== */
+(function(){
+  function q(s,r){ return (r||document).querySelector(s); }
+  function qa(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function val(d,k){ var i=q('input[data-k="'+k+'"]',d); return i? i.value.trim() : ''; }
+  var OPEN_WHEN_EMPTY={pickup:1,delivery:1};      // these stay typeable on a report card until filled
+  var PENCIL='<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zm17.7-10.2a1 1 0 0 0 0-1.42l-2.33-2.33a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+
+  var st=document.createElement('style');
+  st.textContent=
+    '.vsbtnr .vsedit,.vsbtnr .vswipe{width:34px;height:34px;border:none;border-radius:8px;background:#2b4a70;color:#e8eef6;padding:0;margin-right:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}'+
+    '.vsbtnr .vswipe{width:auto;padding:0 10px;font-size:13px;font-weight:bold;color:#ffb3a8}'+
+    '.vsbtnr .vsedit.on{background:#f26a21;color:#fff}'+
+    '.vsrow:not(.vshasdata) .vsedit,.vsrow:not(.vshasdata) .vswipe{display:none}'+
+    '.vsrow.vsc .vsedit,.vsrow.vsc .vswipe{display:none}'+
+    /* report look: locked fields read as plain text */
+    '#vsrows .vsrow input.vslk{border-color:transparent!important;background:transparent!important;box-shadow:none!important;pointer-events:none;padding-left:2px;padding-right:2px;color:#e8eef6;font-weight:700}'+
+    '#vsrows .vsrow input.vslk::placeholder{color:#7f95b2;opacity:1}'+
+    '#vsrows .vsrow.vsrpt .vsymm input.vslk{font-size:19px}'+
+    '#vsrows .vsrow.vsrpt .vslook{display:none!important}';
+  document.head.appendChild(st);
+
+  function hasData(d){ return !!(val(d,'year') || val(d,'make') || val(d,'model')); }
+  function full(d){ return !!(val(d,'year') && val(d,'make') && val(d,'model') && val(d,'curb_weight')); }
+
+  function lockInput(i,on){
+    if(on){
+      if(!i.classList.contains('vslk')){
+        i.classList.add('vslk'); i.readOnly=true; i.tabIndex=-1;
+        if(!i.hasAttribute('data-ph')) i.setAttribute('data-ph', i.getAttribute('placeholder')||'');
+        i.setAttribute('placeholder','\u2014');
+        if(document.activeElement===i) i.blur();
+      }
+    } else if(i.classList.contains('vslk')){
+      i.classList.remove('vslk'); i.readOnly=false; i.removeAttribute('tabindex');
+      var ph=i.getAttribute('data-ph'); i.removeAttribute('data-ph');
+      if(ph) i.setAttribute('placeholder',ph); else i.removeAttribute('placeholder');
+    }
+  }
+  function setReport(d,on){
+    d.classList.toggle('vsrpt',on);
+    qa('input[data-k]',d).forEach(function(i){
+      var k=i.dataset.k;
+      lockInput(i, on && !(OPEN_WHEN_EMPTY[k] && !i.value.trim()));
+    });
+    var e=q('.vsedit',d); if(e){ e.classList.toggle('on',!on); e.setAttribute('aria-label', on?'Edit vehicle':'Done editing'); e.title=e.getAttribute('aria-label'); }
+  }
+  function refresh(d){ d.classList.toggle('vshasdata', hasData(d)); }
+
+  function clearCard(d){
+    if(!confirm('Clear this vehicle so you can put a different one in this spot?')) return;
+    qa('input[data-k]',d).forEach(function(i){ lockInput(i,false); i.value=''; i.dispatchEvent(new Event('input',{bubbles:true})); });
+    qa('.vsvary',d).forEach(function(c){ c.remove(); });
+    var sp=q('.vsspecs',d); if(sp) sp.classList.remove('hasvary');
+    qa('.cv',d).forEach(function(c){ c.textContent=''; });
+    var m=q('.vsmsg',d); if(m) m.innerHTML='';
+    if(window.fpsClearPhoto) fpsClearPhoto(d);
+    d.__rdLast=null; d.__rdRaw=null; clearTimeout(d.__qt);
+    setReport(d,false); refresh(d);
+    if(typeof vsTotal==='function') vsTotal();
+    if(typeof vsSave==='function') vsSave();
+    var y=q('input[data-k="year"]',d); if(y) y.focus();
+  }
+
+  function wire(d){
+    if(d.__vsrpt) return;
+    var grp=q('.vsbtnr',d), del=q('.vsdel',d);
+    if(!grp||!del){ setTimeout(function(){ if(d.isConnected) wire(d); },300); return; }
+    d.__vsrpt=true;
+    var ed=document.createElement('button'); ed.type='button'; ed.className='vsedit'; ed.innerHTML=PENCIL;
+    var wp=document.createElement('button'); wp.type='button'; wp.className='vswipe'; wp.textContent='Clear';
+    grp.insertBefore(ed,del); grp.insertBefore(wp,ed);
+    ed.onclick=function(e){
+      e.stopPropagation();
+      if(d.classList.contains('vsrpt')) setReport(d,false);
+      else { setReport(d,true); if(typeof vsSave==='function') vsSave(); }
+    };
+    wp.onclick=function(e){ e.stopPropagation(); clearCard(d); };
+    d.addEventListener('input',function(){ refresh(d); });
+    // folding the card (Close, Collapse all) locks it back into a report
+    new MutationObserver(function(){ if(d.classList.contains('vsc') && full(d) && !d.classList.contains('vsrpt')) setReport(d,true); })
+      .observe(d,{attributes:true,attributeFilter:['class']});
+    refresh(d);
+    setReport(d, full(d));
+  }
+
+  // Rodney finished -> the whole card turns into a report
+  function hook(){
+    if(typeof vsLookup!=='function') return setTimeout(hook,300);
+    if(vsLookup.__vsrpt) return;
+    var o=vsLookup;
+    vsLookup=async function(d){
+      var r=await o.apply(this,arguments);
+      if(d){ refresh(d); if(full(d)) setReport(d,true); }
+      return r;
+    };
+    vsLookup.__vsrpt=true;
+  }
+
+  function start(){
+    var box=q('#vsrows'); if(!box) return setTimeout(start,300);
+    hook();
+    qa('.vsrow',box).forEach(wire);
+    new MutationObserver(function(){ qa('.vsrow',box).forEach(wire); }).observe(box,{childList:true});
+    window.fpsSetReport=setReport;
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,1000); }); else setTimeout(start,1000);
+})();
+</script>
 </body>
 </html>
