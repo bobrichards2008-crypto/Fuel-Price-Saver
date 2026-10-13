@@ -1,0 +1,25 @@
+# Stamps every deploy with a build tag (date + commit) so phones can
+# tell a new version is out and so the app can show which build it's on.
+[build]
+  publish = "."
+  command = "B=\"$(TZ=America/Detroit date +%m%d-%H%M)-$(echo ${COMMIT_REF:-local} | cut -c1-7)\"; sed -i \"s|__FPS_BUILD__|$B|g\" index.html sw.js; echo \"FPS build $B\""
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
