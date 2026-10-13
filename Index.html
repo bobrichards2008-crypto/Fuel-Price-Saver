@@ -3024,7 +3024,7 @@ async function vsLookup(d){
     '.vstools .vstogwrap .vstog{width:85px;min-width:0;height:44px;padding:0 2px;font-size:12.5px;line-height:1.15;white-space:normal}'+
     '.vsdel{display:flex;align-items:center;justify-content:center;padding:0}'+
     '.vsdel .vslid{transform-box:fill-box;transform-origin:100% 100%}'+
-    '.vscol svg{width:20px;height:20px;display:block;transition:transform .7s cubic-bezier(.2,.75,.2,1)}'+
+    '.vscol{display:none!important}'+    '#vsrows .vsrow .vsspecs{grid-template-areas:"w w p" "l h d" "b c g" "x x ."}'+    '#vsrows .vsrow .vsspecs.hasvary{grid-template-areas:"v v v" "w w p" "l h d" "b c g" "x x ."}'+    '#vsrows .vsclose{grid-area:x;height:44px;margin-top:4px;border-radius:9px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:15px;font-weight:bold;cursor:pointer}'+    '.vscol svg{width:20px;height:20px;display:block;transition:transform .7s cubic-bezier(.2,.75,.2,1)}'+
     '@media (prefers-reduced-motion:reduce){.vscol svg{transition:none}}'+
     '.vsdel .vstrash{overflow:visible}'+
     '.vsflyer{position:fixed;z-index:9900;color:#fff;font-size:16px;font-weight:800;white-space:nowrap;pointer-events:none;transform-origin:center;text-shadow:0 1px 3px rgba(0,0,0,.6)}'+
@@ -3091,7 +3091,15 @@ async function vsLookup(d){
     line(d); sync();
   }
   function filled(d){ return !!(val(d,'year') && val(d,'make') && val(d,'model')); }
+  function addClose(d){
+    var sp=q('.vsspecs',d); if(!sp){ setTimeout(function(){ if(d.isConnected) addClose(d); },300); return; }
+    if(q('.vsclose',sp)) return;
+    var c=document.createElement('button'); c.type='button'; c.className='vsclose'; c.textContent='Close';
+    c.onclick=function(e){ e.stopPropagation(); setC(d,true); };
+    sp.appendChild(c);
+  }
   function wire(d){
+    addClose(d);
     if(d.__vscol) return; d.__vscol=true;
     var top=q('.vstop',d), del=q('.vsdel',d); if(!top||!del) return;
     var ln=document.createElement('div'); ln.className='vsline';
@@ -3708,7 +3716,8 @@ async function vsLookup(d){
   function paint(d){
     var nm=nameOf(d), on=!!(val(d,'year') && val(d,'make'));
     var lbl=on? 'Look up photos of '+nm : 'Enter year and make to look up photos';
-    [q('.vsgal',d), q('.vsthumb',d)].forEach(function(b){ if(!b) return; b.disabled=!on; b.setAttribute('aria-label',lbl); b.title=lbl; });
+    var g=q('.vsgal',d); if(g){ g.disabled=!on; g.setAttribute('aria-label',lbl); g.title=lbl; }
+    var t=q('.vsthumb',d); if(t){ t.disabled=false; t.setAttribute('aria-label','Open vehicle'); t.title='Open vehicle'; }
   }
   window.vsPaint=function(d){ paint(d); };
   // Old builds saved photos on the phone; clear that space out once.
@@ -3796,7 +3805,7 @@ async function vsLookup(d){
     if(q('.vsthumb',d)) return; var ln=q('.vsline',d); if(!ln) return;
     var b=document.createElement('button'); b.type='button'; b.className='vsthumb'; b.innerHTML=CAR;
     ln.parentNode.insertBefore(b,ln.nextSibling);   // right side: after the measurements, before the arrow
-    b.addEventListener('click',function(e){ if(b.classList.contains('vsthas')) return; e.stopPropagation(); lookUp(d); });  // photo: tap opens the card; red car: search
+    // tap the folded thumb (photo or red car) just opens the card; searching lives inside the open card
     paint(d);
     var gi=q('.vsgal img',d); if(gi && gi.getAttribute('src')) thumbPhoto(d, gi.getAttribute('src'));
   }
@@ -3833,6 +3842,98 @@ async function vsLookup(d){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 })();
 
+</script>
+<script>
+/* ===== Vehicle specifications add-on: full-screen photo viewer (tap the open card's photo) ===== */
+(function(){
+  var st=document.createElement('style');
+  st.textContent=
+    '#vsview{position:fixed;inset:0;z-index:9950;background:#000;display:none;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}'+
+    '#vsview.on{display:block}'+
+    '#vsview img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;transform-origin:0 0;will-change:transform;pointer-events:none}'+
+    '#vsview .vsx{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:2;width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.85);background:rgba(10,20,35,.75);color:#fff;font-size:30px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}'+
+    '#vsview .vscap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);text-align:center;color:#e8eef6;font-size:15px;font-weight:bold;text-shadow:0 1px 3px #000;pointer-events:none;padding:0 70px}'+
+    '#vsrows .vsgal.vshas{cursor:zoom-in}';
+  document.head.appendChild(st);
+
+  var v=document.createElement('div'); v.id='vsview';
+  v.innerHTML='<img alt=""><div class="vscap"></div><button type="button" class="vsx" aria-label="Close photo">&times;</button>';
+  document.body.appendChild(v);
+  var im=v.querySelector('img'), cap=v.querySelector('.vscap'), xb=v.querySelector('.vsx');
+
+  var sc=1, tx=0, ty=0;                       // zoom + pan
+  function apply(){ im.style.transform='translate('+tx+'px,'+ty+'px) scale('+sc+')'; }
+  function clamp(){
+    var W=v.clientWidth, H=v.clientHeight;
+    if(sc<=1){ sc=1; tx=0; ty=0; return; }
+    if(sc>6) sc=6;
+    tx=Math.min(0,Math.max(W-W*sc,tx)); ty=Math.min(0,Math.max(H-H*sc,ty));
+  }
+  function zoomAt(ns,cx,cy){ ns=Math.max(1,Math.min(6,ns)); tx=cx-(cx-tx)*ns/sc; ty=cy-(cy-ty)*ns/sc; sc=ns; clamp(); apply(); }
+
+  function open(src,title){
+    if(!src) return;
+    im.src=src; cap.textContent=title||''; sc=1; tx=0; ty=0; apply();
+    v.classList.add('on'); document.body.style.overflow='hidden';
+    if(typeof enterScreen==='function') enterScreen();     // phone back arrow closes it
+  }
+  function close(){ v.classList.remove('on'); document.body.style.overflow=''; im.removeAttribute('src'); }
+  function isOpen(){ return v.classList.contains('on'); }
+  xb.addEventListener('click',function(e){ e.stopPropagation(); if(!isOpen()) return; history.back(); });
+
+  // the app's back handler: close the photo first, before stepping back a screen
+  if(typeof window.stepBack==='function' && !window.stepBack.__vsview){
+    var ob=window.stepBack;
+    window.stepBack=function(){ if(isOpen()){ close(); return true; } return ob.apply(this,arguments); };
+    window.stepBack.__vsview=true;
+  }
+
+  // tap the open card's photo
+  document.addEventListener('click',function(e){
+    var g=e.target.closest && e.target.closest('#vsrows .vsgal.vshas'); if(!g) return;
+    var i=g.querySelector('img'); if(!i) return;
+    var d=g.closest('.vsrow');
+    var nm=d? [].map.call(d.querySelectorAll('input[data-k="year"],input[data-k="make"],input[data-k="model"]'),function(x){return x.value.trim();}).filter(Boolean).join(' ') : '';
+    open(i.getAttribute('src'), nm);
+  });
+
+  // pinch to zoom, drag to pan, double-tap to zoom in/out
+  var pts={}, last=null, startD=0, startS=1, lastTap=0, lastTapP=null, down=null, multi=false;
+  function rel(e){ var r=v.getBoundingClientRect(); return {x:e.clientX-r.left,y:e.clientY-r.top}; }
+  v.addEventListener('pointerdown',function(e){
+    if(e.target===xb) return;
+    pts[e.pointerId]=rel(e); try{ v.setPointerCapture(e.pointerId); }catch(_){}
+    var k=Object.keys(pts);
+    if(k.length===2){ var a=pts[k[0]], b=pts[k[1]]; startD=Math.hypot(a.x-b.x,a.y-b.y)||1; startS=sc; last={x:(a.x+b.x)/2,y:(a.y+b.y)/2}; multi=true; lastTap=0; }
+    else if(k.length===1){ last=pts[e.pointerId]; multi=false; down={x:last.x,y:last.y,t:Date.now()}; }
+  });
+  v.addEventListener('pointermove',function(e){
+    if(!pts[e.pointerId]) return; pts[e.pointerId]=rel(e);
+    var k=Object.keys(pts);
+    if(k.length>=2){
+      var a=pts[k[0]], b=pts[k[1]], m={x:(a.x+b.x)/2,y:(a.y+b.y)/2}, dd=Math.hypot(a.x-b.x,a.y-b.y);
+      tx+=m.x-last.x; ty+=m.y-last.y; last=m;
+      zoomAt(startS*dd/startD, m.x, m.y);
+    } else if(sc>1 && last){
+      var p=pts[e.pointerId]; tx+=p.x-last.x; ty+=p.y-last.y; last=p; clamp(); apply();
+    }
+  });
+  function up(e){
+    var p=pts[e.pointerId]; delete pts[e.pointerId]; var k=Object.keys(pts);
+    // a real tap: one finger, quick, didn't move, and no pinch in this gesture
+    if(!k.length && p && down && !multi && Date.now()-down.t<250 && Math.hypot(p.x-down.x,p.y-down.y)<10){
+      var now=Date.now();
+      if(lastTap && now-lastTap<320 && lastTapP && Math.hypot(p.x-lastTapP.x,p.y-lastTapP.y)<40){ zoomAt(sc>1.2?1:2.5,p.x,p.y); lastTap=0; }
+      else { lastTap=now; lastTapP=p; }
+    }
+    if(!k.length){ down=null; multi=false; }
+    last= k.length? pts[k[0]] : null;
+  }
+  v.addEventListener('pointerup',up); v.addEventListener('pointercancel',up);
+  v.addEventListener('wheel',function(e){ e.preventDefault(); var p=rel(e); zoomAt(sc*(e.deltaY<0?1.15:1/1.15),p.x,p.y); },{passive:false});
+  window.addEventListener('resize',function(){ if(isOpen()){ clamp(); apply(); } });
+  window.fpsPhotoView=open;
+})();
 </script>
 </body>
 </html>
