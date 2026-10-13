@@ -4041,8 +4041,91 @@ async function vsLookup(d){
     qa('.vsrow',box).forEach(wire);
     new MutationObserver(function(){ qa('.vsrow',box).forEach(wire); }).observe(box,{childList:true});
     window.fpsSetReport=setReport;
+    window.fpsLockInput=lockInput;
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,1000); }); else setTimeout(start,1000);
+})();
+</script>
+<script>
+/* ===== Vehicle specifications add-on: pickup under make, delivery under model, miles between ===== */
+(function(){
+  function q(s,r){ return (r||document).querySelector(s); }
+  function qa(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+  function val(d,k){ var i=q('input[data-k="'+k+'"]',d); return i? i.value.trim() : ''; }
+  var MKEY='fps_vsmiles_v1', MC={};
+  try{ MC=JSON.parse(localStorage.getItem(MKEY)||'{}')||{}; }catch(e){ MC={}; }
+  function keep(){ try{ localStorage.setItem(MKEY, JSON.stringify(MC)); }catch(e){} }
+
+  var st=document.createElement('style');
+  st.textContent=
+    '#vsrows .vsrow.vsmv .vsymm{grid-template-columns:78px 1fr 1fr;row-gap:6px}'+
+    '#vsrows .vsrow.vsmv .vsymm .f-pickup{grid-column:2;grid-row:2}'+
+    '#vsrows .vsrow.vsmv .vsymm .f-delivery{grid-column:3;grid-row:2}'+
+    '#vsrows .vsrow.vsmv .vsymm .f-pickup label,#vsrows .vsrow.vsmv .vsymm .f-delivery label{display:block;font-size:12px;color:#9fb0c8;margin:0 0 2px 2px}'+
+    '#vsrows .vsrow.vsmv .vsymm .f-pickup input,#vsrows .vsrow.vsmv .vsymm .f-delivery input{width:100%;box-sizing:border-box}'+
+    '#vsrows .vsrow.vsmv .vsymm .vsmiles{grid-column:2 / 4;grid-row:3;font-size:14px;color:#9fb0c8;margin:0 2px;min-height:0}'+
+    '#vsrows .vsrow.vsmv .vsymm .vsmiles:empty{display:none}'+
+    '#vsrows .vsrow.vsmv .vsymm .vsmiles b{color:#f5c542}'+
+    '#vsrows .vsrow.vsmv .vsspecs{grid-template-areas:"w w g" "l h g" "b c g" "x x ."}'+
+    '#vsrows .vsrow.vsmv .vsspecs.hasvary{grid-template-areas:"v v v" "w w g" "l h g" "b c g" "x x ."}'+
+    '#vsrows .vsrow.vsmv .vsspecs .vsgal{align-self:start;height:auto!important;min-height:0!important;aspect-ratio:4/3}'+
+    '#vsrows .vsrow.vsc .vsymm .f-pickup,#vsrows .vsrow.vsc .vsymm .f-delivery,#vsrows .vsrow.vsc .vsymm .vsmiles{display:none}';
+  document.head.appendChild(st);
+
+  function key(a,b){ return a.toLowerCase()+'|'+b.toLowerCase(); }
+  function show(d,mi,txt){
+    var m=q('.vsmiles',d); if(!m) return;
+    m.innerHTML = mi!=null ? 'Pickup to delivery: <b>'+Math.round(mi).toLocaleString()+' mi</b>' : (txt||'');
+  }
+  async function miles(d){
+    var a=val(d,'pickup'), b=val(d,'delivery'), tok=(d.__mtok=(d.__mtok||0)+1);
+    if(!a || !b){ show(d,null,''); return; }
+    var k=key(a,b);
+    if(MC[k]!=null){ show(d,MC[k]); return; }
+    if(typeof geocode!=='function'){ show(d,null,''); return; }
+    show(d,null,'Figuring miles\u2026');
+    try{
+      var p1=await geocode(a), p2=await geocode(b);
+      var u='https://router.project-osrm.org/route/v1/driving/'+p1[0]+','+p1[1]+';'+p2[0]+','+p2[1]+'?overview=false';
+      var j=await (await fetch(u)).json();
+      if(tok!==d.__mtok) return;                       // he changed a city while we were working
+      if(!j.routes || !j.routes.length) throw 0;
+      var mi=j.routes[0].distance/1609.34; MC[k]=Math.round(mi); keep(); show(d,MC[k]);
+    }catch(e){ if(tok===d.__mtok) show(d,null,'Couldn\u2019t get miles for those cities'); }
+  }
+
+  // a filled pickup/delivery turns into report text as soon as he leaves the box
+  function lockSoon(d,i){
+    setTimeout(function(){
+      if(document.activeElement===i) return;
+      if(i.value.trim() && d.classList.contains('vsrpt') && window.fpsLockInput) fpsLockInput(i,true);
+    },600);
+  }
+
+  function move(d){
+    if(d.__vsmv) return;
+    var ymm=q('.vsymm',d), pu=q('.f-pickup',d), de=q('.f-delivery',d);
+    if(!ymm||!pu||!de){ setTimeout(function(){ if(d.isConnected) move(d); },300); return; }
+    d.__vsmv=true;
+    ymm.appendChild(pu); ymm.appendChild(de);
+    var m=document.createElement('div'); m.className='vsmiles'; ymm.appendChild(m);
+    d.classList.add('vsmv');
+    [pu,de].forEach(function(f){
+      var i=q('input[data-k]',f), sug=q('.suggest',f), t;
+      i.addEventListener('input',function(){ clearTimeout(t); if(!val(d,'pickup')||!val(d,'delivery')){ d.__mtok=(d.__mtok||0)+1; show(d,null,''); return; } t=setTimeout(function(){ miles(d); },1200); });
+      i.addEventListener('blur',function(){ clearTimeout(t); setTimeout(function(){ miles(d); },400); lockSoon(d,i); });
+      i.addEventListener('keydown',function(e){ if(e.key==='Enter') i.blur(); });
+      if(sug) sug.addEventListener('click',function(){ setTimeout(function(){ miles(d); lockSoon(d,i); },300); });
+    });
+    miles(d);
+  }
+
+  function start(){
+    var box=q('#vsrows'); if(!box) return setTimeout(start,300);
+    qa('.vsrow',box).forEach(move);
+    new MutationObserver(function(){ qa('.vsrow',box).forEach(move); }).observe(box,{childList:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,1100); }); else setTimeout(start,1100);
 })();
 </script>
 </body>
