@@ -498,7 +498,7 @@
 
   #fcline{position:absolute;left:0;right:0;top:9px;padding:0 76px;text-align:center;cursor:pointer;display:none;line-height:1.25;white-space:nowrap;overflow:hidden}
   body.has-fcline #fcline{display:block}
-  body.on-detail #fcline, body.on-svc #fcline, body.on-news #fcline{display:none}
+  
   #fcline .hd{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0c8}
   #fcline .ln{font-size:15px;font-weight:bold;color:#cfe0f2;display:inline-flex;align-items:center;gap:5px}
   #fcline .ln svg{width:14px;height:14px;flex:none}
@@ -1151,8 +1151,8 @@ function drawFcLine(f){
   const moved=Math.max(f.up||0,f.down||0), share=f.stores?Math.round(100*moved/f.stores):0;
   const conf='';
   let sp='';
-  if(f.lo!=null && f.hi!=null && a>=0.5){
-    const lo=+f.lo, hi=+f.hi;
+  if(f.low!=null && f.high!=null && a>=0.5){
+  const lo=+f.low, hi=+f.high;
     if((lo<0&&hi<0)||(lo>0&&hi>0)){ const p=[Math.abs(lo),Math.abs(hi)].sort((x,y)=>x-y);
       sp=' ('+Math.round(p[0])+'\u2013'+fcCents(p[1])+')'; }
     else sp=' ('+(lo>0?'+':'\u2212')+fcCents(lo)+' to '+(hi>0?'+':'\u2212')+fcCents(hi)+')';
