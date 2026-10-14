@@ -3952,6 +3952,8 @@ async function vsLookup(d){
     more(card,src);
   }
   function close(){ stop(); clearTimeout(rest); rest=null; v.classList.remove('on','multi'); document.body.style.overflow=''; im.removeAttribute('src'); list=[]; card=null; }
+  // vehicle specs v2: open the viewer with a ready list of up to 4 photos
+  window.vsViewList=function(arr,t){ arr=(arr||[]).filter(Boolean).slice(0,4); if(!arr.length) return; open(arr[0],t,null); list=arr; drawDots(); show(0); play(); };
   xb.addEventListener('click',function(e){ e.stopPropagation(); if(!isOpen()) return; history.back(); });
   pv.addEventListener('click',function(e){ e.stopPropagation(); touched(); show(idx-1); });
   nx.addEventListener('click',function(e){ e.stopPropagation(); touched(); show(idx+1); });
@@ -4262,6 +4264,411 @@ async function vsLookup(d){
     window.addEventListener('resize',all);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,1300); }); else setTimeout(start,1300);
+})();
+</script>
+<script>
+/* ===== Vehicle specs v2 (Oct 14 2026): stops + entry pop-ups, built from the approved preview.
+   Lives in its own shadow root so none of the app's older vehicle-spec styles or add-ons touch it.
+   The old #vspop screen is left in the file but no longer opened. ===== */
+(function(){
+  var KEY='fps_vspec_v2';
+  var FIELDS=[['curb_weight','Curb weight','lbs'],['height','Height','in'],['length','Length','in'],['wheel_base','Wheelbase','in'],['ground_clearance','Ground clearance','in']];
+  var URL_ = (typeof VSPEC_URL!=='undefined' && VSPEC_URL) ? VSPEC_URL : '';
+  var POPS=['pop','chooser','settings','delpick','delcfm','edpick'];
+
+  var hs=document.createElement('style');
+  hs.textContent='#vs2{position:fixed;inset:0;z-index:9500;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}#vs2.show{display:block}';
+  document.head.appendChild(hs);
+
+  var host=document.createElement('div'); host.id='vs2';
+  document.body.appendChild(host);
+  var root=host.attachShadow({mode:'open'});
+
+  var PENCIL='<svg viewBox="0 0 24 24"><g transform="rotate(45 12 12)"><rect x="9.2" y="3" width="5.6" height="3.2" rx="0.6" fill="#e3463b"/><rect x="9.2" y="6" width="5.6" height="1.5" fill="#d9a441"/><rect x="9.2" y="7.3" width="5.6" height="13.5" fill="#f3c53d"/><polygon points="9.2,20.8 14.8,20.8 12,24.5" fill="#e8d6a6"/><polygon points="11.1,23 12.9,23 12,24.5" fill="#2b2b2b"/></g></svg>';
+  var PLUS='<svg viewBox="0 0 24 24" fill="none" stroke="#f26a21" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+
+  root.innerHTML='<style>'+
+  ':host{ --navy:#10233f; --orange:#f26a21; --panel:#17304f; --line:#2b4a70; --edge:#4f7bb0; --green:#2fa85a; --text:#e8eef6; --mut:#9fb4ce; --ok:#3fbf6f; --bad:#e25a4f; --field:#1d3a5e; --warn:#f2b36b;'+
+  ' color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:normal;text-align:left}'+
+  '*{box-sizing:border-box}'+
+  '.wrap{max-width:560px;margin:0 auto;padding:14px 14px calc(40px + env(safe-area-inset-bottom));padding-top:calc(14px + env(safe-area-inset-top))}'+
+  'h1{font-size:20px;margin:6px 0 2px}'+
+  'input{background:var(--field);color:#fff;border:1px solid var(--edge);border-radius:8px;padding:11px 10px;font-size:16px;width:100%;font-family:inherit;margin:0}'+
+  'input:focus{outline:2px solid var(--orange);outline-offset:1px}'+
+  'button{font:inherit;cursor:pointer}'+
+  '.top{display:flex;align-items:flex-start;gap:8px;margin-bottom:12px}.top h1{flex:1}'+
+  '.gear{flex:0 0 auto;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;margin-top:4px;font-size:24px;color:#cfe0f2;line-height:1;padding:0}'+
+  '.toprow{display:flex;gap:10px;margin-bottom:14px}'+
+  '.toprow button{flex:1;padding:14px 10px;border:1px solid var(--orange);border-radius:12px;color:#fff;font-size:16px;font-weight:700;margin:0;background:var(--panel)}'+
+  '.toprow .delveh.hide{display:none}'+
+  '.run{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden}'+
+  '.runhd{display:flex;align-items:center;gap:8px;padding:9px 10px 9px 12px;background:var(--navy);border-bottom:1.5px solid var(--line)}'+
+  '.runhd .hbtn{flex:0 0 auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:var(--field);border:1px solid var(--line);padding:0}'+
+  '.runhd .hbtn svg{width:24px;height:24px}'+
+  '.runhd .nm{flex:1;font-weight:700;font-size:17px;cursor:pointer}'+
+  '.runhd .nm small{display:block;font-weight:400;font-size:12px;color:var(--mut);margin-top:1px}'+
+  '.veh{position:relative;padding:11px 140px 12px 12px;border-top:1px solid var(--line)}'+
+  '.veh:first-of-type{border-top:0}'+
+  '.veh .vmain{min-width:0;padding-right:28px}'+
+  '.thumb{position:absolute;right:12px;bottom:11px;width:118px;height:90px;border-radius:9px;overflow:hidden;background:var(--field);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}'+
+  '.thumb[data-has]{cursor:zoom-in}'+
+  '.thumb img{width:100%;height:100%;object-fit:cover;display:block}'+
+  '.thumb .ph{color:var(--mut);font-size:10px;text-align:center;line-height:1.15;padding:2px}'+
+  '.vhd{display:flex;align-items:baseline;gap:8px}.vhd b{flex:1;font-size:16px}'+
+  '.specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 14px;margin-top:6px;font-size:14px}'+
+  '.specs div{color:var(--mut);white-space:nowrap}'+
+  '.specs div strong{color:var(--text);font-weight:600}'+
+  '.missing{color:var(--warn) !important}'+
+  '.busy{margin-top:6px;font-size:14px;color:var(--mut);display:flex;align-items:center;gap:8px}'+
+  '.dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1s infinite ease-in-out}'+
+  '@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}'+
+  '.fail{margin-top:6px;font-size:14px;color:var(--warn)}'+
+  '.empty{text-align:center;color:var(--mut);padding:30px 10px;border:1.5px dashed var(--line);border-radius:14px}'+
+  '.shade{position:fixed;inset:0;background:rgba(6,16,30,.72);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}'+
+  '.shade.show{opacity:1;pointer-events:auto}'+
+  '.pop{position:fixed;left:0;right:0;top:0;z-index:60;transform:translateY(-110%);transition:transform .25s ease-out;padding-top:env(safe-area-inset-top)}'+
+  '.pop.show{transform:none}'+
+  '.popin{max-width:560px;margin:0 auto;background:var(--navy);border:2px solid var(--edge);border-top:0;border-radius:0 0 16px 16px;padding:12px 14px 14px;max-height:calc(100vh - 20px);overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.55)}'+
+  '.pophd{display:flex;align-items:center;margin-bottom:8px}.pophd h2{flex:1;margin:0;font-size:18px}'+
+  '.x{background:none;border:0;color:var(--mut);font-size:26px;line-height:1;padding:0 4px}'+
+  '.lane{font-size:15px;color:var(--mut);margin-bottom:6px}.lane b{color:var(--text)}'+
+  '.lbl{font-size:13px;color:var(--mut);margin:8px 0 4px}'+
+  '.row{display:flex;gap:8px}.row > *{flex:1}.yr{flex:0 0 84px}'+
+  '.msg{font-size:14px;margin-top:6px;color:var(--warn)}'+
+  '.acts{display:flex;gap:8px;margin-top:14px}'+
+  '.acts button{flex:1;padding:13px 6px;border-radius:10px;font-size:16px;font-weight:700}'+
+  '.save{background:var(--orange);color:#fff;border:0}'+
+  '.clear{background:transparent;color:var(--text);border:1.5px solid var(--edge);padding:13px 6px;border-radius:10px;font-size:16px;font-weight:700;width:100%}'+
+  '.acts .clear{width:auto}'+
+  '.del{background:transparent;color:var(--bad);border:1.5px solid var(--bad)}'+
+  '.pick{display:flex;flex-direction:column;gap:9px;margin:4px 0 14px}'+
+  '.pickrow{display:flex;align-items:flex-start;gap:12px;text-align:left;padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;background:var(--field);color:var(--text);font-size:15px;cursor:pointer}'+
+  '.pickrow input{width:20px;height:20px;margin-top:1px;flex:0 0 auto;accent-color:var(--bad);padding:0}'+
+  '.pickrow small{display:block;color:var(--mut);font-size:12.5px;margin-top:2px}'+
+  '.pickrow .nmw{flex:1}.pickall{font-weight:700}'+
+  '.dpacts{display:flex;flex-direction:column;gap:9px}'+
+  '.dpacts button{padding:13px 6px;border-radius:10px;font-size:16px;font-weight:700}'+
+  '.cfm .popin{border:2px solid var(--bad)}.cfm h2{color:var(--bad)}'+
+  '.cfmsub{color:var(--mut);font-size:14px;margin:2px 0 16px;line-height:1.4}'+
+  '.cfmbig{background:var(--bad);color:#fff;border:0;font-weight:800}'+
+  '#dpdel.off{background:transparent;color:var(--mut);border:1.5px solid var(--line);font-weight:700}'+
+  '.bylink{background:none;border:0;color:var(--orange);font-size:14px;padding:10px 0 0;text-decoration:underline}'+
+  '.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:6px}'+
+  '.grid label{display:block;font-size:13px;color:var(--mut);margin-bottom:3px}'+
+  '.cv{font-size:12px;color:var(--mut);min-height:15px;margin-top:2px}'+
+  '.choice{display:flex;flex-direction:column;gap:10px;margin-top:4px}'+
+  '.choice button{padding:15px;border-radius:12px;font-size:17px;font-weight:700}'+
+  '.c1{background:var(--orange);color:#fff;border:0}'+
+  '.c3{background:transparent;color:var(--mut);border:0;font-weight:600 !important}'+
+  '.setrow{margin:2px 0 10px}.setrow label{display:block;font-size:14px;color:var(--mut);margin-bottom:5px}'+
+  '.hide{display:none !important}'+
+  '.popping #report{visibility:hidden}'+
+  '</style>'+
+  '<div class="wrap" id="wrapv">'+
+    '<div class="top"><h1>Vehicle specs</h1><button class="gear" type="button" aria-label="Settings" onclick="V2.openSettings()">\u2699</button></div>'+
+    '<div class="toprow"><button class="addbtn" type="button" onclick="V2.newRun()">+ Add a vehicle</button>'+
+    '<button class="delveh hide" id="delvehbtn" type="button" onclick="V2.openDelPicker()">Delete a vehicle</button></div>'+
+    '<div id="report"></div>'+
+  '</div>'+
+  '<div class="shade" id="shade" onclick="V2.closeAll()"></div>'+
+  '<div class="pop" id="settings" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2>Settings</h2><button class="x" type="button" aria-label="Close" onclick="V2.closeAll()">&times;</button></div>'+
+    '<div class="setrow"><label for="maxin">Your max load (lbs)</label><input id="maxin" type="text" inputmode="numeric" placeholder="Optional"></div>'+
+    '<div class="acts"><button class="save" type="button" onclick="V2.closeAll()">Done</button></div></div></div>'+
+  '<div class="pop" id="pop" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2 id="poptitle">Add a vehicle</h2><button class="x" type="button" aria-label="Close" onclick="V2.closeAll()">&times;</button></div>'+
+    '<div id="runbox"><div class="row"><input id="from" type="text" autocapitalize="words" placeholder="From"><input id="to" type="text" autocapitalize="words" placeholder="To"></div></div>'+
+    '<div class="lane hide" id="lane"></div>'+
+    '<div id="vehbox"><div class="lbl">Vehicle</div><div class="row">'+
+      '<input id="year" class="yr" type="text" inputmode="numeric" maxlength="4" placeholder="Year">'+
+      '<input id="make" type="text" autocapitalize="words" placeholder="Make">'+
+      '<input id="model" type="text" autocapitalize="words" placeholder="Model"></div>'+
+      '<button class="bylink hide" id="bylink" type="button" onclick="V2.showGrid()">Type the numbers in myself</button>'+
+      '<div class="grid hide" id="grid"></div></div>'+
+    '<div class="msg" id="msg"></div>'+
+    '<div class="acts"><button class="save" type="button" onclick="V2.save()">Save</button>'+
+      '<button class="clear" type="button" onclick="V2.clearPop()">Clear</button>'+
+      '<button class="del hide" id="delbtn" type="button" onclick="V2.del()">Delete</button></div></div></div>'+
+  '<div class="pop" id="delpick" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2>Delete a vehicle</h2><button class="x" type="button" aria-label="Close" onclick="V2.closeAll()">&times;</button></div>'+
+    '<div class="cfmsub">Check the vehicles you want to remove.</div><div class="pick" id="pickbox"></div>'+
+    '<div class="dpacts"><button class="cfmbig" id="dpdel" type="button" onclick="V2.askDelChecked()">Delete selected</button>'+
+      '<button class="clear" type="button" onclick="V2.closeAll()">Cancel</button></div></div></div>'+
+  '<div class="pop" id="edpick" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2>Which vehicle do you want to edit?</h2><button class="x" type="button" aria-label="Close" onclick="V2.closeAll()">&times;</button></div>'+
+    '<div class="lane" id="eplane"></div><div class="choice" id="epbox"></div>'+
+    '<button class="clear" type="button" style="margin-top:12px" onclick="V2.closeAll()">Cancel</button></div></div>'+
+  '<div class="pop cfm" id="delcfm" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2 id="dctitle">Delete this vehicle?</h2></div><div class="cfmsub" id="dcsub"></div>'+
+    '<div class="acts"><button class="cfmbig" id="dcyes" type="button">Yes, delete it</button>'+
+      '<button class="clear" type="button" onclick="V2.openDelPicker()">Cancel</button></div></div></div>'+
+  '<div class="pop" id="chooser" role="dialog" aria-modal="true"><div class="popin">'+
+    '<div class="pophd"><h2 id="chtitle">Saved</h2></div><div class="lane" id="chlane"></div>'+
+    '<div class="choice"><button class="c1" id="ch1" type="button" onclick="V2.addTo(V2.cur())">Add another vehicle to this stop</button>'+
+      '<button class="c3" type="button" onclick="V2.closeAll()">Done</button></div></div></div>';
+
+  function $(id){ return root.getElementById(id); }
+  function qa(s){ return [].slice.call(root.querySelectorAll(s)); }
+
+  var data={max:'',runs:[]}, mode=null, curRun=null, curVeh=null;
+  function load(){ try{ var s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&s.runs) data=s; }catch(e){} }
+  function store(){ try{ localStorage.setItem(KEY,JSON.stringify(data)); }catch(e){} }
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+  function num(v){ var n=parseFloat(String(v==null?'':v).replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+  function feet(inches){ var n=num(inches); if(!n) return ''; var f=Math.floor(n/12), i=Math.round(n-f*12); if(i===12){f++;i=0;} return f===0 ? i+'"' : f+"' "+i+'"'; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function vname(v){ return [v.year,v.make,v.model].filter(Boolean).join(' ')||'Vehicle'; }
+  function laneTxt(r){ return (r.from||'?')+' \u2192 '+(r.to||'?'); }
+  function findRun(id){ return data.runs.find(function(r){ return r.id===id; }); }
+  function findVeh(id){ for(var a=0;a<data.runs.length;a++){ var r=data.runs[a], v=r.vehicles.find(function(x){ return x.id===id; }); if(v) return {r:r,v:v}; } return null; }
+  function firstPhoto(v){ return v.photo || (v.photos && v.photos[0]) || ''; }
+
+  /* ---------- report view ---------- */
+  function render(){
+    var box=$('report');
+    var anyVeh=data.runs.some(function(r){ return r.vehicles.length; });
+    $('delvehbtn').classList.toggle('hide',!anyVeh);
+    if(!data.runs.length){ box.innerHTML='<div class="empty">Nothing on your trip sheet yet.<br>Tap <b>+ Add a vehicle</b> to start.</div>'; return; }
+    box.innerHTML=data.runs.map(function(r){
+      return '<div class="run"><div class="runhd"><span class="nm" data-r="'+r.id+'">'+esc(laneTxt(r))+'<small>'+r.vehicles.length+' vehicle'+(r.vehicles.length===1?'':'s')+'</small></span>'+
+        '<button class="hbtn add" type="button" data-add="'+r.id+'" aria-label="Add a vehicle to this stop">'+PLUS+'</button>'+
+        '<button class="hbtn ed" type="button" data-edit="'+r.id+'" aria-label="Edit a vehicle">'+PENCIL+'</button></div>'+
+        r.vehicles.map(function(v){ return '<div class="veh" data-v="'+v.id+'"><div class="vmain"><div class="vhd"><b>'+esc(vname(v))+'</b></div>'+vbody(v)+'</div>'+thumb(v)+'</div>'; }).join('')+'</div>';
+    }).join('');
+    qa('.runhd .nm').forEach(function(el){ el.onclick=function(){ editRun(el.dataset.r); }; });
+    qa('.hbtn.add').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); addTo(el.dataset.add); }; });
+    qa('.hbtn.ed').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); editPick(el.dataset.edit); }; });
+    qa('.thumb[data-has]').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); openPhotos(el.dataset.v); }; });
+    qa('.thumb img').forEach(function(im){ im.onerror=function(){ var f=findVeh(im.closest('.thumb').dataset.v); if(f){ var bad=im.getAttribute('src'); if(f.v.photo===bad) f.v.photo=''; if(f.v.photos) f.v.photos=f.v.photos.filter(function(u){ return u!==bad; }); store(); } im.closest('.thumb').removeAttribute('data-has'); im.replaceWith(Object.assign(document.createElement('span'),{className:'ph',textContent:'photo'})); }; });
+    qa('.run').forEach(function(run){ var vs=[].slice.call(run.querySelectorAll('.veh')); vs.forEach(function(v){ v.style.minHeight=''; }); if(vs.length<2) return; var h=Math.max.apply(null,vs.map(function(v){ return v.getBoundingClientRect().height; })); vs.forEach(function(v){ v.style.minHeight=h+'px'; }); });
+  }
+  function thumb(v){
+    var p=firstPhoto(v);
+    if(p) return '<div class="thumb" data-has="1" data-v="'+v.id+'"><img src="'+esc(p)+'" alt="" loading="lazy"></div>';
+    return '<div class="thumb" data-v="'+v.id+'"><span class="ph">photo</span></div>';
+  }
+  function vbody(v){
+    if(v.status==='look') return '<div class="busy"><span class="dot"></span>Rodney is looking this one up\u2026</div>';
+    var any=FIELDS.some(function(f){ return num(v[f[0]]); });
+    if(v.status==='fail' && !any) return '<div class="fail">Couldn\u2019t find specs. Tap the pencil to retry or type them in.</div>';
+    return '<div class="specs">'+FIELDS.map(function(f){ var k=f[0], l=f[1], u=f[2], val=num(v[k]);
+      if(!val) return (k==='curb_weight'||k==='height'||k==='length')? '<div class="missing">'+l+': needed</div>' : '<div>'+l+': -</div>';
+      var s= u==='in' ? feet(val)+' ('+val+' in)' : Math.round(val).toLocaleString()+' '+u;
+      return '<div>'+l+': <strong>'+s+'</strong></div>'; }).join('')+'</div>';
+  }
+
+  /* ---------- photos: static thumbnail, tap opens the full-screen carousel (up to 4) ---------- */
+  function openPhotos(vid){
+    var f=findVeh(vid); if(!f) return;
+    var list=[]; [f.v.photo].concat(f.v.photos||[]).forEach(function(u){ if(u && list.indexOf(u)<0 && list.length<4) list.push(u); });
+    if(!list.length) return;
+    if(typeof window.vsViewList==='function') window.vsViewList(list, vname(f.v));
+    if(!f.v.photos) photos(vid);
+  }
+  function photos(vid){
+    var f=findVeh(vid); if(!f || !URL_) return;
+    var v=f.v, asked=vname(v);
+    var q='year='+encodeURIComponent(v.year)+'&make='+encodeURIComponent(v.make)+'&model='+encodeURIComponent(v.model)+'&images=only';
+    fetch(URL_+(URL_.indexOf('?')>=0?'&':'?')+q).then(function(r){ return r.ok? r.json() : null; }).then(function(j){
+      var got=(j && j.ok && Array.isArray(j.images))? j.images.map(function(x){ return x && x.url; }).filter(Boolean).slice(0,4) : [];
+      var now=findVeh(vid); if(!now || vname(now.v)!==asked) return;
+      now.v.photos=got; if(!now.v.photo && got[0]) now.v.photo=got[0];
+      store(); if(host.classList.contains('show') && !anyOpen()) render();
+    }).catch(function(){});
+  }
+
+  /* ---------- pop-up control ---------- */
+  function anyOpen(){ return POPS.some(function(p){ return $(p).classList.contains('show'); }); }
+  function show(id){ $('shade').classList.add('show'); POPS.forEach(function(p){ $(p).classList.toggle('show',p===id); }); $('wrapv').classList.add('popping'); }
+  function closeAll(){ $('shade').classList.remove('show'); POPS.forEach(function(p){ $(p).classList.remove('show'); }); $('wrapv').classList.remove('popping'); mode=null; var a=root.activeElement; if(a && a.blur) a.blur(); render(); }
+  function openSettings(){ $('maxin').value=data.max||''; show('settings'); }
+  function setup(m,title){
+    mode=m; $('poptitle').textContent=title; $('msg').textContent='';
+    var runFields=(m==='newrun'||m==='editrun'||m==='editveh'), vehFields=(m!=='editrun');
+    $('runbox').classList.toggle('hide',!runFields);
+    $('vehbox').classList.toggle('hide',!vehFields);
+    $('lane').classList.toggle('hide',runFields);
+    $('delbtn').classList.toggle('hide',!(m==='editveh'||m==='editrun'));
+    $('bylink').classList.toggle('hide',m!=='editveh');
+    $('grid').classList.add('hide');
+    ['year','make','model'].forEach(function(k){ $(k).value=''; });
+    FIELDS.forEach(function(f){ $('f_'+f[0]).value=''; conv(f[0]); });
+    show('pop');
+  }
+  function newRun(){ curRun=null; curVeh=null; setup('newrun','Add a vehicle'); $('from').value=''; $('to').value=''; focusSoon('from'); }
+  function addTo(rid){
+    var r=findRun(rid); if(!r){ newRun(); return; }
+    curRun=rid; curVeh=null; setup('addveh','Add a vehicle');
+    $('lane').innerHTML='Adding to <b>'+esc(laneTxt(r))+'</b>'; focusSoon('year');
+  }
+  function editVeh(vid){
+    var f=findVeh(vid); if(!f) return;
+    curRun=f.r.id; curVeh=vid; setup('editveh','Change vehicle');
+    $('from').value=f.r.from||''; $('to').value=f.r.to||'';
+    ['year','make','model'].forEach(function(k){ $(k).value=f.v[k]||''; });
+    FIELDS.forEach(function(x){ $('f_'+x[0]).value=f.v[x[0]]||''; conv(x[0]); });
+    if(f.v.status==='fail') showGrid();
+  }
+  function editPick(rid){
+    var r=findRun(rid); if(!r||!r.vehicles.length) return;
+    if(r.vehicles.length===1){ editVeh(r.vehicles[0].id); return; }
+    $('eplane').innerHTML='Stop: <b>'+esc(laneTxt(r))+'</b>';
+    $('epbox').innerHTML=r.vehicles.map(function(v){ return '<button class="c1 epv" type="button" data-v="'+v.id+'">'+esc(vname(v))+'</button>'; }).join('');
+    qa('#epbox .epv').forEach(function(b){ b.onclick=function(){ editVeh(b.dataset.v); }; });
+    show('edpick');
+  }
+  function editRun(rid){
+    var r=findRun(rid); if(!r) return;
+    curRun=rid; curVeh=null; setup('editrun','Change the cities');
+    $('from').value=r.from||''; $('to').value=r.to||'';
+  }
+  function focusSoon(id){ setTimeout(function(){ $(id).focus(); },270); }
+  function showGrid(){ $('grid').classList.remove('hide'); $('bylink').classList.add('hide'); }
+  function clearPop(){
+    if(mode==='newrun'||mode==='editrun'){ $('from').value=''; $('to').value=''; }
+    ['year','make','model'].forEach(function(k){ $(k).value=''; });
+    FIELDS.forEach(function(f){ $('f_'+f[0]).value=''; conv(f[0]); });
+    $('msg').textContent='';
+    focusSoon(mode==='newrun'||mode==='editrun'?'from':'year');
+  }
+
+  /* ---------- delete-vehicle picker ---------- */
+  function openDelPicker(){
+    var rows=[], n=0;
+    data.runs.forEach(function(r){ r.vehicles.forEach(function(v){ n++;
+      rows.push('<label class="pickrow"><input type="checkbox" class="vck" value="'+v.id+'"><span class="nmw">'+esc(vname(v))+'<small>'+esc(laneTxt(r))+'</small></span></label>'); }); });
+    if(n>1) rows.unshift('<label class="pickrow pickall"><input type="checkbox" id="ckall"><span class="nmw">Delete all vehicles</span></label>');
+    $('pickbox').innerHTML = n ? rows.join('') : '<div class="cfmsub">No vehicles yet.</div>';
+    var all=$('ckall');
+    if(all) all.onchange=function(){ qa('.vck').forEach(function(c){ c.checked=all.checked; }); syncDel(); };
+    qa('.vck').forEach(function(c){ c.onchange=function(){ if(all) all.checked=qa('.vck').every(function(b){ return b.checked; }); syncDel(); }; });
+    syncDel(); show('delpick');
+  }
+  function checkedIds(){ return qa('.vck:checked').map(function(c){ return c.value; }); }
+  function syncDel(){
+    var n=qa('.vck:checked').length, btn=$('dpdel');
+    if(n===0){ btn.classList.add('off'); btn.textContent='Choose vehicles to delete'; }
+    else { btn.classList.remove('off'); btn.textContent = n===1 ? 'Delete this vehicle' : 'Delete '+n+' vehicles'; }
+  }
+  function askDelChecked(){
+    var ids=checkedIds(); if(!ids.length) return;
+    var msg;
+    if(ids.length===1){ var f=findVeh(ids[0]); msg='Are you sure you want to delete the <b>'+esc(vname(f.v))+'</b> on <b>'+esc(laneTxt(f.r))+'</b>? Make sure you are deleting the right vehicle.'; }
+    else msg='Are you sure you want to delete these <b>'+ids.length+' vehicles</b>? This cannot be undone \u2014 you would have to enter them again.';
+    $('dcsub').innerHTML=msg;
+    $('dctitle').textContent = ids.length===1 ? 'Delete this vehicle?' : 'Delete '+ids.length+' vehicles?';
+    $('dcyes').textContent = ids.length===1 ? 'Yes, delete it' : 'Yes, delete them';
+    $('dcyes').onclick=function(){ doDel(ids); };
+    show('delcfm');
+  }
+  function doDel(ids){
+    data.runs.forEach(function(r){ r.vehicles=r.vehicles.filter(function(v){ return ids.indexOf(v.id)<0; }); });
+    data.runs=data.runs.filter(function(r){ return r.vehicles.length; });
+    store();
+    if(data.runs.some(function(r){ return r.vehicles.length; })) openDelPicker(); else closeAll();
+  }
+
+  /* ---------- save ---------- */
+  function save(){
+    var from=$('from').value.trim(), to=$('to').value.trim();
+    var y=$('year').value.trim(), mk=$('make').value.trim(), md=$('model').value.trim();
+    if(mode==='newrun'||mode==='editrun'||mode==='editveh'){ if(!from||!to){ $('msg').textContent='Fill in From and To.'; return; } }
+    if(mode!=='editrun'){ if(!y||!mk||!md){ $('msg').textContent='Fill in year, make and model.'; return; } }
+    if(mode==='editrun'){ var rr=findRun(curRun); rr.from=from; rr.to=to; store(); closeAll(); return; }
+    if(mode==='editveh'){
+      var f=findVeh(curVeh), v=f.v;
+      f.r.from=from; f.r.to=to;
+      var changed = v.year!==y || v.make!==mk || v.model!==md;
+      var typed={}, typedAny=false;
+      FIELDS.forEach(function(x){ typed[x[0]]=$('f_'+x[0]).value.trim(); if(typed[x[0]]) typedAny=true; });
+      v.year=y; v.make=mk; v.model=md;
+      if(changed){ FIELDS.forEach(function(x){ v[x[0]]=''; }); v.photo=''; v.photos=null; }
+      if(!$('grid').classList.contains('hide')) FIELDS.forEach(function(x){ v[x[0]]=typed[x[0]]; });
+      store(); closeAll();
+      if(changed || (v.status==='fail' && !typedAny)) lookup(v.id);
+      else if(typedAny){ v.status='done'; store(); render(); }
+      return;
+    }
+    var r;
+    if(mode==='newrun'){ r={id:uid(),from:from,to:to,vehicles:[]}; data.runs.push(r); }
+    else r=findRun(curRun);
+    var nv={id:uid(),year:y,make:mk,model:md,status:'look',photo:'',photos:null};
+    FIELDS.forEach(function(x){ nv[x[0]]=''; });
+    r.vehicles.push(nv); curRun=r.id;
+    store(); render();
+    lookup(nv.id);                       // Rodney starts now, while the driver keeps typing
+    $('chlane').innerHTML='<b>'+esc(vname(nv))+'</b> added to '+esc(laneTxt(r))+'.';
+    $('chtitle').textContent='Vehicle added';
+    show('chooser');
+  }
+  function del(){
+    if(mode==='editveh'){
+      var f=findVeh(curVeh); if(!confirm('Delete '+vname(f.v)+'?')) return;
+      f.r.vehicles=f.r.vehicles.filter(function(x){ return x.id!==curVeh; });
+      if(!f.r.vehicles.length) data.runs=data.runs.filter(function(x){ return x.id!==f.r.id; });
+    } else if(mode==='editrun'){
+      var r=findRun(curRun); if(!confirm('Delete the whole stop '+laneTxt(r)+' and its '+r.vehicles.length+' vehicle(s)?')) return;
+      data.runs=data.runs.filter(function(x){ return x.id!==curRun; });
+    }
+    store(); closeAll();
+  }
+
+  /* ---------- background lookup, one per vehicle, many at once ---------- */
+  function lookup(vid){
+    var f=findVeh(vid); if(!f) return;
+    var v=f.v; v.status='look'; FIELDS.forEach(function(x){ v[x[0]]=''; }); store(); if(!anyOpen()) render();
+    var asked=vname(v);
+    var q='year='+encodeURIComponent(v.year)+'&make='+encodeURIComponent(v.make)+'&model='+encodeURIComponent(v.model);
+    var p = URL_ ? fetch(URL_+(URL_.indexOf('?')>=0?'&':'?')+q).then(function(r){ return r.ok? r.json() : null; }) : Promise.resolve(null);
+    p.catch(function(){ return null; }).then(function(j){
+      var got=null, photo='';
+      if(j){
+        var list=j.specs?[j.specs]:Array.isArray(j)?j:(j.data||[j]);
+        got={}; FIELDS.forEach(function(x){ var best=0; list.forEach(function(o){ var n=num(o&&o[x[0]]); if(n>best) best=n; }); if(best) got[x[0]]=best; });
+        if(!Object.keys(got).length) got=null;
+        if(j.photo) photo=String(j.photo);
+      }
+      var now=findVeh(vid);
+      if(!now || vname(now.v)!==asked) return;   // deleted or changed while Rodney was out
+      if(got){ FIELDS.forEach(function(x){ now.v[x[0]]=got[x[0]]||''; }); now.v.status='done'; } else now.v.status='fail';
+      if(photo) now.v.photo=photo;
+      store(); if(!anyOpen()) render();
+      if(got) photos(vid);                        // the rest of the photos for the carousel, in the background
+    });
+  }
+
+  /* ---------- wiring ---------- */
+  $('grid').innerHTML=FIELDS.map(function(f){ return '<div><label for="f_'+f[0]+'">'+f[1]+' ('+f[2]+')</label><input id="f_'+f[0]+'" type="text" inputmode="decimal"><div class="cv" id="cv_'+f[0]+'"></div></div>'; }).join('');
+  function conv(k){ $('cv_'+k).textContent=feet($('f_'+k).value); }
+  FIELDS.forEach(function(f){ if(f[2]==='in') $('f_'+f[0]).addEventListener('input',function(){ conv(f[0]); }); });
+  $('maxin').addEventListener('input',function(){ data.max=$('maxin').value; store(); });
+  ['from','to','year','make','model'].forEach(function(k){ $(k).addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); save(); } }); });
+  root.addEventListener('keydown',function(e){ if(e.key==='Escape') closeAll(); });
+
+  window.V2={ newRun:newRun, addTo:addTo, openSettings:openSettings, openDelPicker:openDelPicker, closeAll:closeAll, save:save, clearPop:clearPop,
+              del:del, showGrid:showGrid, askDelChecked:askDelChecked, cur:function(){ return curRun; } };
+
+  /* ---------- open from Tools, close with the phone's back arrow ---------- */
+  function openV2(){
+    if(typeof enterScreen==='function') enterScreen();
+    host.classList.add('show'); document.body.classList.add('on-vspec2'); host.scrollTop=0; render();
+  }
+  window.openVspec=openV2;
+  try{ openVspec=openV2; }catch(e){}
+  var ob=window.stepBack;
+  window.stepBack=function(){
+    var sv=document.getElementById('vsview');
+    if(sv && sv.classList.contains('on')) return ob.apply(this,arguments);       // photo viewer closes first
+    if(host.classList.contains('show')){
+      if(anyOpen()){ closeAll(); if(typeof enterScreen==='function') enterScreen(); return true; }   // back closes the pop-up, stays on this page
+      host.classList.remove('show'); document.body.classList.remove('on-vspec2'); return true;
+    }
+    return ob.apply(this,arguments);
+  };
+  try{ stepBack=window.stepBack; }catch(e){}
+
+  load(); render();
+  data.runs.forEach(function(r){ r.vehicles.forEach(function(v){ if(v.status==='look') lookup(v.id); }); });   // finish lookups cut off by closing the app
 })();
 </script>
 </body>
