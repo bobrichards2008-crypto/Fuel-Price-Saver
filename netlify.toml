@@ -4,6 +4,12 @@
   publish = "."
   command = "B=\"$(TZ=America/Detroit date +%m%d-%H%M)-$(echo ${COMMIT_REF:-local} | cut -c1-7)\"; sed -i \"s|__FPS_BUILD__|$B|g\" index.html sw.js; echo \"FPS build $B\""
 
+# ---- STAGING ONLY: point the app's access check at the STAGING brain ----
+# Only the 'staging' branch runs this. Main and test ignore it, so this file
+# is safe to merge anywhere. Only the access gate moves; Rodney stays put.
+[context.staging]
+  command = "B=\"$(TZ=America/Detroit date +%m%d-%H%M)-$(echo ${COMMIT_REF:-local} | cut -c1-7)\"; sed -i \"s|__FPS_BUILD__|$B|g\" index.html sw.js; S='https://script.google.com/macros/s/AKfycbz5kuMIKgaZGApiPNcCtf3QETLNg2kAPWJshGo4NCN3I-XvFuCveVA_6ASQVUEUBMKoBQ/exec'; sed -i \"s|var ACCESS_URL = \\\"[^\\\"]*\\\"|var ACCESS_URL = \\\"$S\\\"|\" index.html; grep -q \"var ACCESS_URL = \\\"$S\\\"\" index.html || { echo 'STAGING BRAIN SWAP FAILED'; exit 1; }; echo \"FPS staging build $B -> $S\""
+
 [[headers]]
   for = "/sw.js"
   [headers.values]
