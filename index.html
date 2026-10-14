@@ -1162,7 +1162,7 @@ function drawFcLine(f){
              : up    ? chev('#e74c3c','M2 10L7 4L12 10')
                      : chev('#3ab54a','M2 4L7 10L12 4');
   const txt = a<0.5 ? 'flat' : fcCents(c)+sp;
-  el.innerHTML='<div class="hd">Tomorrow</div><div class="ln">'+icon+'Diesel <span class="gd">'+txt+'</span></div>';
+  el.innerHTML='<div class="hd">Tomorrow!</div><div class="ln">'+icon+'Diesel <span class="gd">'+txt+'</span></div>';
   document.body.classList.add('has-fcline');
 }
 setInterval(()=>drawFcLine(null),60000);   // catches midnight while the app sits open
