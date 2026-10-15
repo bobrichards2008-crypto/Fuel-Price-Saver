@@ -4319,10 +4319,10 @@ async function vsLookup(d){
   '.specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 14px;margin-top:6px;font-size:14px}'+
   '.specs div{color:var(--mut);white-space:nowrap}'+
   '.specs div strong{color:var(--text);font-weight:600}'+
-  '.missing{color:var(--warn) !important}'+
+  '.missing{color:var(--warn) !important}'+'.vary{font-size:11px;color:var(--mut);margin-top:1px}'+'.again{display:inline-block;margin-top:8px;font-size:13px;color:var(--orange);text-decoration:none}'+
   '.busy{margin-top:6px;font-size:14px;color:var(--mut);display:flex;align-items:center;justify-content:center;gap:8px;min-height:34px}'+
   '.dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1s infinite ease-in-out}'+
-  '.rcar{width:60px;height:30px;flex:0 0 60px;overflow:visible}'+'.rscene{position:relative;width:192px;height:62px;border-radius:8px;overflow:hidden;background:linear-gradient(#20406a 0%,#2a4e78 46%,#34597f 54%,#2b4a6e 100%)}'+'.rscene .sun{position:absolute;left:50%;top:14px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:radial-gradient(circle,#f3c66a,#f0a94a);opacity:.7}'+'.rscene .road{position:absolute;left:0;right:0;bottom:0;height:46%;background:#26384c;z-index:1}'+'.rscene .scn{position:absolute;left:0;bottom:46%;width:200%;height:40%;background-repeat:repeat-x;background-size:225px 100%;animation:rscn 1.9s linear infinite}'+'.rscene .scn{background-image:url(\"data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27225%27 height=%2730%27%3E%3Crect x=%2722%27 y=%277%27 width=%277%27 height=%2723%27 fill=%27%23203a55%27/%3E%3Crect x=%2724%27 y=%2710%27 width=%271.6%27 height=%272%27 fill=%27%233a567a%27/%3E%3Crect x=%2726.5%27 y=%2710%27 width=%271.6%27 height=%272%27 fill=%27%233a567a%27/%3E%3Crect x=%2795%27 y=%2720%27 width=%272%27 height=%2710%27 fill=%27%23244a2f%27/%3E%3Ccircle cx=%2796%27 cy=%2717%27 r=%276%27 fill=%27%232f6b3f%27/%3E%3C/svg%3E\")}'+'@keyframes rscn{to{transform:translateX(-225px)}}'+'.rscene.stop .scn,.rscene.stop .road,.rscene.stop .edge,.rscene.stop .sun{animation-play-state:paused;opacity:0;transition:opacity .45s ease}'+'.rscene.stop{background:transparent;transition:background .45s ease}'+'.rscene.stop .whl{animation-play-state:paused}'+'.rscene.stop .bod{animation:none;transform:none;transition:transform .3s ease}'+'.rscene .road:before{content:\"\";position:absolute;left:0;right:0;top:0;height:2px;background:#5c7794}'+'.rscene .road .edge{position:absolute;left:0;right:58%;height:2px;background:repeating-linear-gradient(90deg,#cfd8e4 0 9px,transparent 9px 22px);animation:rroad .5s linear infinite;opacity:.65}'+'.rscene .road .edge.b{bottom:62%}'+'.rscene .rcar{position:absolute;left:50%;bottom:7px;margin-left:-30px;z-index:3}'+'@keyframes rroad{to{background-position:-30px 0}}'+'@media (prefers-reduced-motion:reduce){.rscene .edge{animation-duration:2s}}'+
+  '.rcar{width:60px;height:30px;flex:0 0 60px;overflow:visible}'+'.rscene{position:relative;width:192px;height:62px;border-radius:8px;overflow:hidden;background:linear-gradient(#20406a 0%,#2a4e78 46%,#34597f 54%,#2b4a6e 100%)}'+'.rscene .sun{position:absolute;left:50%;top:14px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:radial-gradient(circle,#f3c66a,#f0a94a);opacity:.7}'+'.rscene .road{position:absolute;left:0;right:0;bottom:0;height:46%;background:#26384c;z-index:1}'+'.rscene .scn{position:absolute;left:0;bottom:46%;width:200%;height:40%;background-repeat:repeat-x;background-size:225px 100%;animation:rscn 1.9s linear infinite}'+'.rscene .scn{background-image:url(\"data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27225%27 height=%2730%27%3E%3Crect x=%2722%27 y=%277%27 width=%277%27 height=%2723%27 fill=%27%23203a55%27/%3E%3Crect x=%2724%27 y=%2710%27 width=%271.6%27 height=%272%27 fill=%27%233a567a%27/%3E%3Crect x=%2726.5%27 y=%2710%27 width=%271.6%27 height=%272%27 fill=%27%233a567a%27/%3E%3Crect x=%2795%27 y=%2720%27 width=%272%27 height=%2710%27 fill=%27%23244a2f%27/%3E%3Ccircle cx=%2796%27 cy=%2717%27 r=%276%27 fill=%27%232f6b3f%27/%3E%3C/svg%3E\")}'+'@keyframes rscn{to{transform:translateX(-225px)}}'+'.rscene.stop .scn,.rscene.stop .road,.rscene.stop .edge,.rscene.stop .sun{animation-play-state:paused;opacity:0;transition:opacity .45s ease}'+'.rscene.stop{background:transparent;transition:background .45s ease}'+'.rscene.stop .whl{animation-play-state:paused}'+'.rscene.stop .bod{animation:none;transform:none;transition:transform .3s ease}'+'.rscene .road:before{content:\"\";position:absolute;left:0;right:0;top:0;height:2px;background:#5c7794}'+'.rscene .road .edge{position:absolute;left:0;right:58%;height:2px;background:repeating-linear-gradient(90deg,#cfd8e4 0 9px,transparent 9px 22px);animation:rroad .5s linear infinite;opacity:.65}'+'.rscene .road .edge.b{bottom:81%}'+'.rscene .rcar{position:absolute;left:50%;bottom:0px;margin-left:-30px;z-index:3}'+'@keyframes rroad{to{background-position:-30px 0}}'+'@media (prefers-reduced-motion:reduce){.rscene .edge{animation-duration:2s}}'+
   '.rcar .bod{transform-box:view-box;transform-origin:24px 22px;animation:rrock 1.1s ease-in-out infinite}'+
   '.rcar .whl{transform-box:fill-box;transform-origin:center;animation:rspin .55s linear infinite}'+
   '@keyframes rrock{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-.9px) rotate(-1.3deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-.9px) rotate(1.3deg)}}'+
@@ -4462,7 +4462,9 @@ async function vsLookup(d){
     return '<div class="specs">'+FIELDS.map(function(f){ var k=f[0], l=f[1], u=f[2], val=num(v[k]);
       if(!val) return (k==='curb_weight'||k==='height'||k==='length')? '<div class="missing">'+l+': needed</div>' : '<div>'+l+': -</div>';
       var s= u==='in' ? feet(val)+' ('+val+' in)' : Math.round(val).toLocaleString()+' '+u;
-      return '<div>'+l+': <strong>'+s+'</strong></div>'; }).join('')+'</div>';
+      var extra='';
+      if(k==='curb_weight' && v.range && v.range.curb_weight){ var rl=v.range.curb_weight[0], rh=v.range.curb_weight[1]; if(rh-rl>=50) extra='<div class="vary">Weight varies, '+Math.round(rl).toLocaleString()+' to '+Math.round(rh).toLocaleString()+' lbs</div>'; }
+      return '<div>'+l+': <strong>'+s+'</strong>'+extra+'</div>'; }).join('')+'<a class="again" href="#" onclick="event.preventDefault();V2.again(\''+v.id+'\')">Look again</a></div>';
   }
 
   /* ---------- photos: static thumbnail, tap opens the full-screen carousel (up to 4) ---------- */
@@ -4621,14 +4623,14 @@ async function vsLookup(d){
   }
 
   /* ---------- background lookup, one per vehicle, many at once ---------- */
-  function lookup(vid){
+  function lookup(vid,fresh){
     var f=findVeh(vid); if(!f) return;
     var v=f.v; v.status='look'; v.err=''; FIELDS.forEach(function(x){ v[x[0]]=''; }); store(); if(!anyOpen()) render();
     try{ setTimeout(function(){ var card=root.querySelector('.veh[data-v="'+v.id+'"]'); if(card) card.scrollIntoView({block:'center'}); },120); }catch(e){}
     var asked=vname(v);
     function ask(y,mk,md){
       if(!URL_) return Promise.resolve({__err:'Rodney\u2019s address is missing from the app.'});
-      var q='year='+encodeURIComponent(y)+'&make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(md);
+      var q='year='+encodeURIComponent(y)+'&make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(md)+(fresh?'&fresh=1&refresh=1':'');
       return fetch(URL_+(URL_.indexOf('?')>=0?'&':'?')+q)
         .then(function(r){ return r.ok ? r.json().catch(function(){ return {__err:'Rodney sent back something unreadable.'}; }) : {__err:'Rodney\u2019s server answered '+r.status+'.'}; })
         .catch(function(){ return {__err:'No connection to Rodney.'}; });
@@ -4658,7 +4660,7 @@ async function vsLookup(d){
     next().then(function(res){
       var now=findVeh(vid);
       if(!now || vname(now.v)!==asked) return;   // deleted or changed while Rodney was out
-      if(res.got){ FIELDS.forEach(function(x){ now.v[x[0]]=res.got[x[0]]||''; }); now.v.status='done'; now.v.err=''; }
+      if(res.got){ FIELDS.forEach(function(x){ now.v[x[0]]=res.got[x[0]]||''; }); now.v.status='done'; now.v.err=''; now.v.range = res.range || null; }
       else { now.v.status='fail'; now.v.err = notSold(now.v.year,now.v.make,now.v.model) || res.err || ''; }
       if(res.photo) now.v.photo=res.photo;
       store();
@@ -4825,6 +4827,7 @@ async function vsLookup(d){
   }
 
   window.V2={ newRun:newRun, addTo:addTo, openSettings:openSettings, openDelPicker:openDelPicker, closeAll:closeAll, save:save, clearPop:clearPop,
+              again:function(id){ lookup(id,true); },
               del:del, showGrid:showGrid, askDelChecked:askDelChecked, cur:function(){ return curRun; } };
 
   /* ---------- open from Tools, close with the phone's back arrow ---------- */
