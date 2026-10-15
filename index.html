@@ -4322,6 +4322,12 @@ async function vsLookup(d){
   '.missing{color:var(--warn) !important}'+
   '.busy{margin-top:6px;font-size:14px;color:var(--mut);display:flex;align-items:center;gap:8px}'+
   '.dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1s infinite ease-in-out}'+
+  '.rcar{width:40px;height:20px;flex:0 0 40px;overflow:visible}'+
+  '.rcar .bod{transform-box:view-box;transform-origin:24px 22px;animation:rrock 1.1s ease-in-out infinite}'+
+  '.rcar .whl{transform-box:fill-box;transform-origin:center;animation:rspin .55s linear infinite}'+
+  '@keyframes rrock{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-.8px) rotate(-1.4deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-.8px) rotate(1.4deg)}}'+
+  '@keyframes rspin{to{transform:rotate(360deg)}}'+
+  '@media (prefers-reduced-motion:reduce){.rcar .bod{animation:none}.rcar .whl{animation-duration:2s}}'+
   '@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}'+
   '.fail{margin-top:6px;font-size:14px;color:var(--warn)}'+
   '.empty{text-align:center;color:var(--mut);padding:30px 10px;border:1.5px dashed var(--line);border-radius:14px}'+
@@ -4450,7 +4456,7 @@ async function vsLookup(d){
     return '';
   }
   function vbody(v){
-    if(v.status==='look') return '<div class="busy"><span class="dot"></span>Rodney is looking this one up\u2026</div>';
+    if(v.status==='look') return '<div class="busy"><svg class="rcar" viewBox="0 0 48 24" aria-hidden="true"><g class="bod"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/></g><g class="whl"><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><path d="M13 15.2v5.6M10.2 18h5.6" stroke="#e8eef6" stroke-width="1.1"/></g><g class="whl"><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><path d="M35 15.2v5.6M32.2 18h5.6" stroke="#e8eef6" stroke-width="1.1"/></g></svg>Rodney is looking this one up\u2026</div>';
     var any=FIELDS.some(function(f){ return num(v[f[0]]); });
     if(v.status==='fail' && !any) return '<div class="fail">Couldn\u2019t find specs.'+(v.err?' <span class="why">'+esc(v.err)+'</span>':'')+' Tap the pencil to retry or type them in.</div>';
     return '<div class="specs">'+FIELDS.map(function(f){ var k=f[0], l=f[1], u=f[2], val=num(v[k]);
@@ -4509,7 +4515,6 @@ async function vsLookup(d){
     $('from').value=f.r.from||''; $('to').value=f.r.to||'';
     ['year','make','model'].forEach(function(k){ $(k).value=f.v[k]||''; });
     FIELDS.forEach(function(x){ $('f_'+x[0]).value=f.v[x[0]]||''; conv(x[0]); });
-    if(f.v.status==='fail') showGrid();
   }
   function editPick(rid){
     var r=findRun(rid); if(!r||!r.vehicles.length) return;
@@ -4696,8 +4701,12 @@ async function vsLookup(d){
   function makePool(){ return MAKELIST.concat(Object.keys(myCars())); }
   function modelPool(mk){ return (CARSDB[mk]?Object.keys(CARSDB[mk]):[]).concat(myCars()[mk]||[]); }
   function fixMake(v){ if(!v) return v; var c=caps(v); return exact(c,makePool()) || closest(c,makePool()) || c; }
-  function fixModel(mk,v){ if(!v) return v; var c=caps(v); if(nz(c)==='nomodel') return 'No model'; var pool=modelPool(mk);
-    return exact(c,pool) || closest(c,pool) || c; }
+  function nearWhole(q,pool){ var best=null,bd=99,tie=false; pool.forEach(function(p){ var x=dist(q,p); if(x<bd){ bd=x; best=p; tie=false; } else if(x===bd && nz(p)!==nz(best)) tie=true; }); return (best && !tie && bd>0 && okSlip(q,bd)) ? best : null; }
+  function fixModel(mk,v){ if(!v) return v; var c=caps(v); if(nz(c)==='nomodel') return 'No model';
+    var hit=exact(c,modelPool(mk)); if(hit) return hit;                       // same name, just spacing/case
+    var y=+(($('year')||{}).value||0), sold=(y>=1992 && y<=2024 && BY[y] && BY[y][mk]) ? BY[y][mk].concat(myForYear(y)[mk]||[]) : null;
+    if(!sold) return c;                                                       // outside the list's years: trust what he typed, Rodney sorts it out
+    return nearWhole(c,sold) || c; }
   function saveCar(mk,md,y){ if(!mk||!md||md==='No model') return; y=+y||0;
     var known=y && BY[y] && BY[y][mk] && BY[y][mk].some(function(m){ return nz(m)===nz(md); }); if(known) return;
     if(y){ var my=myYears(), k=mk+'|'+md; my[k]=my[k]||[]; if(my[k].indexOf(y)<0) my[k].push(y); try{ localStorage.setItem(MYYKEY,JSON.stringify(my)); }catch(e){} }
