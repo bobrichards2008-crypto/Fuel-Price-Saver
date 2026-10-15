@@ -4375,7 +4375,7 @@ async function vsLookup(d){
   '<div class="wrap" id="wrapv">'+
     '<div class="top"><h1>Vehicle specs</h1><button class="gear" type="button" aria-label="Settings" onclick="V2.openSettings()">\u2699</button></div>'+
     '<div class="toprow"><button class="addbtn" type="button" onclick="V2.newRun()">+ Add a vehicle</button>'+
-    '<button class="delveh hide" id="delvehbtn" type="button" onclick="V2.openDelPicker()">Delete a vehicle</button></div>'+'<button class="wipe" type="button" onclick="V2.wipe()">Wipe Rodney cache (admin)</button>'+
+    '<button class="delveh hide" id="delvehbtn" type="button" onclick="V2.openDelPicker()">Delete a vehicle</button></div>'+'<button class="wipe" type="button" onclick="V2.wipe()">Wipe Rodney cache</button>'+
     '<div id="report"></div>'+
   '</div>'+
   '<div class="shade" id="shade" onclick="V2.closeAll()"></div>'+
@@ -4830,13 +4830,10 @@ async function vsLookup(d){
               again:function(id){ lookup(id,true); },
               wipe:function(){
                 if(!URL_){ alert('Rodney\u2019s address is missing.'); return; }
-                var k=''; try{ k=localStorage.getItem('fps_admin_k')||''; }catch(e){}
-                if(!k){ k=(prompt('Admin key:')||'').trim(); if(!k) return; }
                 if(!confirm('Wipe ALL of Rodney\u2019s saved specs and photos? (The built-in car list is not touched.)')) return;
-                fetch(URL_+(URL_.indexOf('?')>=0?'&':'?')+'wipe=1&k='+encodeURIComponent(k)).then(function(r){ return r.json(); }).then(function(j){
-                  if(j && j.ok){ try{ localStorage.setItem('fps_admin_k',k); }catch(e){}
-                    var c=j.cleared||{}; alert('Rodney\u2019s cache wiped. Specs: '+(c.Specs||0)+' rows, Photos: '+(c.Photos||0)+' rows. Tap the pencil on a car to look it up fresh.'); }
-                  else { try{ localStorage.removeItem('fps_admin_k'); }catch(e){} alert((j&&j.error)||'Wipe failed.'); }
+                fetch(URL_+(URL_.indexOf('?')>=0?'&':'?')+'wipe=1').then(function(r){ return r.json(); }).then(function(j){
+                  if(j && j.ok){ var c=j.cleared||{}; alert('Rodney\u2019s cache wiped. Specs: '+(c.Specs||0)+' rows, Photos: '+(c.Photos||0)+' rows. Tap the pencil on a car to look it up fresh.'); }
+                  else { alert((j&&j.error)||'Wipe failed.'); }
                 }).catch(function(){ alert('No connection to Rodney.'); });
               },
               del:del, showGrid:showGrid, askDelChecked:askDelChecked, cur:function(){ return curRun; } };
