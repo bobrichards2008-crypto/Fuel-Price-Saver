@@ -4661,11 +4661,11 @@ async function vsLookup(d){
       if(res.got){ FIELDS.forEach(function(x){ now.v[x[0]]=res.got[x[0]]||''; }); now.v.status='done'; now.v.err=''; }
       else { now.v.status='fail'; now.v.err = notSold(now.v.year,now.v.make,now.v.model) || res.err || ''; }
       if(res.photo) now.v.photo=res.photo;
-      // Arrival beat: if the scene is on screen, let the car roll to a stop before the specs show
-      var scene = res.got && !anyOpen() ? root.querySelector('.veh[data-v="'+vid+'"] .rscene') : null;
-      if(scene){ scene.classList.add('stop'); setTimeout(function(){ store(); render(); photos(vid); }, 750); return; }
-      store(); if(!anyOpen()) render();
-      if(res.got) photos(vid);                    // the rest of the photos for the carousel, in the background
+      store();
+      // Arrival beat: if the car scene is on screen, let it roll to a stop before swapping in the specs
+      var scene = res.got ? root.querySelector('.veh[data-v="'+vid+'"] .rscene') : null;
+      if(scene){ scene.classList.add('stop'); setTimeout(function(){ render(); photos(vid); }, 750); }
+      else { render(); if(res.got) photos(vid); }
     });
   }
 
