@@ -4624,7 +4624,7 @@ async function vsLookup(d){
   function lookup(vid){
     var f=findVeh(vid); if(!f) return;
     var v=f.v; v.status='look'; v.err=''; FIELDS.forEach(function(x){ v[x[0]]=''; }); store(); if(!anyOpen()) render();
-    try{ var card=root.querySelector('.veh[data-v="'+v.id+'"]'); if(card) setTimeout(function(){ card.scrollIntoView({block:'center',behavior:'smooth'}); },60); }catch(e){}
+    try{ var card=root.querySelector('.veh[data-v="'+v.id+'"]'); if(card) setTimeout(function(){ card.scrollIntoView({block:'center'}); },60); }catch(e){}
     var asked=vname(v);
     function ask(y,mk,md){
       if(!URL_) return Promise.resolve({__err:'Rodney\u2019s address is missing from the app.'});
