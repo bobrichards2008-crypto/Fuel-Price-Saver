@@ -4311,7 +4311,7 @@ async function vsLookup(d){
   '.runhd .hbtn svg{width:24px;height:24px}'+
   '.runhd .nm{flex:1;font-weight:700;font-size:17px;cursor:pointer}'+
   '.runhd .nm small{display:block;font-weight:400;font-size:12px;color:var(--mut);margin-top:1px}'+
-  '.veh{position:relative;padding:11px 12px 12px 12px;border-top:1px solid var(--line)}'+'.veh.hasph{padding-right:140px}'+
+  '.veh{position:relative;padding:11px 12px 12px 12px;border-top:1px solid var(--line);max-height:230px;overflow-y:auto;-webkit-overflow-scrolling:touch}'+'.veh.hasph{padding-right:12px}'+'.specs div.cw{white-space:normal}'+
   '.veh:first-of-type{border-top:0}'+
   '.veh .vmain{min-width:0;padding-right:28px}'+
   '.thumb{position:absolute;right:12px;bottom:11px;width:118px;height:90px;border-radius:9px;overflow:hidden;background:var(--field);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}'+
@@ -4444,17 +4444,17 @@ async function vsLookup(d){
       return '<div class="run"><div class="runhd"><span class="nm" data-r="'+r.id+'">'+esc(laneTxt(r))+'<small>'+r.vehicles.length+' vehicle'+(r.vehicles.length===1?'':'s')+'</small></span>'+
         '<button class="hbtn add" type="button" data-add="'+r.id+'" aria-label="Add a vehicle to this stop">'+PLUS+'</button>'+
         '<button class="hbtn ed" type="button" data-edit="'+r.id+'" aria-label="Edit a vehicle">'+PENCIL+'</button></div>'+
-        r.vehicles.map(function(v){ return '<div class="veh'+(firstPhoto(v)?' hasph':'')+'" data-v="'+v.id+'"><div class="vmain"><div class="vhd"><b>'+esc(vname(v))+'</b></div>'+vbody(v)+'</div>'+thumb(v)+'</div>'; }).join('')+'</div>';
+        r.vehicles.map(function(v){ return '<div class="veh" data-v="'+v.id+'"><div class="vmain"><div class="vhd"><b>'+esc(vname(v))+'</b></div>'+vbody(v)+'</div>'+thumb(v)+'</div>'; }).join('')+'</div>';
     }).join('');
     qa('.runhd .nm').forEach(function(el){ el.onclick=function(){ editRun(el.dataset.r); }; });
     qa('.hbtn.add').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); addTo(el.dataset.add); }; });
     qa('.hbtn.ed').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); editPick(el.dataset.edit); }; });
     qa('.thumb[data-has]').forEach(function(el){ el.onclick=function(e){ e.stopPropagation(); openPhotos(el.dataset.v); }; });
     qa('.thumb img').forEach(function(im){ im.onerror=function(){ var f=findVeh(im.closest('.thumb').dataset.v); if(f){ var bad=im.getAttribute('src'); if(f.v.photo===bad) f.v.photo=''; if(f.v.photos) f.v.photos=f.v.photos.filter(function(u){ return u!==bad; }); store(); } var th=im.closest('.thumb'), vv=th.closest('.veh'); if(vv) vv.classList.remove('hasph'); th.remove(); }; });
-    qa('.run').forEach(function(run){ var vs=[].slice.call(run.querySelectorAll('.veh')); vs.forEach(function(v){ v.style.minHeight=''; }); if(vs.length<2) return; var h=Math.max.apply(null,vs.map(function(v){ return v.getBoundingClientRect().height; })); vs.forEach(function(v){ v.style.minHeight=h+'px'; }); });
+    (function(){ var vs=qa('.veh'); vs.forEach(function(v){ v.style.minHeight=''; }); if(vs.length<2) return; var h=Math.max.apply(null,vs.map(function(v){ return v.getBoundingClientRect().height; })); vs.forEach(function(v){ v.style.minHeight=h+'px'; }); })();
   }
   function thumb(v){
-    var p=firstPhoto(v);
+    var p=''; /* photos out of the card: driver uses the Google photo button */
     if(p) return '<div class="thumb" data-has="1" data-v="'+v.id+'"><img src="'+esc(p)+'" alt="" loading="lazy"></div>';
     return '';
   }
@@ -4467,7 +4467,7 @@ async function vsLookup(d){
       var s= u==='in' ? feet(val)+' ('+val+' in)' : Math.round(val).toLocaleString()+' '+u;
       var extra='';
       if(k==='curb_weight' && v.range && v.range.curb_weight){ var rl=v.range.curb_weight[0], rh=v.range.curb_weight[1]; if(rh-rl>=50) extra='<span class="vary">, range '+Math.round(rl).toLocaleString()+' to '+Math.round(rh).toLocaleString()+'</span>'; }
-      return '<div>'+l+': <strong>'+s+'</strong>'+extra+'</div>'; }).join('')+'</div>';
+      return '<div'+(k==='curb_weight'?' class="cw"':'')+'>'+l+': <strong>'+s+'</strong>'+extra+'</div>'; }).join('')+'</div>';
   }
 
   /* ---------- photos: static thumbnail, tap opens the full-screen carousel (up to 4) ---------- */
@@ -4479,6 +4479,7 @@ async function vsLookup(d){
     if(!f.v.photos) photos(vid);
   }
   function photos(vid){
+    return; /* photos out of the card: no more photo fetches (speed + memory) */
     var f=findVeh(vid); if(!f || !URL_) return;
     var v=f.v, asked=vname(v);
     var q='year='+encodeURIComponent(v.year)+'&make='+encodeURIComponent(v.make)+'&model='+encodeURIComponent(v.model)+'&images=only';
