@@ -487,6 +487,14 @@
   .amenpick label.dis{opacity:.4}
   .amenhint{font-size:12px;color:#9fb4ce;margin:4px 0 2px}
   #setpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  #truckpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  .trk label{display:block;font-size:14px;color:#cfdbe9;margin:12px 0 5px}
+  .trk label small{color:#9fb4ce}
+  .trk2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .trk2 input,.trk2 select{flex:1;min-width:60px;padding:12px;font-size:16px;border:none;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .trk2 span{color:#9fb4ce;font-size:14px}
+  .trk .trkchk{display:flex;align-items:center;gap:10px;font-size:15px;color:#fff;margin-top:16px;cursor:pointer}
+  .trk .trkchk input{width:22px;height:22px;accent-color:#f26a21}
   /* fresh-prices tag (green), same rocking tag as What's new */
   .freshtag{background:#3ab54a !important;display:none}
   body.has-new .freshtag{display:none}
@@ -605,7 +613,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic</div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.1</span></div>
 </div>
 <script>
 (function(){
@@ -666,6 +674,9 @@
       <div class="poptext" style="margin:16px 0 6px">Details banner shows:</div>
       <div class="amenhint">Pick up to 4 to show on each stop's details banner.</div>
       <div class="amenpick" id="amenpick"></div>
+      <div id="truckrow" onclick="closeSettings();openTruck()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
+        <span><b>Your truck</b><small id="trucksum" style="display:block;color:#9fb4ce;margin-top:2px">Height, weight, length, axles, fuel mileage, tolls</small></span>
+        <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <div id="predrow" onclick="closeSettings();openFc()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:none;align-items:center">
         <span><b>Tomorrow's prediction</b><small style="display:block;color:#9fb4ce;margin-top:2px">What we expect fuel to do tomorrow</small></span>
       </div>
@@ -673,6 +684,29 @@
         <span><b>History of changes</b><small style="display:block;color:#9fb4ce;margin-top:2px">Everything that's been updated, newest first</small></span>
         <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <button class="go" style="padding:10px;margin-top:14px" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+  <div id="truckpop" class="popwrap" style="display:none">
+    <div class="popbox">
+      <div class="poptitle">Your truck</div>
+      <div class="poptext" id="truckintro" style="font-size:14px;color:#9fb4ce;line-height:1.4">Routes are planned for your truck. Change anything that's different, then tap Save.</div>
+      <div class="trk">
+        <label>Height</label>
+        <div class="trk2"><input id="tk_hft" type="number" inputmode="numeric" min="9" max="15"><span>ft</span><input id="tk_hin" type="number" inputmode="numeric" min="0" max="11"><span>in</span></div>
+        <label>Gross weight</label>
+        <div class="trk2"><input id="tk_wt" type="number" inputmode="numeric" min="10000" max="200000" step="1000"><span>lbs</span></div>
+        <label>Total length, tractor and trailer</label>
+        <div class="trk2"><input id="tk_len" type="number" inputmode="numeric" min="20" max="120"><span>ft</span></div>
+        <label>Number of axles</label>
+        <div class="trk2"><select id="tk_ax"></select></div>
+        <label>Fuel mileage <small>(optional)</small></label>
+        <div class="trk2"><input id="tk_mpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="e.g. 6.5"><span>mpg</span></div>
+        <label class="trkchk"><input id="tk_toll" type="checkbox" onchange="tkTollUI()"> Avoid toll roads</label>
+        <div id="tk_tollrow" class="trk2" style="display:none"><span style="margin:0 6px 0 0">unless it adds more than</span><input id="tk_max" type="number" inputmode="numeric" min="1" max="200"><span>miles</span></div>
+      </div>
+      <div id="tk_err" style="color:#ff9b7a;font-size:13px;min-height:16px;margin-top:8px"></div>
+      <div style="font-size:12px;color:#9fb4ce;line-height:1.4">Routes try to stay clear of low bridges, weight limits and restricted roads for these numbers. There's no guarantee every restriction is caught &mdash; always check the road and the signs for yourself.</div>
+      <button class="go" style="padding:10px;margin-top:12px;width:100%" onclick="saveTruck()">Save</button>
     </div>
   </div>
   <div id="fcpop" class="popwrap" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -1735,12 +1769,51 @@ async function fuelNear(radius){
   }catch(e){ hideBar(); res.innerHTML='<p class="hint">'+e.message+'.</p>'; }
 }
 
+/* ---- YOUR TRUCK (driver's own numbers, kept on this phone) ---- */
+const TRUCK_DEF={hft:13,hin:6,wt:80000,len:73,ax:5,mpg:'',toll:false,max:20};
+function getTruck(){ try{ const t=JSON.parse(localStorage.getItem('fps_truck')||'null'); if(t) return Object.assign({},TRUCK_DEF,t); }catch(e){} return null; }
+function truckOpt(){ const t=getTruck()||TRUCK_DEF;
+  return {h:((+t.hft)*12+(+t.hin))*0.0254, w:(+t.wt)*0.45359237, len:(+t.len)*0.3048, ax:+t.ax, toll:!!t.toll, max:+t.max||20}; }
+function truckSum(){ const el=document.getElementById('trucksum'); const t=getTruck(); if(!el) return;
+  el.textContent=t? (t.hft+"' "+t.hin+'" \u2022 '+Number(t.wt).toLocaleString()+' lbs \u2022 '+t.len+' ft \u2022 '+t.ax+' axles'+(t.mpg?' \u2022 '+t.mpg+' mpg':'')+(t.toll?' \u2022 no tolls':''))
+    : 'Not set yet. Tap to enter your truck'; }
+let TRUCK_THEN=null;
+function tkTollUI(){ document.getElementById('tk_tollrow').style.display=document.getElementById('tk_toll').checked?'flex':'none'; }
+function openTruck(then){
+  const t=getTruck()||TRUCK_DEF, $=id=>document.getElementById(id);
+  const ax=$('tk_ax'); if(!ax.options.length){ for(let n=2;n<=9;n++){ const o=document.createElement('option'); o.value=n; o.textContent=n+' axles'; ax.appendChild(o);} }
+  $('tk_hft').value=t.hft; $('tk_hin').value=t.hin; $('tk_wt').value=t.wt; $('tk_len').value=t.len; ax.value=t.ax;
+  $('tk_mpg').value=t.mpg; $('tk_toll').checked=!!t.toll; $('tk_max').value=t.max; tkTollUI(); $('tk_err').textContent='';
+  $('truckintro').textContent= getTruck()
+    ? "Routes are planned for your truck. Change anything that's different, then tap Save."
+    : "One-time setup: routes are planned for your truck. We filled in a standard tractor-trailer. Change anything that's different, then tap Save.";
+  TRUCK_THEN=then||null;
+  $('truckpop').style.display='flex';
+}
+function saveTruck(){
+  const $=id=>document.getElementById(id), n=id=>parseFloat($(id).value);
+  const t={hft:n('tk_hft'),hin:n('tk_hin')||0,wt:n('tk_wt'),len:n('tk_len'),ax:parseInt($('tk_ax').value,10),
+           mpg:$('tk_mpg').value.trim()?n('tk_mpg'):'',toll:$('tk_toll').checked,max:n('tk_max')||20};
+  const bad= !(t.hft>=9&&t.hft<=15)?'Height should be between 9 and 15 feet.'
+    : !(t.hin>=0&&t.hin<12)?'Inches should be 0 to 11.'
+    : !(t.wt>=10000&&t.wt<=200000)?'Weight should be between 10,000 and 200,000 lbs.'
+    : !(t.len>=20&&t.len<=120)?'Length should be between 20 and 120 feet.'
+    : (t.mpg!==''&&!(t.mpg>=2&&t.mpg<=15))?'Fuel mileage should be between 2 and 15 mpg, or leave it blank.'
+    : (t.toll&&!(t.max>=1&&t.max<=200))?'Extra miles should be between 1 and 200.' : '';
+  if(bad){ $('tk_err').textContent=bad; return; }
+  try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){}
+  $('truckpop').style.display='none'; truckSum();
+  const f=TRUCK_THEN; TRUCK_THEN=null; if(f) f();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',truckSum); else truckSum();
+
 /* truck-legal routing (TomTom). Returns the same shape as the old router so nothing else changes. */
 const TT_KEY="ARKpg3nDvyWW0qpnA5aSlSpkK78bopJF";
 async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h:meters,w:kg,toll:bool} */
   const loc=pts.map(p=>(+p[1]).toFixed(5)+","+(+p[0]).toFixed(5)).join(":");
   const q="&travelMode=truck&vehicleCommercial=true&routeType=fastest&traffic=true&vehicleHeight="+opt.h+
-    "&vehicleWeight="+Math.round(opt.w)+"&vehicleWidth=2.6&vehicleLength=22&key="+TT_KEY;
+    "&vehicleWeight="+Math.round(opt.w)+"&vehicleWidth=2.6&vehicleLength="+(opt.len||22).toFixed(1)+
+    (opt.ax?"&vehicleNumberOfAxles="+opt.ax:"")+"&key="+TT_KEY;
   const one=async extra=>{
     const r=await fetch("https://api.tomtom.com/routing/1/calculateRoute/"+loc+"/json?"+q+extra);
     if(!r.ok) throw new Error("route "+r.status);
@@ -1750,14 +1823,16 @@ async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h:met
       legs:(R.legs||[]).map(l=>({distance:l.summary.lengthInMeters,duration:l.summary.travelTimeInSeconds}))}]};
   };
   if(!opt.toll) return one("");
-  /* avoid tolls, but not if it costs more than 20 extra miles */
+  /* avoid tolls, but not if it costs more than the driver's extra-mile limit */
+  const lim=opt.max||20;
   const [a,b]=await Promise.all([one(""),one("&avoid=tollRoads").catch(()=>null)]);
-  if(b&&(b.routes[0].distance-a.routes[0].distance)/1609.34<=20) return b;
+  if(b&&(b.routes[0].distance-a.routes[0].distance)/1609.34<=lim) return b;
   a.tollKept=b?Math.round((b.routes[0].distance-a.routes[0].distance)/1609.34):-1;
   return a;
 }
 
 async function findFuel(){
+  if(!getTruck()){ openTruck(findFuel); return; }     // one-time truck setup, then carry on
   prepStart();                                            // blank start = where the driver is now (filled in visibly)
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const inputs=raw.filter(x=>x);
@@ -1774,7 +1849,7 @@ async function findFuel(){
     setBar(50); res.innerHTML='<p class="hint">Routing: '+resolved.join('  \u2192  ')+'</p>';
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
     let rj=null;
-    try{ rj=await ttRoute(pts.map(p=>[p[0],p[1]]),{h:4.11,w:36287,toll:false}); }catch(e){ rj=null; }
+    try{ rj=await ttRoute(pts.map(p=>[p[0],p[1]]),truckOpt()); }catch(e){ rj=null; }
     if(!rj){ const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
       rj=await (await fetch(ru)).json(); }
     const line=rj.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
@@ -1786,6 +1861,7 @@ async function findFuel(){
       return;
     }
     showLegMiles(rj.routes[0]);
+    if(rj.tollKept>0) oh.innerHTML='<p class="hint">Kept a toll road: going around it adds about '+rj.tollKept+' miles, more than your limit.</p>';
     setBar(70); res.innerHTML='<p class="hint">Matching fuel stops along '+Math.round(rj.routes[0].distance/1609)+' miles...</p>';
     let laMin=90,laMax=-90,loMin=180,loMax=-180;
     for(const[la,lo]of line){ if(la<laMin)laMin=la; if(la>laMax)laMax=la; if(lo<loMin)loMin=lo; if(lo>loMax)loMax=lo; }
@@ -2298,6 +2374,11 @@ const CHANGELOG = [
   { date:'2026-10-17', items:[
     'Version 1.1',
     'New feature brings more precise, accurate routing for trucks: routes now look for low bridges, weight limits, restricted roads and so forth',
+    'New Your truck page in Settings: enter your height, weight, length and number of axles, and routes are planned for your truck',
+    'The first time you find fuel, Your truck opens with a standard tractor-trailer already filled in. Change what\u2019s different and tap Save',
+    'You can add your fuel mileage on the Your truck page',
+    'New Avoid toll roads choice, with a limit on how many extra miles you\u2019re willing to go around a toll',
+    'The version number now shows on the opening screen',
     'Please note: there is no guarantee every restriction is caught. Always check the road and the signs for yourself'
   ]},
   { date:'2026-10-10', items:[
