@@ -5082,5 +5082,6 @@ async function vsLookup(d){
   },0); });
 })();
 </script>
+<script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
 </body>
 </html>
