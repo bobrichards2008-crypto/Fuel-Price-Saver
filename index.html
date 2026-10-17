@@ -1735,6 +1735,28 @@ async function fuelNear(radius){
   }catch(e){ hideBar(); res.innerHTML='<p class="hint">'+e.message+'.</p>'; }
 }
 
+/* truck-legal routing (TomTom). Returns the same shape as the old router so nothing else changes. */
+const TT_KEY="ARKpg3nDvyWW0qpnA5aSlSpkK78bopJF";
+async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h:meters,w:kg,toll:bool} */
+  const loc=pts.map(p=>(+p[1]).toFixed(5)+","+(+p[0]).toFixed(5)).join(":");
+  const q="&travelMode=truck&vehicleCommercial=true&routeType=fastest&traffic=true&vehicleHeight="+opt.h+
+    "&vehicleWeight="+Math.round(opt.w)+"&vehicleWidth=2.6&vehicleLength=22&key="+TT_KEY;
+  const one=async extra=>{
+    const r=await fetch("https://api.tomtom.com/routing/1/calculateRoute/"+loc+"/json?"+q+extra);
+    if(!r.ok) throw new Error("route "+r.status);
+    const d=await r.json(), R=d.routes&&d.routes[0]; if(!R) throw new Error("no route");
+    const co=[]; (R.legs||[]).forEach(l=>l.points.forEach(p=>co.push([p.longitude,p.latitude])));
+    return {code:"Ok",routes:[{geometry:{coordinates:co},distance:R.summary.lengthInMeters,duration:R.summary.travelTimeInSeconds,
+      legs:(R.legs||[]).map(l=>({distance:l.summary.lengthInMeters,duration:l.summary.travelTimeInSeconds}))}]};
+  };
+  if(!opt.toll) return one("");
+  /* avoid tolls, but not if it costs more than 20 extra miles */
+  const [a,b]=await Promise.all([one(""),one("&avoid=tollRoads").catch(()=>null)]);
+  if(b&&(b.routes[0].distance-a.routes[0].distance)/1609.34<=20) return b;
+  a.tollKept=b?Math.round((b.routes[0].distance-a.routes[0].distance)/1609.34):-1;
+  return a;
+}
+
 async function findFuel(){
   prepStart();                                            // blank start = where the driver is now (filled in visibly)
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
@@ -1751,8 +1773,10 @@ async function findFuel(){
     for(let k=0;k<inputs.length;k++){ const g=await geocode(inputs[k]); pts.push(g); resolved.push(shortPlace(g[2]||inputs[k])); setBar(10+Math.round(30*(k+1)/inputs.length)); }
     setBar(50); res.innerHTML='<p class="hint">Routing: '+resolved.join('  \u2192  ')+'</p>';
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
-    const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
-    const rj=await (await fetch(ru)).json();
+    let rj=null;
+    try{ rj=await ttRoute(pts.map(p=>[p[0],p[1]]),{h:4.11,w:36287,toll:false}); }catch(e){ rj=null; }
+    if(!rj){ const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
+      rj=await (await fetch(ru)).json(); }
     const line=rj.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
     const cc=canadaCheck(line);
     if(cc.miles>10){
@@ -2271,6 +2295,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-17', items:[
+    'Version 1.1',
+    'New feature brings more precise, accurate routing for trucks: routes now look for low bridges, weight limits, restricted roads and so forth',
+    'Please note: there is no guarantee every restriction is caught. Always check the road and the signs for yourself'
+  ]},
   { date:'2026-10-10', items:[
     'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
     'Fuel near me now offers 50, 75 and 100 mile circles',
@@ -5082,5 +5111,6 @@ async function vsLookup(d){
   },0); });
 })();
 </script>
+<script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
 </body>
 </html>
