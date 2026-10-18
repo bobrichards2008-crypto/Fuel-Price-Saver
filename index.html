@@ -488,6 +488,84 @@
   .amenhint{font-size:12px;color:#9fb4ce;margin:4px 0 2px}
   #setpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
   #truckpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  .sthead .stname{display:flex;flex-direction:column;gap:2px;min-width:0;flex:0 1 auto}
+  .sthead .stname b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  button.sthead{flex-wrap:nowrap}
+  .sthead #expandall{flex:none;white-space:nowrap}
+  .sthead .stname small{margin:0}
+  .sthead .nfbtn{margin-left:auto;flex:none;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;background:var(--orange);color:#fff;font-weight:bold;font-size:12.5px;padding:7px 10px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .sthead .nfbtn svg{width:16px;height:16px}
+  .sthead .nfbtn + #expandall{margin-left:8px}
+  .sthead .nfbtn + .stx{margin-left:10px}
+  #nfpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  .nfg{display:flex;align-items:center;gap:14px;margin:10px 0 6px}
+  .nfg svg{width:120px;height:98px;flex:none}
+  .nfg .nfpick{flex:1;min-width:0}
+  .nfg label{display:block;font-size:13px;color:#cfdbe9;margin-bottom:5px}
+  .nfg select,.nfmpg input{width:100%;padding:11px;font-size:16px;border:none;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .nfmpg{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;color:#cfdbe9}
+  .nfmpg input{width:90px;flex:none}
+  #nfneedle{transition:transform .9s cubic-bezier(.45,0,.2,1)}
+  #nffill{transition:stroke-dashoffset .9s cubic-bezier(.45,0,.2,1)}
+  .card .nfrow{display:flex;justify-content:flex-end;margin-top:8px}
+  .card .nfbtn{display:inline-flex;align-items:center;gap:6px;background:var(--orange);color:#fff;font-weight:bold;font-size:14px;padding:8px 14px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .card .nfbtn svg{width:17px;height:17px}
+  .nflogbtn{display:block;width:100%;margin-top:12px;padding:12px;border-radius:10px;border:1.5px solid #2fa85a;background:#17304f;color:#7fe0a0;font-size:16px;font-weight:bold;cursor:pointer}
+  #fbpop{z-index:9700}
+  #fbpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  #fbpop label{display:block;font-size:13px;color:#cfdbe9}
+  #fbpop input[type=text],#fbpop input[type=number],#fbpop input[type=date],#fbpop select{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff}
+  .fbrow{display:flex;gap:10px;margin-bottom:10px}
+  .fbrow label{flex:1;min-width:0}
+  .fbrow label:first-child{flex:1.25}
+  #fb_date{padding:11px 6px!important}
+  .fb3 input{padding:11px 8px!important}
+  .fbl{margin-bottom:10px}
+  .fbimp{width:100%;padding:11px;margin:2px 0 8px;border-radius:10px;border:1.5px solid #f26a21;background:transparent;color:#f2b36b;font-size:15px;font-weight:bold;cursor:pointer}
+  .fbhint{font-size:12.5px;color:#9fb4ce;line-height:1.4;margin-bottom:6px}
+  .fbchk{display:flex!important;align-items:flex-start;gap:9px;margin:4px 0 12px;font-size:15px!important;color:#fff!important;font-weight:bold}
+  .fbchk input{width:22px;height:22px;flex:none;margin:0;accent-color:#2fa85a}
+  .fbchk small{display:block;font-weight:normal;font-size:12.5px;color:#9fb4ce;margin-top:2px}
+  .fbwarn{display:none;background:#5a1a17;border:2px solid #e25a4f;color:#ffd6d1;font-weight:bold;font-size:14.5px;line-height:1.4;border-radius:10px;padding:11px;margin:2px 0 10px}
+  .fberr{color:#ff9b7a;font-size:14px;min-height:18px;margin-top:4px}
+  .fbbtns{display:flex;gap:10px;margin-top:10px}
+  .fbbtns button{flex:1;padding:11px;border-radius:10px;font-size:15px;font-weight:bold;background:transparent;cursor:pointer}
+  .fbcancel{border:1.5px solid #4f7bb0;color:#9fc0e8}
+  .fbdel{border:1.5px solid #e25a4f;color:#ff8a80}
+  #flpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #flpop.show{display:block}
+  .fl2{display:flex;gap:10px;margin:14px 0}
+  .fl2 .go{flex:1;padding:13px;font-size:16px}
+  .flblue{flex:1;padding:13px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;font-size:16px;font-weight:bold;cursor:pointer}
+  .flst{display:flex;gap:10px;margin-top:14px}
+  .flst div{flex:1;background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:11px;text-align:center}
+  .flst b{display:block;font-size:22px;color:#fff}
+  .flst small{display:block;font-size:12px;color:#9fb4ce;margin-top:2px}
+  .flnote{font-size:12.5px;color:#9fb4ce;margin-top:8px;line-height:1.4}
+  .flent{display:block;width:100%;text-align:left;background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:12px;margin:0 0 10px;color:#fff;cursor:pointer;font:inherit}
+  .flent .t1{display:flex;justify-content:space-between;gap:8px;font-weight:bold;font-size:15px}
+  .flent .t2{font-size:14px;color:#cfdbe9;margin-top:3px}
+  .flent .t3{font-size:13px;color:#9fb4ce;margin-top:3px}
+  .flent .nood{color:#ff8a80;font-weight:bold}
+  .fltag{font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;white-space:nowrap;align-self:center}
+  .fltag.full{background:#2fa85a;color:#fff}.fltag.part{background:#2b4a70;color:#cfdbe9}
+  .flempty{color:#9fb4ce;text-align:center;padding:24px 8px;line-height:1.5}
+  .ifpick{display:flex;gap:10px;margin:14px 0}
+  .ifpick select,.ifadd{flex:1;width:100%;padding:11px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .iftbl{width:100%;border-collapse:collapse;font-size:15px}
+  .iftbl th{text-align:left;font-size:12px;color:#f2b36b;text-transform:uppercase;letter-spacing:.4px;padding:6px 4px;border-bottom:1px solid #2b4a70}
+  .iftbl td{padding:7px 4px;border-bottom:1px solid #1f3a5c;vertical-align:middle}
+  .iftbl td.n{text-align:right;white-space:nowrap}
+  .iftbl input{width:96px;padding:8px;font-size:16px;border:1px solid #4f7bb0;border-radius:8px;background:#1d3a5e;color:#fff;text-align:right;box-sizing:border-box}
+  .iftbl tr.tot td{font-weight:bold;border-top:2px solid #4f7bb0;border-bottom:none}
+  .ifmpg{margin-top:10px;font-size:14px;color:#cfdbe9}
+  #fltoast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#2fa85a;color:#fff;font-weight:bold;padding:10px 18px;border-radius:999px;z-index:9800;display:none;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .nfopt{background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:12px;margin-top:10px;line-height:1.4}
+  .nfopt h4{margin:0 0 4px;font-size:13px;color:#f2b36b;text-transform:uppercase;letter-spacing:.4px}
+  .nfopt .nfbig{font-size:17px;font-weight:bold;color:#fff}
+  .nfopt .nfsub{font-size:13.5px;color:#9fb4ce}
+  .nfopt .nfbuy{display:inline-block;margin-top:6px;background:#2fa85a;color:#fff;font-weight:bold;border-radius:8px;padding:4px 10px;font-size:14px}
+  .nfopt .nfbuy.none{background:#2b4a70}
   .trk label{display:block;font-size:14px;color:#cfdbe9;margin:12px 0 5px}
   .trk label small{color:#9fb4ce}
   .trk2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -592,7 +670,7 @@
   if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
   fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
     .then(function(r){ return r.json(); })
-    .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); lift(); } else deny(); })
+    .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); ls('fps_fl', j.fuellog?'1':'0'); if(window.flApply) window.flApply(); lift(); } else deny(); })
     .catch(function(){
       // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
       if(trusted) return;
@@ -613,7 +691,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.1</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.2</span></div>
 </div>
 <script>
 (function(){
@@ -701,12 +779,41 @@
         <div class="trk2"><select id="tk_ax"></select></div>
         <label>Fuel mileage <small>(optional)</small></label>
         <div class="trk2"><input id="tk_mpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="e.g. 6.5"><span>mpg</span></div>
+        <label>Fuel tank size, all tanks together</label>
+        <div class="trk2"><input id="tk_tank" type="number" inputmode="numeric" min="50" max="400"><span>gallons</span></div>
+        <label>Reserve to keep in the tank</label>
+        <div class="trk2"><input id="tk_res" type="number" inputmode="numeric" min="0" max="100"><span>gallons</span></div>
+        <label>States you never buy fuel in <small>(optional, e.g. KY, NJ)</small></label>
+        <div class="trk2"><input id="tk_skip" type="text" autocapitalize="characters" placeholder="e.g. KY"></div>
         <label class="trkchk"><input id="tk_toll" type="checkbox" onchange="tkTollUI()"> Avoid toll roads</label>
         <div id="tk_tollrow" class="trk2" style="display:none"><span style="margin:0 6px 0 0">unless it adds more than</span><input id="tk_max" type="number" inputmode="numeric" min="1" max="200"><span>miles</span></div>
       </div>
       <div id="tk_err" style="color:#ff9b7a;font-size:13px;min-height:16px;margin-top:8px"></div>
       <div style="font-size:12px;color:#9fb4ce;line-height:1.4">Routes try to stay clear of low bridges, weight limits and restricted roads for these numbers. There's no guarantee every restriction is caught &mdash; always check the road and the signs for yourself.</div>
       <button class="go" style="padding:10px;margin-top:12px;width:100%" onclick="saveTruck()">Save</button>
+    </div>
+  </div>
+  <div id="nfpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNf()">
+    <div class="popbox">
+      <div class="poptitle" id="nftitle">Next fuel</div>
+      <div class="poptext" id="nffrom" style="font-size:14px;color:#9fb4ce;line-height:1.4"></div>
+      <div class="nfg">
+        <svg viewBox="0 0 120 98" aria-hidden="true">
+          <path d="M20 70 a40 40 0 0 1 80 0" fill="none" stroke="#2b4a70" stroke-width="9" stroke-linecap="round"/>
+          <path id="nffill" d="M20 70 a40 40 0 0 1 80 0" fill="none" stroke="#f26a21" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="75"/>
+          <g id="nfneedle" style="transform-box:view-box;transform-origin:60px 70px;transform:rotate(45deg)"><line x1="60" y1="70" x2="28" y2="70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+          <circle cx="60" cy="70" r="5" fill="#f26a21"/>
+          <text x="14" y="83" font-size="11" font-weight="bold" fill="#e25a4f" font-family="Arial">E</text>
+          <text x="101" y="83" font-size="11" font-weight="bold" fill="#3fbf6f" font-family="Arial">F</text>
+          <text x="60" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff" font-family="Arial">FPS</text>
+        </svg>
+        <div class="nfpick"><label for="nflvl">Fuel in your tanks right now</label><select id="nflvl" onchange="nfCalc()"></select></div>
+      </div>
+      <div class="nfmpg" id="nfmpgrow"><span>Your fuel mileage</span><input id="nfmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="nfMpgSave()"><span>mpg</span></div>
+      <div id="nfout"></div>
+      <button type="button" id="nflogbtn" class="nflogbtn" style="display:none" onclick="fbOpenFromStop()">Log this fuel buy</button>
+      <div style="font-size:12px;color:#9fb4ce;line-height:1.4;margin-top:12px">Gallons are estimates from your fuel mileage and tank size, keeping your reserve. Prices can change before you get there. Always watch your own gauge.</div>
+      <button class="go" style="padding:10px;margin-top:12px;width:100%" onclick="closeNf()">Close</button>
     </div>
   </div>
   <div id="fcpop" class="popwrap" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -1770,12 +1877,12 @@ async function fuelNear(radius){
 }
 
 /* ---- YOUR TRUCK (driver's own numbers, kept on this phone) ---- */
-const TRUCK_DEF={hft:13,hin:6,wt:80000,len:73,ax:5,mpg:'',toll:false,max:20};
+const TRUCK_DEF={hft:13,hin:6,wt:80000,len:73,ax:5,mpg:'',toll:false,max:20,tank:200,res:25,skip:''};
 function getTruck(){ try{ const t=JSON.parse(localStorage.getItem('fps_truck')||'null'); if(t) return Object.assign({},TRUCK_DEF,t); }catch(e){} return null; }
 function truckOpt(){ const t=getTruck()||TRUCK_DEF;
   return {h:((+t.hft)*12+(+t.hin))*0.0254, w:(+t.wt)*0.45359237, len:(+t.len)*0.3048, ax:+t.ax, toll:!!t.toll, max:+t.max||20}; }
 function truckSum(){ const el=document.getElementById('trucksum'); const t=getTruck(); if(!el) return;
-  el.textContent=t? (t.hft+"' "+t.hin+'" \u2022 '+Number(t.wt).toLocaleString()+' lbs \u2022 '+t.len+' ft \u2022 '+t.ax+' axles'+(t.mpg?' \u2022 '+t.mpg+' mpg':'')+(t.toll?' \u2022 no tolls':''))
+  el.textContent=t? (t.hft+"' "+t.hin+'" \u2022 '+Number(t.wt).toLocaleString()+' lbs \u2022 '+t.len+' ft \u2022 '+t.ax+' axles'+(t.mpg?' \u2022 '+t.mpg+' mpg':'')+' \u2022 '+t.tank+' gal tank'+(t.toll?' \u2022 no tolls':''))
     : 'Not set yet. Tap to enter your truck'; }
 let TRUCK_THEN=null;
 function tkTollUI(){ document.getElementById('tk_tollrow').style.display=document.getElementById('tk_toll').checked?'flex':'none'; }
@@ -1783,7 +1890,7 @@ function openTruck(then){
   const t=getTruck()||TRUCK_DEF, $=id=>document.getElementById(id);
   const ax=$('tk_ax'); if(!ax.options.length){ for(let n=2;n<=9;n++){ const o=document.createElement('option'); o.value=n; o.textContent=n+' axles'; ax.appendChild(o);} }
   $('tk_hft').value=t.hft; $('tk_hin').value=t.hin; $('tk_wt').value=t.wt; $('tk_len').value=t.len; ax.value=t.ax;
-  $('tk_mpg').value=t.mpg; $('tk_toll').checked=!!t.toll; $('tk_max').value=t.max; tkTollUI(); $('tk_err').textContent='';
+  $('tk_mpg').value=t.mpg; $('tk_tank').value=t.tank; $('tk_res').value=t.res; $('tk_skip').value=t.skip||''; $('tk_toll').checked=!!t.toll; $('tk_max').value=t.max; tkTollUI(); $('tk_err').textContent='';
   $('truckintro').textContent= getTruck()
     ? "Routes are planned for your truck. Change anything that's different, then tap Save."
     : "One-time setup: routes are planned for your truck. We filled in a standard tractor-trailer. Change anything that's different, then tap Save.";
@@ -1793,19 +1900,107 @@ function openTruck(then){
 function saveTruck(){
   const $=id=>document.getElementById(id), n=id=>parseFloat($(id).value);
   const t={hft:n('tk_hft'),hin:n('tk_hin')||0,wt:n('tk_wt'),len:n('tk_len'),ax:parseInt($('tk_ax').value,10),
-           mpg:$('tk_mpg').value.trim()?n('tk_mpg'):'',toll:$('tk_toll').checked,max:n('tk_max')||20};
+           mpg:$('tk_mpg').value.trim()?n('tk_mpg'):'',toll:$('tk_toll').checked,max:n('tk_max')||20,
+           tank:n('tk_tank'),res:$('tk_res').value.trim()===''?25:n('tk_res'),
+           skip:($('tk_skip').value.toUpperCase().match(/[A-Z]{2}/g)||[]).join(', ')};
+  const okSt=Object.values(STATES), badSt=(t.skip?t.skip.split(', '):[]).filter(x=>okSt.indexOf(x)<0);
   const bad= !(t.hft>=9&&t.hft<=15)?'Height should be between 9 and 15 feet.'
     : !(t.hin>=0&&t.hin<12)?'Inches should be 0 to 11.'
     : !(t.wt>=10000&&t.wt<=200000)?'Weight should be between 10,000 and 200,000 lbs.'
     : !(t.len>=20&&t.len<=120)?'Length should be between 20 and 120 feet.'
     : (t.mpg!==''&&!(t.mpg>=2&&t.mpg<=15))?'Fuel mileage should be between 2 and 15 mpg, or leave it blank.'
-    : (t.toll&&!(t.max>=1&&t.max<=200))?'Extra miles should be between 1 and 200.' : '';
+    : (t.toll&&!(t.max>=1&&t.max<=200))?'Extra miles should be between 1 and 200.'
+    : !(t.tank>=50&&t.tank<=400)?'Tank size should be between 50 and 400 gallons.'
+    : !(t.res>=0&&t.res<t.tank)?'Reserve should be 0 or more, and less than your tank size.'
+    : badSt.length?('Not a state: '+badSt.join(', ')+'. Use two letters, like KY.') : '';
   if(bad){ $('tk_err').textContent=bad; return; }
   try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){}
   $('truckpop').style.display='none'; truckSum();
   const f=TRUCK_THEN; TRUCK_THEN=null; if(f) f();
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',truckSum); else truckSum();
+
+/* ---- NEXT FUEL: how much to buy to reach the cheapest fuel you can make ---- */
+let ROUTE_CUM=[], ROUTE_TOTAL=0, NF_I=null, NF_LVL=0.25, NF_REC=0;
+const NF_LVLS=[[0.125,'1/8 tank'],[0.25,'1/4 tank'],[0.375,'3/8 tank'],[0.5,'1/2 tank'],[0.625,'5/8 tank'],[0.75,'3/4 tank'],[0.875,'7/8 tank'],[1,'Full']];
+function hvMi(a,b,c,d){ const r=Math.PI/180, x=Math.sin((c-a)*r/2), y=Math.sin((d-b)*r/2);
+  return 7917.6*Math.asin(Math.sqrt(x*x+Math.cos(a*r)*Math.cos(c*r)*y*y)); }
+function nfCardBtn(i){
+  if(NEAR_R||!ROUTE_TOTAL||nfSkip().indexOf(LASTHITS[i].st)>=0) return '';
+  return '<div class="nfrow"><span class="nfbtn" role="button" tabindex="0" onclick="event.stopPropagation();openNf('+i+')">'
+    +'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17a8 8 0 0 1 16 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M12 17l4-6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>Next fuel</span></div>';
+}
+function nfSkip(){ const t=getTruck()||TRUCK_DEF; return (t.skip||'').split(/[^A-Z]+/).filter(Boolean); }
+function openNf(i){
+  NF_I=i; const s=LASTHITS[i], t=getTruck()||TRUCK_DEF, NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
+  const sel=document.getElementById('nflvl');
+  if(!sel.options.length) NF_LVLS.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; sel.appendChild(o); });
+  sel.value=String(NF_LVL);
+  document.getElementById('nftitle').textContent='Next fuel';
+  document.getElementById('nffrom').textContent='From '+s.b+' in '+s.c+', '+(NAMES[s.st]||s.st)+', at $'+fmt(rankVal(s))+'.';
+  if(window.flApply) flApply();
+  document.getElementById('nfmpg').value=t.mpg||'';
+  const pop=document.getElementById('nfpop'); if(pop.parentElement!==document.body) document.body.appendChild(pop);
+  pop.style.display='flex';
+  nfCalc();
+}
+function closeNf(){ document.getElementById('nfpop').style.display='none'; }
+function nfMpgSave(){
+  const v=parseFloat(document.getElementById('nfmpg').value);
+  if(v>=2&&v<=15){ const t=getTruck()||Object.assign({},TRUCK_DEF); t.mpg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} truckSum(); }
+  nfCalc();
+}
+function nfGauge(f){
+  document.getElementById('nfneedle').style.transform='rotate('+(f*180)+'deg)';
+  document.getElementById('nffill').style.strokeDashoffset=String(100-f*100);
+}
+function nfCalc(){
+  if(NF_I==null) return;
+  const t=getTruck()||TRUCK_DEF, s=LASTHITS[NF_I], out=document.getElementById('nfout');
+  NF_LVL=parseFloat(document.getElementById('nflvl').value)||0.25; nfGauge(NF_LVL);
+  const mpgIn=parseFloat(document.getElementById('nfmpg').value), mpg=(mpgIn>=2&&mpgIn<=15)?mpgIn:6.5;
+  const tank=+t.tank||200, res=Math.min(+t.res||0, tank-1), have=tank*NF_LVL, price=rankVal(s);
+  const at=s.rmi||0, left=Math.max(0,ROUTE_TOTAL-at), skip=nfSkip();
+  const fullRange=(tank-res)*mpg, nowRange=Math.max(0,(have-res)*mpg);
+  const ahead=LASTHITS.filter(h=>(h.rmi||0)>at+0.5 && skip.indexOf(h.st)<0).sort((a,b)=>a.rmi-b.rmi);
+  const G=x=>Math.round(x), M=x=>Math.round(x).toLocaleString(), $p=x=>'$'+fmt(x);
+  const where=h=>esc(h.b)+', '+esc(h.c)+', '+h.st;
+  // gallons to buy here to reach a point d miles ahead and still have the reserve
+  const buyFor=d=>{ const need=d/mpg+res-have; return need<=0?0:Math.min(Math.ceil(need), Math.max(0,Math.floor(tank-have))); };
+  const fits=d=>d/mpg+res<=tank;
+  const buyTag=(g,d)=> g<=0 ? '<span class="nfbuy none">No fuel needed here</span>'
+      : '<span class="nfbuy">Buy about '+g+' gal here</span>'+(fits(d)?'':' <span class="nfsub">(fill up, you\u2019ll still need fuel before you get there)</span>');
+  let h='<div class="nfopt"><h4>Your range</h4><div class="nfbig">About '+M(nowRange)+' miles</div>'
+    +'<div class="nfsub">'+G(have)+' of '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'
+    +(mpgIn>=2?'':' (typical, enter yours above)')+'. A full tank goes about '+M(fullRange)+' miles. '+M(left)+' miles left on your route.</div></div>';
+  if(skip.length) h+='<div class="nfsub" style="margin-top:8px">Skipping stops in '+skip.join(', ')+'.</div>';
+  const cheaper=ahead.find(x=>rankVal(x)<price);
+  NF_REC=cheaper?buyFor(cheaper.rmi-at):buyFor(left);
+  if(cheaper){
+    const d=cheaper.rmi-at, g=buyFor(d);
+    h+='<div class="nfopt"><h4>Next cheaper fuel</h4><div class="nfbig">'+where(cheaper)+'</div>'
+      +'<div class="nfsub">'+M(d)+' miles ahead at '+$p(rankVal(cheaper))+', '+Math.round((price-rankVal(cheaper))*100)+'\u00a2 cheaper a gallon</div>'+buyTag(g,d)+'</div>';
+  }
+  const reach=ahead.filter(x=>x.rmi-at<=fullRange);
+  const best=reach.length?reach.reduce((a,b)=>rankVal(b)<rankVal(a)?b:a):null;
+  if(best&&rankVal(best)<price&&best!==cheaper){
+    const d=best.rmi-at, g=buyFor(d);
+    h+='<div class="nfopt"><h4>Cheapest you can reach on one tank</h4><div class="nfbig">'+where(best)+'</div>'
+      +'<div class="nfsub">'+M(d)+' miles ahead at '+$p(rankVal(best))+', '+Math.round((price-rankVal(best))*100)+'\u00a2 cheaper a gallon</div>'+buyTag(g,d)+'</div>';
+  }
+  const all=ahead.length?ahead.reduce((a,b)=>rankVal(b)<rankVal(a)?b:a):null;
+  if(all&&rankVal(all)<price&&all!==best&&all!==cheaper){
+    h+='<div class="nfopt"><h4>Cheapest on the rest of your route</h4><div class="nfbig">'+where(all)+'</div>'
+      +'<div class="nfsub">'+M(all.rmi-at)+' miles ahead at '+$p(rankVal(all))+'. Too far for one tank, so you\u2019ll fuel at least once before it.</div></div>';
+  }
+  if(!cheaper){
+    const g=buyFor(left);
+    h+='<div class="nfopt"><h4>Best fuel left on your route</h4><div class="nfbig">This is it</div>'
+      +'<div class="nfsub">Nothing cheaper ahead'+(skip.length?' (outside the states you skip)':'')+'. '
+      +(fits(left)?'Buying enough to finish your trip with your reserve:':'Your trip is longer than one tank, so fill up here:')+'</div>'+buyTag(g,left)+'</div>';
+  }
+  out.innerHTML=h;
+}
 
 /* truck-legal routing (TomTom). Returns the same shape as the old router so nothing else changes. */
 const TT_KEY="ARKpg3nDvyWW0qpnA5aSlSpkK78bopJF";
@@ -1853,6 +2048,9 @@ async function findFuel(){
     if(!rj){ const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
       rj=await (await fetch(ru)).json(); }
     const line=rj.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+    { const cum=[0]; for(let i=1;i<line.length;i++) cum.push(cum[i-1]+hvMi(line[i-1][0],line[i-1][1],line[i][0],line[i][1]));
+      const k=cum[cum.length-1]>0 ? (rj.routes[0].distance/1609.34)/cum[cum.length-1] : 1;
+      ROUTE_CUM=cum.map(x=>x*k); ROUTE_TOTAL=rj.routes[0].distance/1609.34; }
     const cc=canadaCheck(line);
     if(cc.miles>10){
       hideBar();
@@ -1876,7 +2074,7 @@ async function findFuel(){
         if(d<best){ best=d; bestI=i; }
         if(best<0.15) break;
       }
-      if(best<=maxMiles){ hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI}); }
+      if(best<=maxMiles){ hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI,rmi:ROUTE_CUM[bestI]||0}); }
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
     LASTHITS=hits; NEAR_R=null;
@@ -1933,10 +2131,10 @@ function render(hits){
     const multi=idx.length>1;
     h+='<div class="stgrp" id="stg_'+st+'">';
     if(multi){
-      h+='<button class="sthead" aria-expanded="false" onclick="toggleState(\''+st+'\')"><b>'+(NAMES[st]||st)+'</b><small>'+idx.length+' stops</small>'
+      h+='<button class="sthead" aria-expanded="false" onclick="toggleState(\''+st+'\')"><span class="stname"><b>'+(NAMES[st]||st)+'</b><small>'+idx.length+' stops</small></span>'
         +'<span class="stx" aria-label="Show stops"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M12 3a1.2 1.2 0 0 1 1.2 1.2v12.3l4.0-4.0a1.2 1.2 0 1 1 1.7 1.7l-6.0 6.05a1.2 1.2 0 0 1-1.7 0l-6.05-6.05a1.2 1.2 0 1 1 1.7-1.7l4.05 4.0V4.2A1.2 1.2 0 0 1 12 3z\"/></svg></span></button>';
     } else {
-      h+='<div class="sthead"><b>'+(NAMES[st]||st)+'</b><small>1 stop</small></div>';
+      h+='<div class="sthead"><span class="stname"><b>'+(NAMES[st]||st)+'</b><small>1 stop</small></span></div>';
     }
     idx.forEach((i,k)=>{
     if(k===1) h+='<div class="stmore">';
@@ -1953,6 +2151,7 @@ function render(hits){
       +'<button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
       +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a>'
       +'</div>'
+      +nfCardBtn(i)
       +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
       +'</div>';
     });
@@ -2372,6 +2571,18 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-17', items:[
+    'Version 1.2',
+    'New Next fuel button on every stop on your route. Tap it to see how much fuel to buy there to reach the cheapest fuel you can make',
+    'Pick how much fuel is in your tanks and the gauge shows it. The app works out your range and the gallons to buy, keeping your reserve',
+    'Shows the next cheaper fuel ahead, the cheapest you can reach on one tank, and the cheapest on the rest of your route',
+    'Your truck now has your fuel tank size, the reserve you like to keep (25 gallons to start), and states you never buy fuel in',
+    'New Fuel log (add-on): log a fuel buy right from the stop. Bring in the card price with one tap, fill in any two of price, gallons or total, and it figures the third',
+    'Fuel log shows your fuel mileage and fuel cost a mile, figured from full fill-up to full fill-up with your odometer',
+    'New IFTA report (add-on): pick a quarter to see gallons bought by state, type in your miles by state, and copy the numbers for your filing. The app does not file for you',
+    'Fuel log and IFTA report are add-ons and may not be turned on for your account',
+    'Please note: gallons, miles and fuel mileage are estimates. Prices can change before you get there. Always watch your own gauge and check your own records'
+  ]},
+  { date:'2026-10-17', items:[
     'Version 1.1',
     'New feature brings more precise, accurate routing for trucks: routes now look for low bridges, weight limits, restricted roads and so forth',
     'New Your truck page in Settings: enter your height, weight, length and number of axles, and routes are planned for your truck',
@@ -2775,7 +2986,8 @@ async function optimizeStops(){
     <h2>Tools</h2>
     <div class="plsub">Extra helpers for your loads. More are on the way.</div>
     <button class="tlcard" id="tlvspec" onclick="if(!window.FPS_VSOFF)openVspec()"><span class="tlico"><svg viewBox="0 0 48 24" width="44" height="22" aria-hidden="true"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/></svg></span><span><span class="tlt">Vehicle specifications</span><span class="tls" style="display:block">Weight and size of each car on your load</span></span></button>
-    <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 20V9h4v11zM10 20V4h4v16zM16 20v-7h4v7z" fill="#9fc0e8"/></svg></span><span><span class="tlt">Fuel mileage</span><span class="tls" style="display:block">Track your miles per gallon</span></span><span class="soontag">COMING SOON</span></div>
+    <button class="tlcard" id="tlflog" style="display:none" onclick="openFlog()"><span class="tlico"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><rect x="4" y="4" width="10" height="16" rx="1.6" fill="#f26a21"/><rect x="6" y="6.5" width="6" height="4" rx=".8" fill="#10233f"/><path d="M14 8h2a2 2 0 0 1 2 2v6.5a1.4 1.4 0 0 0 2.8 0V9l-2.2-2.6" fill="none" stroke="#f26a21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="tlt">Fuel log &amp; IFTA</span><span class="tls" style="display:block">Log fuel buys, see your fuel mileage, and your IFTA gallons and miles by state</span></span></button>
+    <div class="tlcard soon" id="tlfmsoon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 20V9h4v11zM10 20V4h4v16zM16 20v-7h4v7z" fill="#9fc0e8"/></svg></span><span><span class="tlt">Fuel mileage</span><span class="tls" style="display:block">Track your miles per gallon</span></span><span class="soontag">COMING SOON</span></div>
     <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#9fc0e8" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#9fc0e8" stroke-width="2"/></svg></span><span><span class="tlt">Accounting</span><span class="tls" style="display:block">Expenses and settlements</span></span><span class="soontag">COMING SOON</span></div>
   </div>
     <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
@@ -2789,6 +3001,43 @@ async function optimizeStops(){
   </div>
     <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
   </div>
+<div id="fbpop" class="popwrap" style="display:none" onclick="if(event.target===this)fbClose()">
+  <div class="popbox">
+    <div class="poptitle" id="fb_title">Log a fuel buy</div>
+    <div class="fbrow"><label>Date<input id="fb_date" type="date"></label><label>State<select id="fb_st"></select></label></div>
+    <label class="fbl">Where (optional)<input id="fb_place" type="text" placeholder="Love's, Nashville" autocomplete="off"></label>
+    <button type="button" id="fb_imp" class="fbimp" onclick="fbImp()">Use the card price</button>
+    <div class="fbhint">Fill in any two. The app figures the third.</div>
+    <div class="fbrow fb3"><label>Price a gallon<input id="fb_ppg" type="number" inputmode="decimal" step="0.001" oninput="fbIn('ppg')"></label><label>Gallons<input id="fb_gal" type="number" inputmode="decimal" step="0.001" oninput="fbIn('gal')"></label><label>Total $<input id="fb_tot" type="number" inputmode="decimal" step="0.01" oninput="fbIn('tot')"></label></div>
+    <label class="fbchk"><input id="fb_full" type="checkbox" checked><span>Full fill-up<small>Uncheck if you only put in part of a tank</small></span></label>
+    <label class="fbl">Odometer<input id="fb_odo" type="number" inputmode="numeric" oninput="fbOdoWarn()"></label>
+    <div id="fb_odowarn" class="fbwarn">No odometer reading. Without miles, this fuel buy can&rsquo;t count toward your fuel mileage or cost per mile. You can still save it.</div>
+    <div id="fb_err" class="fberr"></div>
+    <button class="go" style="padding:12px;margin-top:6px;width:100%" onclick="fbSave()">Save</button>
+    <div class="fbbtns"><button type="button" class="fbcancel" onclick="fbClose()">Cancel</button><button type="button" id="fb_del" class="fbdel" onclick="fbDel()">Delete</button></div>
+  </div>
+</div>
+<div id="flpop"><div class="plwrap">
+  <div id="flmain">
+    <h2>Fuel log</h2>
+    <div class="plsub">Your fuel buys are saved on this phone.</div>
+    <div id="flstats"></div>
+    <div class="fl2"><button class="go" onclick="fbOpen()">+ Add a fuel buy</button><button class="flblue" onclick="iftaOpen()">IFTA report</button></div>
+    <div id="fllist"></div>
+  </div>
+  <div id="flifta" style="display:none">
+    <h2>IFTA report</h2>
+    <div class="plsub">Gallons come from your fuel log. Type in your miles for each state from your own records.</div>
+    <div class="ifpick"><select id="if_y" onchange="iftaRender()"></select><select id="if_q" onchange="iftaRender()"><option value="1">Jan &ndash; Mar (Q1)</option><option value="2">Apr &ndash; Jun (Q2)</option><option value="3">Jul &ndash; Sep (Q3)</option><option value="4">Oct &ndash; Dec (Q4)</option></select></div>
+    <div id="iftab"></div>
+    <select id="if_add" class="ifadd" onchange="iftaAddSt(this.value)"></select>
+    <button class="flblue" style="width:100%;margin-top:12px" onclick="iftaCopy()">Copy the numbers</button>
+    <div class="fbhint" style="margin-top:12px">This app does not file for you. Check every number against your own records before you file. There&rsquo;s no guarantee these numbers are complete or correct.</div>
+  </div>
+</div>
+  <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
+</div>
+<div id="fltoast"></div>
 <div id="mvpop" onclick="if(event.target===this)closeMove()"><div class="mvbox" role="dialog" aria-modal="true" aria-labelledby="mvtitle">
   <div id="mvtitle">Move this stop</div>
   <button class="mvchoice" id="mvup" type="button" onclick="doMove(-1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 16V3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 8l5-5 5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up</button>
@@ -5164,6 +5413,213 @@ async function vsLookup(d){
   load(); render();
   data.runs.forEach(function(r){ r.vehicles.forEach(function(v){ if(v.status==='look') lookup(v.id); }); });   // finish lookups cut off by closing the app
 })();
+</script>
+<script>
+/* ===== FUEL LOG + IFTA REPORT (add-on, switched on per user from the admin dashboard) ===== */
+const FL_KEY='fps_flog', FLMI_KEY='fps_ifta_mi';
+function flOn(){ try{ return localStorage.getItem('fps_fl')==='1'; }catch(e){ return false; } }
+function flLoad(){ try{ const a=JSON.parse(localStorage.getItem(FL_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function flSave(a){ try{ localStorage.setItem(FL_KEY,JSON.stringify(a)); return true; }catch(e){ alert('Could not save on this phone.'); return false; } }
+function flNames(){ const o={}; for(const k in STATES) o[STATES[k]]=k; return o; }
+function flPad(n){ return (n<10?'0':'')+n; }
+function flToday(){ const d=new Date(); return d.getFullYear()+'-'+flPad(d.getMonth()+1)+'-'+flPad(d.getDate()); }
+function flDate(s){ const p=String(s||'').split('-'); if(p.length<3) return s||''; const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return M[+p[1]-1]+' '+(+p[2])+', '+p[0]; }
+function flMoney(x){ return '$'+Number(x).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function flApply(){
+  const on=flOn(), a=document.getElementById('tlflog'), b=document.getElementById('tlfmsoon'), nb=document.getElementById('nflogbtn');
+  if(a) a.style.display=on?'':'none';
+  if(b) b.style.display=on?'none':'';
+  if(nb) nb.style.display=on?'':'none';
+  if(!on){ const f=document.getElementById('flpop'); if(f) f.classList.remove('show'); }
+}
+window.flApply=flApply;
+function flToast(t){ const el=document.getElementById('fltoast'); if(!el) return; el.textContent=t; el.style.display='block'; clearTimeout(flToast.t); flToast.t=setTimeout(()=>el.style.display='none',2200); }
+
+/* ---- one fuel buy ---- */
+let FB={id:null,cardPrice:null,edits:[]};
+function fbOpenFromStop(){
+  if(NF_I==null||!flOn()) return; const s=LASTHITS[NF_I];
+  closeNf();
+  fbOpen({st:s.st, place:s.b+', '+s.c, price:rankVal(s), gal:NF_REC>0?NF_REC:''});
+}
+function fbOpen(o){
+  if(!flOn()) return;
+  o=o||{}; const $=id=>document.getElementById(id), log=flLoad(), N=flNames();
+  FB={id:o.id||null, cardPrice:(o.price!=null&&isFinite(o.price))?+o.price:null, edits:[]};
+  const sel=$('fb_st');
+  if(!sel.options.length){ const op=document.createElement('option'); op.value=''; op.textContent='Pick'; sel.appendChild(op);
+    Object.keys(N).sort().forEach(ab=>{ const x=document.createElement('option'); x.value=ab; x.textContent=ab+' \u2013 '+N[ab]; sel.appendChild(x); }); }
+  sel.value=o.st||'';
+  $('fb_date').value=o.date||flToday();
+  $('fb_place').value=o.place||'';
+  $('fb_ppg').value=o.ppg!=null?o.ppg:'';
+  $('fb_gal').value=(o.gal!=null&&o.gal!=='')?o.gal:'';
+  $('fb_tot').value=o.tot!=null?o.tot:'';
+  if($('fb_gal').value) FB.edits.push('gal');
+  if(o.id){ FB.edits=['ppg','gal']; }
+  $('fb_full').checked=(o.full!=null)?!!o.full:true;
+  const lastOdo=log.reduce((m,e)=>(+e.odo>m?+e.odo:m),0);
+  $('fb_odo').value=(o.odo!=null)?(o.odo||''):(o.id?'':(lastOdo||''));
+  const ib=$('fb_imp');
+  if(FB.cardPrice!=null){ ib.style.display=''; ib.textContent='Use the card price, $'+FB.cardPrice.toFixed(3); } else ib.style.display='none';
+  $('fb_title').textContent=FB.id?'Edit fuel buy':'Log a fuel buy';
+  $('fb_del').style.display=FB.id?'':'none';
+  $('fb_err').textContent='';
+  fbOdoWarn();
+  const pop=$('fbpop'); if(pop.parentElement!==document.body) document.body.appendChild(pop);
+  enterScreen(); pop.style.display='flex';
+}
+function fbClose(){ const p=document.getElementById('fbpop'); if(p&&p.style.display==='flex') history.back(); }
+function fbImp(){ if(FB.cardPrice==null) return; document.getElementById('fb_ppg').value=FB.cardPrice.toFixed(3); fbIn('ppg'); }
+function fbIn(k){
+  FB.edits=FB.edits.filter(x=>x!==k); FB.edits.push(k);
+  const $=id=>document.getElementById(id), v={ppg:parseFloat($('fb_ppg').value), gal:parseFloat($('fb_gal').value), tot:parseFloat($('fb_tot').value)};
+  const keep=FB.edits.filter(x=>v[x]>0).slice(-2);
+  if(keep.length<2) return;
+  const c=['ppg','gal','tot'].find(x=>keep.indexOf(x)<0);
+  if(c==='tot') $('fb_tot').value=(v.ppg*v.gal).toFixed(2);
+  if(c==='gal') $('fb_gal').value=(v.tot/v.ppg).toFixed(3);
+  if(c==='ppg') $('fb_ppg').value=(v.tot/v.gal).toFixed(3);
+}
+function fbOdoWarn(){ document.getElementById('fb_odowarn').style.display=document.getElementById('fb_odo').value.trim()?'none':'block'; }
+function fbSave(){
+  const $=id=>document.getElementById(id), err=$('fb_err'), num=id=>{ const n=parseFloat($(id).value); return isFinite(n)&&n>0?n:null; };
+  const date=$('fb_date').value, st=$('fb_st').value, gal=num('fb_gal'); let ppg=num('fb_ppg'), tot=num('fb_tot');
+  const odoRaw=$('fb_odo').value.trim(), odo=odoRaw?parseFloat(odoRaw):null;
+  err.textContent='';
+  if(!date){ err.textContent='Pick the date.'; return; }
+  if(!st){ err.textContent='Pick the state you bought fuel in. IFTA needs it.'; return; }
+  if(!gal){ err.textContent='Enter the gallons, or the price and the total.'; return; }
+  if(gal>600){ err.textContent='That\u2019s a lot of gallons. Check the number.'; return; }
+  if(odoRaw&&!(odo>=0&&odo<10000000)){ err.textContent='Check the odometer number.'; return; }
+  if(ppg&&!tot) tot=+(ppg*gal).toFixed(2);
+  if(tot&&!ppg) ppg=+(tot/gal).toFixed(3);
+  const e={id:FB.id||('f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)), date:date, st:st,
+    place:$('fb_place').value.trim().slice(0,80), ppg:ppg, gal:+gal.toFixed(3), tot:tot, full:$('fb_full').checked, odo:odo};
+  const log=flLoad(), k=log.findIndex(x=>x.id===e.id);
+  if(k>=0) log[k]=e; else log.push(e);
+  if(!flSave(log)) return;
+  fbClose(); flRender(); flToast(FB.id?'Saved':'Fuel buy saved');
+}
+function fbDel(){
+  if(!FB.id) return;
+  if(!confirm('Delete this fuel buy? This can\u2019t be undone.')) return;
+  flSave(flLoad().filter(x=>x.id!==FB.id)); fbClose(); flRender(); flToast('Deleted');
+}
+
+/* ---- fuel mileage and cost per mile, from full fill-up to full fill-up ---- */
+function flOrder(log){ return log.map((e,i)=>({e:e,i:i})).sort((a,b)=>a.e.date<b.e.date?-1:a.e.date>b.e.date?1:((+a.e.odo||0)-(+b.e.odo||0))||(a.i-b.i)).map(x=>x.e); }
+function flSegs(log){
+  const w=flOrder(log), segs=[]; let a=-1;
+  for(let i=0;i<w.length;i++){
+    if(!(w[i].full&&+w[i].odo>0)) continue;
+    if(a>=0){ let g=0,c=0,cOk=true; for(let j=a+1;j<=i;j++){ g+=+w[j].gal||0; if(w[j].tot) c+=+w[j].tot; else cOk=false; }
+      const mi=w[i].odo-w[a].odo; if(mi>0&&g>0) segs.push({mi:mi,g:g,c:c,cOk:cOk,date:w[i].date}); }
+    a=i;
+  }
+  return segs;
+}
+function flRender(){
+  const box=document.getElementById('fllist'), stb=document.getElementById('flstats'); if(!box) return;
+  const log=flLoad(), N=flNames();
+  const segs=flSegs(log), cut=new Date(); cut.setDate(cut.getDate()-90);
+  const cutS=cut.getFullYear()+'-'+flPad(cut.getMonth()+1)+'-'+flPad(cut.getDate());
+  const rec=segs.filter(x=>x.date>=cutS);
+  const last=segs.length?segs[segs.length-1]:null;
+  const mi=rec.reduce((a,x)=>a+x.mi,0), g=rec.reduce((a,x)=>a+x.g,0);
+  const cOk=rec.length&&rec.every(x=>x.cOk), c=rec.reduce((a,x)=>a+x.c,0);
+  if(last){
+    stb.innerHTML='<div class="flst"><div><b>'+(last.mi/last.g).toFixed(2)+'</b><small>mpg, last fill-up</small></div>'
+      +'<div><b>'+(g?(mi/g).toFixed(2):'--')+'</b><small>mpg, last 3 months</small></div>'
+      +'<div><b>'+(cOk&&mi?Math.round(c/mi*100)+'\u00a2':'--')+'</b><small>fuel cost a mile</small></div></div>'
+      +'<div class="flnote">Figured from full fill-up to full fill-up using your odometer. '+(cOk?'':'Cost a mile needs a price or total on every buy. ')+'These are estimates.</div>';
+  } else {
+    stb.innerHTML='<div class="flnote">Your fuel mileage shows up after two full fill-ups with odometer readings.</div>';
+  }
+  if(!log.length){ box.innerHTML='<div class="flempty">No fuel buys yet.<br>Tap <b>Next fuel</b> on a stop, then <b>Log this fuel buy</b>, or use <b>+ Add a fuel buy</b> above.</div>'; return; }
+  box.innerHTML=flOrder(log).reverse().map(e=>{
+    const line=(+e.gal).toFixed(3).replace(/\.?0+$/,'')+' gal'+(e.ppg?' \u00d7 $'+(+e.ppg).toFixed(3):'')+(e.tot?' = '+flMoney(e.tot):'');
+    return '<button type="button" class="flent" onclick="fbEdit(\''+e.id+'\')"><div class="t1"><span>'+flDate(e.date)+' \u2022 '+esc(N[e.st]||e.st)+'</span>'
+      +'<span class="fltag '+(e.full?'full':'part')+'">'+(e.full?'FULL':'PARTIAL')+'</span></div>'
+      +(e.place?'<div class="t3">'+esc(e.place)+'</div>':'')
+      +'<div class="t2">'+line+'</div>'
+      +'<div class="t3">'+(e.odo?'Odometer '+Math.round(e.odo).toLocaleString():'<span class="nood">No odometer</span>')+'</div></button>';
+  }).join('');
+}
+function fbEdit(id){ const e=flLoad().find(x=>x.id===id); if(e) fbOpen(Object.assign({},e)); }
+function openFlog(){
+  if(!flOn()) return;
+  const p=document.getElementById('flpop');
+  enterScreen(); document.getElementById('flmain').style.display=''; document.getElementById('flifta').style.display='none';
+  p.classList.add('show'); document.body.classList.add('on-flog'); p.scrollTop=0; flRender();
+}
+
+/* ---- IFTA report: gallons by state from the log, miles by state typed in ---- */
+function iftaMiles(){ try{ return JSON.parse(localStorage.getItem(FLMI_KEY)||'{}')||{}; }catch(e){ return {}; } }
+function iftaKey(){ return document.getElementById('if_y').value+'-Q'+document.getElementById('if_q').value; }
+function iftaOpen(){
+  const now=new Date(), y=now.getFullYear(), ys={}; ys[y]=1; ys[y-1]=1;
+  flLoad().forEach(e=>{ const n=parseInt(String(e.date).slice(0,4),10); if(n) ys[n]=1; });
+  const sy=document.getElementById('if_y'); sy.innerHTML=Object.keys(ys).sort().reverse().map(v=>'<option>'+v+'</option>').join('');
+  sy.value=String(y); document.getElementById('if_q').value=String(Math.floor(now.getMonth()/3)+1);
+  enterScreen(); document.getElementById('flmain').style.display='none'; document.getElementById('flifta').style.display='';
+  document.getElementById('flpop').scrollTop=0; iftaRender();
+}
+function iftaData(){
+  const y=+document.getElementById('if_y').value, q=+document.getElementById('if_q').value;
+  const from=y+'-'+flPad((q-1)*3+1)+'-01', to=q===4?(y+1)+'-01-01':y+'-'+flPad(q*3+1)+'-01';
+  const gal={}; flLoad().forEach(e=>{ if(e.date>=from&&e.date<to) gal[e.st]=(gal[e.st]||0)+(+e.gal||0); });
+  const mi=iftaMiles()[iftaKey()]||{}, sts={};
+  Object.keys(gal).forEach(k=>sts[k]=1); Object.keys(mi).forEach(k=>sts[k]=1);
+  return {gal:gal, mi:mi, sts:Object.keys(sts).sort()};
+}
+function iftaRender(){
+  const d=iftaData(), N=flNames(), tab=document.getElementById('iftab');
+  let tm=0, tg=0;
+  let h='<table class="iftbl"><tr><th>State</th><th style="text-align:right">Miles</th><th style="text-align:right">Gallons</th></tr>';
+  d.sts.forEach(st=>{ const m=d.mi[st], g=d.gal[st]||0; tm+=+m||0; tg+=g;
+    h+='<tr><td>'+esc(N[st]||st)+'</td><td class="n"><input type="number" inputmode="numeric" min="0" value="'+(m!=null&&m!==''?m:'')+'" placeholder="0" onchange="iftaMi(\''+st+'\',this.value)"></td>'
+      +'<td class="n">'+(g?g.toFixed(1):'0')+'</td></tr>'; });
+  h+='<tr class="tot"><td>Total</td><td class="n">'+Math.round(tm).toLocaleString()+'</td><td class="n">'+tg.toFixed(1)+'</td></tr></table>';
+  if(!d.sts.length) h='<div class="flempty">Nothing for this quarter yet.<br>Fuel buys you log show up here by state. Add a state below to type in miles.</div>';
+  else h+='<div class="ifmpg">Average fuel mileage for the quarter: <b>'+(tm&&tg?(tm/tg).toFixed(2)+' mpg':'--')+'</b> (total miles \u00f7 total gallons)</div>';
+  tab.innerHTML=h;
+  const add=document.getElementById('if_add');
+  add.innerHTML='<option value="">+ Add a state for miles</option>'+Object.keys(N).sort().filter(ab=>d.sts.indexOf(ab)<0).map(ab=>'<option value="'+ab+'">'+ab+' \u2013 '+N[ab]+'</option>').join('');
+}
+function iftaMi(st,v){
+  const all=iftaMiles(), k=iftaKey(), o=all[k]||{}, n=parseFloat(v);
+  if(isFinite(n)&&n>=0) o[st]=Math.round(n); else delete o[st];
+  all[k]=o; try{ localStorage.setItem(FLMI_KEY,JSON.stringify(all)); }catch(e){}
+  iftaRender();
+}
+function iftaAddSt(st){ if(!st) return; const all=iftaMiles(), k=iftaKey(), o=all[k]||{}; if(o[st]==null) o[st]=''; all[k]=o;
+  try{ localStorage.setItem(FLMI_KEY,JSON.stringify(all)); }catch(e){} iftaRender(); }
+function iftaCopy(){
+  const d=iftaData(), N=flNames(); let tm=0,tg=0;
+  let t='IFTA '+document.getElementById('if_y').value+' Q'+document.getElementById('if_q').value+'\nState\tMiles\tGallons\n';
+  d.sts.forEach(st=>{ const m=+d.mi[st]||0, g=d.gal[st]||0; tm+=m; tg+=g; t+=(N[st]||st)+'\t'+m+'\t'+g.toFixed(1)+'\n'; });
+  t+='Total\t'+tm+'\t'+tg.toFixed(1)+'\n';
+  const ok=()=>flToast('Copied');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,()=>alert(t)); else alert(t);
+}
+
+/* ---- phone back arrow: close the fuel buy, then IFTA, then the log ---- */
+(function(){
+  const ob=window.stepBack;
+  window.stepBack=function(){
+    const fb=document.getElementById('fbpop'), fl=document.getElementById('flpop');
+    if(fb&&fb.style.display==='flex'){ fb.style.display='none'; return true; }
+    if(fl&&fl.classList.contains('show')){
+      const ift=document.getElementById('flifta');
+      if(ift.style.display!=='none'){ ift.style.display='none'; document.getElementById('flmain').style.display=''; flRender(); return true; }
+      fl.classList.remove('show'); document.body.classList.remove('on-flog'); return true;
+    }
+    return ob.apply(this,arguments);
+  };
+  try{ stepBack=window.stepBack; }catch(e){}
+})();
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',flApply); else flApply();
 </script>
 <script>
 /* ===== Admin app switch: Vehicle specifications on/off (set on the FPS Access dashboard) ===== */
