@@ -671,11 +671,11 @@
   // ask Google; if no answer, try again a few times. Also ask again whenever the app comes back on screen.
   function flSet(j){ ls('fps_fl', j.fuellog?'1':'0'); var go=function(){ if(window.flApply) window.flApply(); }; go(); setTimeout(go,1500); }
   function ask(n, quiet){
-    fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev)+'&t='+Date.now(),{cache:'no-store'})
-      .then(function(r){ ls('fps_dbg','try '+n+': got reply '+r.status); return r.json(); })
-      .then(function(j){ ls('fps_dbg',(ls('fps_dbg')||'')+' | read: '+JSON.stringify(j)); if(j&&j.ok){ ls('fps_ok','1'); trusted=true; lift(); if(!('fuellog' in j) && n<4){ ls('fps_dbg',(ls('fps_dbg')||'')+' | no fuel log, asking again'); setTimeout(function(){ ask(n+1,true); },3000); return; } flSet(j); ls('fps_dbg',(ls('fps_dbg')||'')+' | saved '+ls('fps_fl')); } else if(!quiet) deny(); })
+    fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
+      .then(function(r){ ls('fps_dbg',(ls('fps_dbg')||'')+' | try '+n+': got reply '+r.status); return r.json(); })
+      .then(function(j){ ls('fps_dbg',(ls('fps_dbg')||'')+' | read: '+JSON.stringify(j)); if(j&&j.ok){ ls('fps_ok','1'); trusted=true; lift(); if(!('fuellog' in j) && n<10){ ls('fps_dbg',(ls('fps_dbg')||'')+' | no fuel log, asking again'); setTimeout(function(){ ask(n+1,true); },3000); return; } flSet(j); ls('fps_dbg',(ls('fps_dbg')||'')+' | saved '+ls('fps_fl')); } else if(!quiet) deny(); })
       .catch(function(e){ ls('fps_dbg',(ls('fps_dbg')||'')+' | try '+n+' FAILED: '+e);
-        if(n<3){ setTimeout(function(){ ask(n+1, quiet); }, 4000); return; }
+        if(n<10){ setTimeout(function(){ ask(n+1, quiet); }, 3000); return; }
         // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
         if(trusted||quiet) return;
         show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
@@ -2579,6 +2579,14 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-19', items:[
+    'Version 1.3',
+    'Behind the scenes: the app now counts which buttons get used, so we know what to improve. Nothing changes in how the app works'
+  ]},
+  { date:'2026-10-19', items:[
+    'Version 1.2.5',
+    'Fixed: the app keeps checking for your Fuel log for a few more seconds when it opens'
+  ]},
   { date:'2026-10-19', items:[
     'Version 1.2.4',
     'Fixed: the Fuel log now turns on when it is switched on for you, even if the first check comes back incomplete'
@@ -5690,7 +5698,35 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     fetch(URL_+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
       .then(function(r){return r.text();}).then(function(t){ setTimeout(function(){ box(head+t+'\n\nAfter answer, saved fuel switch: '+g('fps_fl')+'\nApp check: '+g('fps_dbg')+'\nTile showing now: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()); },2000); })
       .catch(function(e){ box(head+'NO ANSWER: '+e); });
-  },6000);
+  },20000);
+})();
+</script>
+<script>
+/* ===== TAP TRACKER: counts button taps, sends them to the access server ===== */
+(function(){
+  var K='fps_taps', URL_='https://script.google.com/macros/s/AKfycbxEpGntHw5H205B6qJI5YrbIBe2n98TfAhXJwPCY6rghwRWCZhipF9wchbNj_mAwBtzpA/exec';
+  function get(){ try{ return JSON.parse(localStorage.getItem(K)||'{}')||{}; }catch(e){ return {}; } }
+  function put(m){ try{ localStorage.setItem(K,JSON.stringify(m)); }catch(e){} }
+  function add(b){ var m=get(); m[b]=(m[b]||0)+1; put(m); }
+  function wrap(n,b){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ add(b); return f.apply(this,arguments); }; }
+  wrap('openWx','weather'); wrap('openDetail','details'); wrap('openServices','services');
+  wrap('wxDay','wx2hr'); wrap('wxHourly','wxhourly'); wrap('askNear','near');
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest&&e.target.closest('a.wxradar,a.maplink,a.drive'); if(!a) return;
+    add(a.classList.contains('wxradar')?'radar':'map');
+  },true);
+  var busy=false;
+  function flush(){
+    if(busy) return; var m=get(); if(!Object.keys(m).length) return;
+    var code='', dev=''; try{ code=localStorage.getItem('fps_code')||''; dev=localStorage.getItem('fps_dev')||''; }catch(e){}
+    if(!code) return; busy=true; var sent=JSON.stringify(m);
+    fetch(URL_+'?page=tap&code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev)+'&b='+encodeURIComponent(sent),{cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(j&&j.ok){ var cur=get(), s=JSON.parse(sent); for(var k in s){ cur[k]=(cur[k]||0)-s[k]; if(cur[k]<=0) delete cur[k]; } put(cur); } })
+      .catch(function(){}).then(function(){ busy=false; });
+  }
+  setTimeout(flush,10000); setInterval(flush,120000);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') flush(); });
 })();
 </script>
 </body>
