@@ -668,14 +668,22 @@
   
   var trusted = ls('fps_ok')==='1';
   if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
-  fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); ls('fps_fl', j.fuellog?'1':'0'); if(window.flApply) window.flApply(); lift(); } else deny(); })
-    .catch(function(){
-      // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
-      if(trusted) return;
-      show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
-    });
+  // ask Google; if no answer, try again a few times. Also ask again whenever the app comes back on screen.
+  function flSet(j){ ls('fps_fl', j.fuellog?'1':'0'); var go=function(){ if(window.flApply) window.flApply(); }; go(); setTimeout(go,1500); }
+  function ask(n, quiet){
+    fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev)+'&t='+Date.now(),{cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); trusted=true; flSet(j); lift(); } else if(!quiet) deny(); })
+      .catch(function(){
+        if(n<3){ setTimeout(function(){ ask(n+1, quiet); }, 4000); return; }
+        // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
+        if(trusted||quiet) return;
+        show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
+      });
+  }
+  window.fpsAsk=ask;
+  ask(1,false);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible' && trusted) ask(3,true); });
 })();
 </script>
 <div id="splash">
@@ -2570,6 +2578,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-19', items:[
+    'Version 1.2.2',
+    'Fixed: turning on the Fuel log for a user now shows up in the app. The app checks again if it can\'t get through the first time, and again each time you come back to it'
+  ]},
   { date:'2026-10-19', items:[
     'Version 1.2.1',
     'Behind-the-scenes check added for the Fuel log switch. Nothing changes in how the app works'
@@ -5667,9 +5679,9 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
     var head='Code: '+code+'\nPhone ID: '+dev+'\nSaved fuel switch: '+g('fps_fl')+'\nTile showing: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()+'\n\nServer says:\n';
     box(head+'asking...');
     fetch(URL_+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
-      .then(function(r){return r.text();}).then(function(t){ box(head+t); })
+      .then(function(r){return r.text();}).then(function(t){ setTimeout(function(){ box(head+t+'\n\nAfter answer, saved fuel switch: '+g('fps_fl')+'\nTile showing now: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()); },2000); })
       .catch(function(e){ box(head+'NO ANSWER: '+e); });
-  },3000);
+  },6000);
 })();
 </script>
 </body>
