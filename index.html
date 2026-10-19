@@ -2570,6 +2570,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-19', items:[
+    'Version 1.2.1',
+    'Behind-the-scenes check added for the Fuel log switch. Nothing changes in how the app works'
+  ]},
   { date:'2026-10-17', items:[
     'Version 1.2',
     'New Next fuel button on every stop on your route. Tap it to see how much fuel to buy there to reach the cheapest fuel you can make',
@@ -5649,5 +5653,24 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 })();
 </script>
 <script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
+<script>
+/* ===== FL CHECK: open the app with ?flcheck=1 to see the fuel-log answer ===== */
+(function(){
+  if(!/[?&]flcheck=1/.test(location.search)) return;
+  var URL_='https://script.google.com/macros/s/AKfycbxEpGntHw5H205B6qJI5YrbIBe2n98TfAhXJwPCY6rghwRWCZhipF9wchbNj_mAwBtzpA/exec';
+  function g(k){ try{ return localStorage.getItem(k); }catch(e){ return 'ERR'; } }
+  function box(t){ var d=document.getElementById('flck'); if(!d){ d=document.createElement('div'); d.id='flck';
+    d.style.cssText='position:fixed;left:10px;right:10px;top:40px;z-index:2147483647;background:#fff;color:#000;padding:14px;border:3px solid #f26a21;border-radius:10px;font:15px/1.5 monospace;white-space:pre-wrap;word-break:break-all';
+    document.body.appendChild(d); } d.textContent=t; }
+  setTimeout(function(){
+    var code=g('fps_code')||'', dev=g('fps_dev')||'';
+    var head='Code: '+code+'\nPhone ID: '+dev+'\nSaved fuel switch: '+g('fps_fl')+'\nTile showing: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()+'\n\nServer says:\n';
+    box(head+'asking...');
+    fetch(URL_+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
+      .then(function(r){return r.text();}).then(function(t){ box(head+t); })
+      .catch(function(e){ box(head+'NO ANSWER: '+e); });
+  },3000);
+})();
+</script>
 </body>
 </html>
