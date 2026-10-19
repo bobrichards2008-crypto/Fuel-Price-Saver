@@ -673,7 +673,7 @@
   function ask(n, quiet){
     fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev)+'&t='+Date.now(),{cache:'no-store'})
       .then(function(r){ ls('fps_dbg','try '+n+': got reply '+r.status); return r.json(); })
-      .then(function(j){ ls('fps_dbg',(ls('fps_dbg')||'')+' | read: '+JSON.stringify(j)); if(j&&j.ok){ ls('fps_ok','1'); trusted=true; flSet(j); lift(); ls('fps_dbg',(ls('fps_dbg')||'')+' | saved '+ls('fps_fl')); } else if(!quiet) deny(); })
+      .then(function(j){ ls('fps_dbg',(ls('fps_dbg')||'')+' | read: '+JSON.stringify(j)); if(j&&j.ok){ ls('fps_ok','1'); trusted=true; lift(); if(!('fuellog' in j) && n<4){ ls('fps_dbg',(ls('fps_dbg')||'')+' | no fuel log, asking again'); setTimeout(function(){ ask(n+1,true); },3000); return; } flSet(j); ls('fps_dbg',(ls('fps_dbg')||'')+' | saved '+ls('fps_fl')); } else if(!quiet) deny(); })
       .catch(function(e){ ls('fps_dbg',(ls('fps_dbg')||'')+' | try '+n+' FAILED: '+e);
         if(n<3){ setTimeout(function(){ ask(n+1, quiet); }, 4000); return; }
         // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
@@ -2579,6 +2579,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-19', items:[
+    'Version 1.2.4',
+    'Fixed: the Fuel log now turns on when it is switched on for you, even if the first check comes back incomplete'
+  ]},
   { date:'2026-10-19', items:[
     'Version 1.2.3',
     'Behind-the-scenes check added for the Fuel log switch. Nothing changes in how the app works'
