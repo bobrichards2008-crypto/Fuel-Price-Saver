@@ -1,0 +1,13 @@
+{
+  "id": "/admin.html",
+  "name": "FPS Admin Main",
+  "short_name": "FPS Admin",
+  "start_url": "/admin.html",
+  "scope": "/admin.html",
+  "display": "standalone",
+  "background_color": "#10233f",
+  "theme_color": "#10233f",
+  "icons": [
+    { "src": "/admin-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
