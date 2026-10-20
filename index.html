@@ -599,13 +599,22 @@
   var ACCESS_URL = "https://script.google.com/macros/s/AKfycbxEpGntHw5H205B6qJI5YrbIBe2n98TfAhXJwPCY6rghwRWCZhipF9wchbNj_mAwBtzpA/exec";  var CONTACT = "rdrichardsllc@gmail.com";
   function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){} return null; }
   // 1. user code: from their link (?a=CODE) the first time, then remembered
-  var q = new URLSearchParams(location.search), fromLink = (q.get('a')||'').trim().toUpperCase();
-  if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink);
-    q.delete('a'); var rest=q.toString(); try{ history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);}catch(e){} }
+  var q = new URLSearchParams(location.search), fromLink = (q.get('a')||'').trim().toUpperCase(), fromDev = (q.get('d')||'').trim();
+  var inApp = false; try{ inApp = navigator.standalone===true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches); }catch(e){}
+  if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink); }
   var code = ls('fps_code')||'';
-  // 2. device stamp: a random tag saved on this phone
+  // 2. device stamp: a random tag saved on this phone.
+  // iPhone fix (1.3.3): the home-screen icon has its own storage, separate from Safari.
+  // The icon's start address carries the code and this phone's stamp (?a=CODE&d=STAMP),
+  // so the icon uses the SAME stamp as Safari and the lock sees one phone, not two.
   var dev = ls('fps_dev');
+  if(fromDev && /^[A-Za-z0-9-]{8,64}$/.test(fromDev) && dev!==fromDev && (!dev || ls('fps_ok')!=='1')){ dev=fromDev; ls('fps_dev',dev); }
   if(!dev){ dev = (window.crypto&&crypto.randomUUID)? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)); ls('fps_dev',dev); }
+  try{
+    q.delete('a'); q.delete('d');
+    if(!inApp && code){ q.set('a',code); q.set('d',dev); }   // in the browser: keep code+stamp in the address so "Add to Home Screen" saves them
+    var rest=q.toString(); history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);
+  }catch(e){}
   // 3. the cover screen
   var cover=null;
   function show(title,msg,retry){
@@ -2580,6 +2589,19 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-20', items:[
+    'Version 1.3.4',
+    'Fixed: the car photo buttons now show just pictures of the vehicle, without sale prices and dealer listings mixed in',
+    'Fixed: car photos now open inside the app with an X to close, instead of jumping out to the browser'
+  ]},
+  { date:'2026-10-20', items:[
+    'Version 1.3.3',
+    'Fixed: on iPhones, the home screen icon no longer says access not granted. The icon and Safari now count as the same phone'
+  ]},
+  { date:'2026-10-20', items:[
+    'Version 1.3.2',
+    'Fixed: the version number on the opening screen now always matches the latest version'
+  ]},
+  { date:'2026-10-20', items:[
     'Version 1.3.1',
     'The home screen icon for this test version now says Staging, so it is easy to tell apart'
   ]},
@@ -4228,12 +4250,34 @@ async function vsLookup(d){
 
   /* ---------- the car icon: look it up on the web ---------- */
   // Builds an image search for exactly what's on the card, e.g. "2019 Ford F150 SuperCab".
-  function webUrl(d){ var nm=nameOf(d); return nm? 'https://www.google.com/search?udm=2&q='+encodeURIComponent(nm) : ''; }
+  // v1.3.4: one shared photo search. Pictures only, with sale/price/dealer pages filtered out,
+  // shown in a full-screen window INSIDE the app with an X to close and an "Open in browser" link.
+  if(!window.fpsPicQ) window.fpsPicQ=function(nm){ return 'https://www.google.com/search?udm=2&safe=active&q='+encodeURIComponent(nm+' photos -sale -price -prices -dealer -dealership -listing -msrp -auction'); };
+  if(!window.fpsPicSearch) window.fpsPicSearch=function(nm){
+    if(!nm) return; var u=window.fpsPicQ(nm), v=document.getElementById('fpsphv');
+    if(!v){
+      v=document.createElement('div'); v.id='fpsphv';
+      v.style.cssText='position:fixed;inset:0;z-index:2147483000;background:#10233f;display:none;flex-direction:column';
+      v.innerHTML='<div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;color:#e8eef6">'+
+        '<span class="t" style="flex:1;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>'+
+        '<a class="o" target="_blank" rel="noopener" style="font-size:13px;color:#f26a21;text-decoration:none;white-space:nowrap">Open in browser</a>'+
+        '<button class="x" type="button" aria-label="Close" style="width:40px;height:40px;border-radius:9px;border:1px solid #2b4a70;background:#1d3a5e;color:#e8eef6;font-size:20px;font-weight:700;cursor:pointer">\u2715</button></div>'+
+        '<iframe referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" style="flex:1;width:100%;border:0;background:#fff"></iframe>';
+      document.body.appendChild(v);
+      v.querySelector('.x').onclick=function(){ v.style.display='none'; v.querySelector('iframe').src='about:blank'; };
+    }
+    v.querySelector('.t').textContent=nm;
+    v.querySelector('.o').href=u;
+    v.querySelector('iframe').src=u.replace('udm=2&','udm=2&igu=1&');
+    v.style.display='flex';
+  };
+  function webUrl(d){ var nm=nameOf(d); return nm? window.fpsPicQ(nm) : ''; }
   // Installed app: open the search in the SAME window, so Android shows its own bar with an X
   // that closes the search and drops the driver back on the vehicle page. Browser tab: new tab.
   function isApp(){ try{ return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone===true; }catch(e){ return false; } }
   function lookUp(d){
     var u=webUrl(d); if(!u) return;
+    if(window.fpsPicSearch){ window.fpsPicSearch(nameOf(d)); return; }
     if(isApp()){
       try{ if(typeof vsSave==='function') vsSave();
         var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow')), pop=document.getElementById('vspop');
@@ -5039,7 +5083,7 @@ async function vsLookup(d){
   function anyOpen(){ return POPS.some(function(p){ return $(p).classList.contains('show'); }); }
   function show(id){ $('shade').classList.add('show'); POPS.forEach(function(p){ $(p).classList.toggle('show',p===id); }); $('wrapv').classList.add('popping'); }
   function openWebView(name){
-    var u='https://www.google.com/search?udm=2&igu=1&q='+encodeURIComponent(name);
+    var u=window.fpsPicQ? window.fpsPicQ(name).replace('udm=2&','udm=2&igu=1&') : 'https://www.google.com/search?udm=2&igu=1&q='+encodeURIComponent(name);
     var wv=root.getElementById('wv');
     if(!wv){
       wv=document.createElement('div'); wv.id='wv'; wv.className='wv';
@@ -5048,7 +5092,7 @@ async function vsLookup(d){
       wv.querySelector('.wvx').onclick=function(){ wv.classList.remove('show'); wv.querySelector('iframe').src='about:blank'; };
     }
     wv.querySelector('.ttl').textContent=name;
-    wv.querySelector('iframe').src=u; wv.querySelector('.wvout').href=u.replace('&igu=1','');
+    wv.querySelector('iframe').src=u; wv.querySelector('.wvout').href=u.replace('igu=1&','');
     wv.classList.add('show');
   }
 
@@ -5732,6 +5776,10 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   setTimeout(flush,10000); setInterval(flush,120000);
   document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') flush(); });
 })();
+</script>
+<script>
+(function(){function s(){try{var v=null;for(var i=0;i<CHANGELOG.length&&!v;i++){for(var j=0;j<CHANGELOG[i].items.length;j++){var m=/^Version\s+[\d.]+/.exec(CHANGELOG[i].items[j]);if(m){v=m[0];break;}}}var e=document.getElementById('splver');if(v&&e)e.textContent=v;}catch(x){}}
+if(document.readyState!=='loading')s();else document.addEventListener('DOMContentLoaded',s);setTimeout(s,50);})();
 </script>
 </body>
 </html>
