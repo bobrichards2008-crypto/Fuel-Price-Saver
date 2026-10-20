@@ -714,6 +714,9 @@
 </div>
 <script>
 (function(){
+  // v1.3.6: a pull-down refresh skips the splash and goes straight back to where the driver was
+  try{ var nv=performance.getEntriesByType('navigation')[0], rs=JSON.parse(sessionStorage.getItem('fps_resume')||'null');
+    if(nv && nv.type==='reload' && rs && Date.now()-rs.t<6*3600*1000){ var s0=document.getElementById('splash'); if(s0) s0.parentNode.removeChild(s0); return; } }catch(e){}
   var started=Date.now();
   function play(){
     var n=document.getElementById('splneedle');
@@ -2599,6 +2602,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-20', items:[
+    'Version 1.3.6',
+    'New: when you swipe down to refresh, the app comes right back to the page you were on, like Vehicle Specs, your results, or a stop\'s details, instead of starting over on the main page',
+    'New: a refresh skips the opening screen, so it\'s faster'
+  ]},
   { date:'2026-10-20', items:[
     'Version 1.3.5',
     'New: city lists now open upward above the box, so they don\'t get hidden behind other things',
@@ -5814,6 +5822,60 @@ if(document.readyState!=='loading')s();else document.addEventListener('DOMConten
       .observe(document.body,{subtree:true,attributes:true,attributeFilter:['style']});
   }
   if(document.body) start(); else document.addEventListener('DOMContentLoaded',start);
+})();
+</script>
+
+<script>
+/* v1.3.6: refresh comes back to the same page (vehicle specs, results, details, tools, fuel log, trip, what's new, settings) */
+(function(){
+  var NEAR=null;
+  try{ NEAR=JSON.parse(sessionStorage.getItem('fps_resume')||'null'); NEAR=NEAR&&NEAR.near||null; }catch(e){}
+  if(typeof window.fuelNear==='function'){ var fn0=window.fuelNear;
+    window.fuelNear=function(r){ try{ NEAR={typed:(document.getElementById('nearcity').value||'').trim(), r:r}; }catch(e){} return fn0.apply(this,arguments); }; }
+  if(typeof window.findFuel==='function'){ var ff0=window.findFuel;
+    window.findFuel=function(){ NEAR=null; return ff0.apply(this,arguments); }; }
+  var POPS=['vs2','vspop','toolspop','planpop','trippop','flpop','news'];
+  function snap(){
+    try{
+      var b=document.body.classList, cls=[].filter.call(b,function(c){ return c.indexOf('on-')===0; });
+      var sc={}; POPS.forEach(function(id){ var e=document.getElementById(id); if(e && e.scrollTop) sc[id]=e.scrollTop; });
+      var sp=document.getElementById('setpop');
+      sessionStorage.setItem('fps_resume', JSON.stringify({ t:Date.now(), cls:cls,
+        det:(typeof CUR_DETAIL!=='undefined'?CUR_DETAIL:null), svc:(typeof svcIndex!=='undefined'?svcIndex:null), svcFrom:(typeof svcFrom!=='undefined'?svcFrom:null),
+        near:(cls.indexOf('on-results')>=0?NEAR:null), y:window.scrollY||0, sc:sc,
+        set: !!(sp && sp.style.display==='flex') }));
+    }catch(e){}
+  }
+  window.addEventListener('pagehide',snap); window.addEventListener('beforeunload',snap);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') snap(); });
+
+  function call(n){ try{ var f=window[n]; if(typeof f==='function') return f.apply(null,[].slice.call(arguments,1)); }catch(e){} }
+  async function restore(){
+    var nv=null, rs=null;
+    try{ nv=performance.getEntriesByType('navigation')[0]; rs=JSON.parse(sessionStorage.getItem('fps_resume')||'null'); }catch(e){}
+    if(!nv || nv.type!=='reload' || !rs || !(Date.now()-rs.t<6*3600*1000)) return;
+    var has=function(c){ return rs.cls.indexOf(c)>=0; };
+    try{
+      if(has('on-results')){
+        if(rs.near){ var nc=document.getElementById('nearcity'); if(nc) nc.value=rs.near.typed||''; await call('fuelNear', rs.near.r); }
+        else await call('findFuel');
+        if((has('on-detail') || (has('on-svc') && rs.svcFrom==='detail')) && rs.det!=null) call('openDetail', rs.det);
+        if(has('on-svc') && rs.svc!=null) call('openServices', rs.svc, rs.svcFrom);
+      }
+      if(has('on-news')) call('openNews');
+      if(has('on-tools')) call('openTools');
+      if(has('on-vspec') || has('on-vspec2')) call('openVspec');
+      if(has('on-flog')) call('openFlog');
+      if(has('on-plan')) call('openPlan');
+      if(has('on-trip')) await call('runTrip');
+      if(rs.set) call('openSettings');
+    }catch(e){}
+    setTimeout(function(){
+      try{ if(rs.y) window.scrollTo(0,rs.y);
+        Object.keys(rs.sc||{}).forEach(function(id){ var e=document.getElementById(id); if(e) e.scrollTop=rs.sc[id]; }); }catch(e){}
+    },700);
+  }
+  if(document.readyState==='complete') setTimeout(restore,350); else window.addEventListener('load',function(){ setTimeout(restore,350); });
 })();
 </script>
 </body>
