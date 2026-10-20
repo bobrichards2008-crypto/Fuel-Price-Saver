@@ -2271,6 +2271,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-20', items:[
+    'Version 1.0.1',
+    'Behind the scenes: the app now counts which buttons get used, so we know what to improve. Nothing changes in how the app works'
+  ]},
   { date:'2026-10-10', items:[
     'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
     'Fuel near me now offers 50, 75 and 100 mile circles',
@@ -5083,5 +5087,33 @@ async function vsLookup(d){
 })();
 </script>
 <script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
+<script>
+/* ===== TAP TRACKER: counts button taps, sends them to the access server ===== */
+(function(){
+  var K='fps_taps', URL_='https://script.google.com/macros/s/AKfycbyR5zyILyw7FZ19dIs_Sz27bMeYHe-j9ST-0d-F0R2lU9a9aFqO2zlYLZR9criLJDpi/exec';
+  function get(){ try{ return JSON.parse(localStorage.getItem(K)||'{}')||{}; }catch(e){ return {}; } }
+  function put(m){ try{ localStorage.setItem(K,JSON.stringify(m)); }catch(e){} }
+  function add(b){ var m=get(); m[b]=(m[b]||0)+1; put(m); }
+  function wrap(n,b){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ add(b); return f.apply(this,arguments); }; }
+  wrap('openWx','weather'); wrap('openDetail','details'); wrap('openServices','services');
+  wrap('wxDay','wx2hr'); wrap('wxHourly','wxhourly'); wrap('askNear','near');
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest&&e.target.closest('a.wxradar,a.maplink,a.drive'); if(!a) return;
+    add(a.classList.contains('wxradar')?'radar':'map');
+  },true);
+  var busy=false;
+  function flush(){
+    if(busy) return; var m=get(); if(!Object.keys(m).length) return;
+    var code='', dev=''; try{ code=localStorage.getItem('fps_code')||''; dev=localStorage.getItem('fps_dev')||''; }catch(e){}
+    if(!code) return; busy=true; var sent=JSON.stringify(m);
+    fetch(URL_+'?page=tap&code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev)+'&b='+encodeURIComponent(sent),{cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(j&&j.ok){ var cur=get(), s=JSON.parse(sent); for(var k in s){ cur[k]=(cur[k]||0)-s[k]; if(cur[k]<=0) delete cur[k]; } put(cur); } })
+      .catch(function(){}).then(function(){ busy=false; });
+  }
+  setTimeout(flush,10000); setInterval(flush,120000);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') flush(); });
+})();
+</script>
 </body>
 </html>
