@@ -513,13 +513,22 @@
   var ACCESS_URL = "https://script.google.com/macros/s/AKfycbyR5zyILyw7FZ19dIs_Sz27bMeYHe-j9ST-0d-F0R2lU9a9aFqO2zlYLZR9criLJDpi/exec";  var CONTACT = "rdrichardsllc@gmail.com";
   function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){} return null; }
   // 1. user code: from their link (?a=CODE) the first time, then remembered
-  var q = new URLSearchParams(location.search), fromLink = (q.get('a')||'').trim().toUpperCase();
-  if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink);
-    q.delete('a'); var rest=q.toString(); try{ history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);}catch(e){} }
+  var q = new URLSearchParams(location.search), fromLink = (q.get('a')||'').trim().toUpperCase(), fromDev = (q.get('d')||'').trim();
+  var inApp = false; try{ inApp = navigator.standalone===true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches); }catch(e){}
+  if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink); }
   var code = ls('fps_code')||'';
-  // 2. device stamp: a random tag saved on this phone
+  // 2. device stamp: a random tag saved on this phone.
+  // iPhone fix (1.0.2): the home-screen icon has its own storage, separate from Safari.
+  // The icon's start address carries the code and this phone's stamp (?a=CODE&d=STAMP),
+  // so the icon uses the SAME stamp as Safari and the lock sees one phone, not two.
   var dev = ls('fps_dev');
+  if(fromDev && /^[A-Za-z0-9-]{8,64}$/.test(fromDev) && dev!==fromDev && (!dev || ls('fps_ok')!=='1')){ dev=fromDev; ls('fps_dev',dev); }
   if(!dev){ dev = (window.crypto&&crypto.randomUUID)? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)); ls('fps_dev',dev); }
+  try{
+    q.delete('a'); q.delete('d');
+    if(!inApp && code){ q.set('a',code); q.set('d',dev); }
+    var rest=q.toString(); history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);
+  }catch(e){}
   // 3. the cover screen
   var cover=null;
   function show(title,msg,retry){
@@ -2271,6 +2280,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-20', items:[
+    'Version 1.0.2',
+    'Fixed: on iPhones, the home screen icon no longer says access not granted. The icon and Safari now count as the same phone'
+  ]},
   { date:'2026-10-20', items:[
     'Version 1.0.1',
     'Behind the scenes: the app now counts which buttons get used, so we know what to improve. Nothing changes in how the app works'
