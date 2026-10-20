@@ -141,6 +141,8 @@
     .trstop .n{color:#000}
     .trbar{display:none}
   }
+  .leghead{margin:22px 0 4px;padding:9px 12px;background:#17304f;border-left:5px solid #f26a21;border-radius:8px;font-weight:700;font-size:15.5px;color:#fff}
+  .leghead small{display:block;font-weight:400;font-size:12px;color:#9fb4ce;margin-top:2px}
   .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
   .sthead b{font-size:17px;letter-spacing:.5px;text-transform:uppercase}
@@ -1297,7 +1299,7 @@ function drawFcLine(f){
   const icon = a<0.5 ? chev('#9fb0c8','M3 7H11')
              : up    ? chev('#e74c3c','M2 10L7 4L12 10')
                      : chev('#3ab54a','M2 4L7 10L12 4');
-  const txt = a<0.5 ? 'flat' : fcCents(c)+sp;
+  const txt = a<0.5 ? 'no movement' : fcCents(c)+sp;
   el.innerHTML='<div class="hd">Tomorrow</div><div class="ln">'+icon+'Diesel <span class="gd">'+txt+'</span></div>';
   document.body.classList.add('has-fcline');
 }
@@ -1732,7 +1734,7 @@ async function fuelNear(radius){
       if(d<=radius) hits.push({b:s[0],c:s[1],st:s[2],la:s[3],lo:s[4],ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:0,away:Math.round(d*10)/10});
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
-    LASTHITS=hits; NEAR_R=radius;
+    LASTHITS=hits; NEAR_R=radius; ROUTE_LEGS=null;
     setBar(100); hideBar();
     if(!hits.length){
       res.innerHTML='<p class="hint">No stops within '+radius+' miles of '+NEAR_AT+'. Try a bigger circle.</p>';
@@ -1771,6 +1773,30 @@ async function findFuel(){
       return;
     }
     showLegMiles(rj.routes[0]);
+    // ---- legs: where each in-between stop falls on the route line, so results follow driving order leg by leg
+    ROUTE_LEGS=null;
+    try{
+      const rlegs=rj.routes[0].legs||[];
+      if(rlegs.length>1){
+        const cum=[0]; for(let i=1;i<line.length;i++) cum.push(cum[i-1]+hav(line[i-1][0],line[i-1][1],line[i][0],line[i][1]));
+        const scale=cum[cum.length-1]/((rj.routes[0].distance/1609.34)||1);
+        const bnd=[0]; let acc=0, lo=0;
+        for(let k=0;k<rlegs.length-1;k++){
+          acc+=rlegs[k].distance/1609.34*scale;
+          const wp=pts[k+1]; let bi=-1, bd=1e9;
+          for(let i=lo;i<line.length;i++){
+            if(cum[i]>acc+25) break;
+            if(cum[i]<acc-25) continue;
+            const d=hav(wp[1],wp[0],line[i][0],line[i][1]); if(d<bd){ bd=d; bi=i; }
+          }
+          if(bi<0){ bi=lo; while(bi<line.length-1&&cum[bi]<acc) bi++; }
+          if(bi<lo) bi=lo;
+          bnd.push(bi); lo=bi;
+        }
+        const nm=k=>String(resolved[k]||inputs[k]||'').split(',')[0].trim();
+        ROUTE_LEGS=bnd.map((st,k)=>({from:nm(k), to:nm(k+1), s:st, mi:Math.round(rlegs[k].distance/1609)}));
+      }
+    }catch(e){ ROUTE_LEGS=null; }
     setBar(70); res.innerHTML='<p class="hint">Matching fuel stops along '+Math.round(rj.routes[0].distance/1609)+' miles...</p>';
     let laMin=90,laMax=-90,loMin=180,loMax=-180;
     for(const[la,lo]of line){ if(la<laMin)laMin=la; if(la>laMax)laMax=la; if(lo<loMin)loMin=lo; if(lo>loMax)loMax=lo; }
@@ -1785,7 +1811,8 @@ async function findFuel(){
         if(d<best){ best=d; bestI=i; }
         if(best<0.15) break;
       }
-      if(best<=maxMiles){ hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI}); }
+      if(best<=maxMiles){ let leg=0; if(ROUTE_LEGS){ for(let k=0;k<ROUTE_LEGS.length;k++){ if(bestI>=ROUTE_LEGS[k].s) leg=k; } }
+        hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI,leg:leg}); }
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
     LASTHITS=hits; NEAR_R=null;
@@ -1810,19 +1837,23 @@ function dismissBestFlag(){
   el.classList.add('closing');
   setTimeout(()=>{ if(el && el.parentNode) el.parentNode.removeChild(el); }, 420);
 }
-let LASTHITS=[];
+let LASTHITS=[], ROUTE_LEGS=null;
 function render(hits){
   const res=document.getElementById('results');
   if(!hits.length){ res.innerHTML='<p class="hint">No stops found within the distance. Try widening the miles in Settings.</p>'; return; }
   // group by state: route order along the trip (or nearest first for Fuel near me),
   // cheapest first inside each state. LASTHITS stays in overall-cheapest order.
-  const groups={}, order=[];
-  hits.forEach((s,i)=>{ if(!groups[s.st]){ groups[s.st]=[]; order.push(s.st); } groups[s.st].push(i); });
+  // multi-stop trips: one group per leg AND state, so a state driven through twice shows under each leg
+  const LEGS=(!NEAR_R && ROUTE_LEGS && ROUTE_LEGS.length>1)?ROUTE_LEGS:null;
+  const keyOf=s=> LEGS ? 'L'+(s.leg||0)+'_'+s.st : s.st;
+  const groups={}, order=[], gst={}, gleg={};
+  hits.forEach((s,i)=>{ const key=keyOf(s); if(!groups[key]){ groups[key]=[]; order.push(key); gst[key]=s.st; gleg[key]=s.leg||0; } groups[key].push(i); });
+  const nStates=new Set(hits.map(s=>s.st)).size;
   const where=s=> NEAR_R ? (s.away||0) : (s.pos||0);
   const first=st=> Math.min(...groups[st].map(i=>where(hits[i])));
   order.sort((x,y)=>first(x)-first(y));
   const NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
-  let h='<p class="hint">'+hits.length+' stops in '+order.length+(order.length===1?' state':' states')
+  let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':', in route order')
     +'</p>'
     +'<div class="expandallrow"><button id="expandall" class="seebtn" onclick="event.stopPropagation();toggleAllStates()">Expand all</button></div>';
@@ -1837,12 +1868,17 @@ function render(hits){
       +'</div></div>';
   }
   const dOn=RANKBY==='disc';
-  order.forEach(st=>{
-    const idx=groups[st];
+  let curLeg=-1;
+  order.forEach(key=>{
+    const idx=groups[key], st=gst[key];
+    if(LEGS && gleg[key]!==curLeg){
+      curLeg=gleg[key]; const L=LEGS[curLeg]||{};
+      h+='<div class="leghead">'+esc(L.from||'')+' to '+esc(L.to||'')+(L.mi?'<small>Leg '+(curLeg+1)+' of '+LEGS.length+' \u2022 '+L.mi+' mi</small>':'')+'</div>';
+    }
     const multi=idx.length>1;
-    h+='<div class="stgrp" id="stg_'+st+'">';
+    h+='<div class="stgrp" id="stg_'+key+'">';
     if(multi){
-      h+='<button class="sthead" aria-expanded="false" onclick="toggleState(\''+st+'\')"><b>'+(NAMES[st]||st)+'</b><small>'+idx.length+' stops</small>'
+      h+='<button class="sthead" aria-expanded="false" onclick="toggleState(\''+key+'\')"><b>'+(NAMES[st]||st)+'</b><small>'+idx.length+' stops</small>'
         +'<span class="stx" aria-label="Show stops"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M12 3a1.2 1.2 0 0 1 1.2 1.2v12.3l4.0-4.0a1.2 1.2 0 1 1 1.7 1.7l-6.0 6.05a1.2 1.2 0 0 1-1.7 0l-6.05-6.05a1.2 1.2 0 1 1 1.7-1.7l4.05 4.0V4.2A1.2 1.2 0 0 1 12 3z\"/></svg></span></button>';
     } else {
       h+='<div class="sthead"><b>'+(NAMES[st]||st)+'</b><small>1 stop</small></div>';
@@ -2280,6 +2316,14 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-20', items:[
+    'Version 1.0.4',
+    'Fixed: trips with stops in between now list fuel stops leg by leg, in the order you drive them. Each leg gets its own heading, like Jacksonville to Charlotte, and a state you pass through twice shows up under each leg'
+  ]},
+  { date:'2026-10-20', items:[
+    'Version 1.0.3',
+    'Changed: tomorrow\'s diesel forecast now says no movement instead of flat'
+  ]},
   { date:'2026-10-20', items:[
     'Version 1.0.2',
     'Fixed: on iPhones, the home screen icon no longer says access not granted. The icon and Safari now count as the same phone'
