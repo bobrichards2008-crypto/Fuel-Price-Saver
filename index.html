@@ -194,6 +194,9 @@
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
   .card.top{border:2px solid var(--orange);box-shadow:0 0 12px rgba(242,106,33,.4)}
+  .card.top{animation:topPulse 1.4s ease-in-out 4}
+  @keyframes topPulse{0%,100%{box-shadow:0 0 12px rgba(242,106,33,.4)}50%{box-shadow:0 0 22px 4px rgba(242,106,33,.85)}}
+  @media (prefers-reduced-motion:reduce){.card.top{animation:none}}
   .cardhead{font-size:15px;margin-bottom:8px}
   .off{float:right;color:#9fb4ce;font-size:13px}
   .prices{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;color:#cfe0f2;margin-bottom:10px}
@@ -1860,8 +1863,7 @@ function render(hits){
   const NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
   let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
-    +'</p>'
-    +'<div class="expandallrow"><button id="expandall" class="seebtn" onclick="event.stopPropagation();toggleAllStates()">Expand all</button></div>';
+    +'</p>';
   if(hits.length>1){
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
@@ -1900,7 +1902,6 @@ function render(hits){
     const bc=brandClass(s.b);
     h+='<div class="card '+bc+(i===0?' top':'')+'">'
       +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
-      +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
       +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
       +'<div class="priceline">'
@@ -2329,7 +2330,9 @@ const CHANGELOG = [
   { date:'2026-10-20', items:[
     'Version 1.0.4',
     'Fixed: trips with stops in between now list fuel stops leg by leg, in the order you drive them. Each leg gets its own heading, like Jacksonville to Charlotte, and a state you pass through twice shows up under each leg',
-    'New: the top of your results now shows the total miles for the trip'
+    'Changed: the cheapest stop now has a gently pulsing orange outline instead of a Cheapest overall tag, and the Expand all button is gone. Use the arrows to open each state',
+    'New: the top of your results now shows the total miles for the trip',
+    'Removed the Expand all button. Tap the arrow on any state to open it'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.0.3',
