@@ -623,7 +623,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic</div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.5</span></div>
 </div>
 <script>
 (function(){
@@ -2327,6 +2327,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-21', items:[
+    'Version 1.0.5',
+    'New: the version number now shows on the opening screen',
+    'Behind the scenes: counts how often the Find fuel button is used, to help improve the app'
+  ]},
   { date:'2026-10-20', items:[
     'Version 1.0.4',
     'Fixed: trips with stops in between now list fuel stops leg by leg, in the order you drive them. Each leg gets its own heading, like Jacksonville to Charlotte, and a state you pass through twice shows up under each leg',
@@ -5159,6 +5164,10 @@ async function vsLookup(d){
 </script>
 <script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
 <script>
+(function(){function s(){try{var v=null;for(var i=0;i<CHANGELOG.length&&!v;i++){for(var j=0;j<CHANGELOG[i].items.length;j++){var m=/^Version\s+[\d.]+/.exec(CHANGELOG[i].items[j]);if(m){v=m[0];break;}}}var e=document.getElementById('splver');if(v&&e)e.textContent=v;}catch(x){}}
+if(document.readyState!=='loading')s();else document.addEventListener('DOMContentLoaded',s);setTimeout(s,50);})();
+</script>
+<script>
 /* ===== TAP TRACKER: counts button taps, sends them to the access server ===== */
 (function(){
   var K='fps_taps', URL_='https://script.google.com/macros/s/AKfycbyR5zyILyw7FZ19dIs_Sz27bMeYHe-j9ST-0d-F0R2lU9a9aFqO2zlYLZR9criLJDpi/exec';
@@ -5169,6 +5178,7 @@ async function vsLookup(d){
   wrap('openWx','weather'); wrap('openDetail','details'); wrap('openServices','services');
   wrap('wxDay','wx2hr'); wrap('wxHourly','wxhourly'); wrap('askNear','near');
   document.addEventListener('click',function(e){
+    var fb=e.target&&e.target.closest&&e.target.closest('button.go[onclick^="findFuel"]'); if(fb){ add('find'); return; }
     var a=e.target&&e.target.closest&&e.target.closest('a.wxradar,a.maplink,a.drive'); if(!a) return;
     add(a.classList.contains('wxradar')?'radar':'map');
   },true);
