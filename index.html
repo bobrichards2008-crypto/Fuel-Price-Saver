@@ -2644,6 +2644,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-21', items:[
+    'Version 1.3.9',
+    'Behind the scenes: counts how often the Find fuel button is used, to help improve the app'
+  ]},
   { date:'2026-10-20', items:[
     'Version 1.3.8',
     'Fixed: trips with stops in between now list fuel stops leg by leg, in the order you drive them. Each leg is labeled with its cities, like Jacksonville, FL \u2013 Charlotte, NC, and a state you pass through twice shows up under each leg',
@@ -5836,6 +5840,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   wrap('openWx','weather'); wrap('openDetail','details'); wrap('openServices','services');
   wrap('wxDay','wx2hr'); wrap('wxHourly','wxhourly'); wrap('askNear','near');
   document.addEventListener('click',function(e){
+    var fb=e.target&&e.target.closest&&e.target.closest('button.go[onclick^="findFuel"]'); if(fb){ add('find'); return; }
     var a=e.target&&e.target.closest&&e.target.closest('a.wxradar,a.maplink,a.drive'); if(!a) return;
     add(a.classList.contains('wxradar')?'radar':'map');
   },true);
