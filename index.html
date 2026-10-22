@@ -289,6 +289,7 @@
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .priceline .seebtn{margin-left:auto}
+  .priceline.cardbot{justify-content:flex-end;margin-top:10px}
   .priceline .pdate{margin-top:0;margin-left:auto}
   .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
@@ -577,6 +578,14 @@
       '<button onclick="fpsReqBack()" style="display:block;width:100%;margin:12px 0 0;padding:12px;font-size:16px;font-weight:700;border:1px solid #4f7bb0;border-radius:12px;background:transparent;color:#c9d6e6">Back</button>',
       false);
     if(cover){ cover.style.alignItems='flex-start'; cover.style.overflowY='auto'; }
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem('fps_rqform')||'{}')||{}; }catch(e){}
+    ['rqname','rqemail','rqphone','rqco'].forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      if(saved[id]) el.value=saved[id];
+      el.addEventListener('input',function(){
+        try{ var o=JSON.parse(localStorage.getItem('fps_rqform')||'{}')||{}; o[id]=el.value; localStorage.setItem('fps_rqform',JSON.stringify(o)); }catch(e){}
+      });
+    });
   };
   window.fpsReqBack=function(){ if(cover){ cover.style.alignItems='center'; } deny(); };
   window.fpsReqSend=function(){
@@ -591,6 +600,7 @@
       '&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
     fetch(u,{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
       if(j&&j.ok){
+        try{ localStorage.removeItem('fps_rqform'); }catch(e){}
         if(cover){ cover.style.alignItems='center'; }
         show('Request sent','<div style="font-size:46px;color:#3ab54a;margin-bottom:6px">✓</div>You\'ll get an email with your own link as soon as you\'re approved.<br><br>Check your spam folder if you don\'t see it.',false);
       } else { err.textContent=(j&&j.msg)||'Something went wrong. Try again.'; b.disabled=false; b.textContent='Send request'; }
@@ -623,7 +633,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.5</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.6</span></div>
 </div>
 <script>
 (function(){
@@ -1241,10 +1251,10 @@ function fpsRowsFrom(data){
   // accepts the counter's {fields:[...], stations:[[...]]} shape
   const f = data.fields || ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product"];
   const ix = n => f.indexOf(n);
-  const [B,C,S,LA,LO,R,D,T,P,PR] =
-    ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product"].map(ix);
+  const [B,C,S,LA,LO,R,D,T,P,PR,DF] =
+    ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product","def"].map(ix);
   return (data.stations||[]).map(s =>
-    [s[B],s[C],s[S],s[LA],s[LO],s[R],s[D],s[T],s[P],s[PR]]);
+    [s[B],s[C],s[S],s[LA],s[LO],s[R],s[D],s[T],s[P],s[PR],DF>=0?s[DF]:null]);
 }
 
 function fpsStat(t,c){ const el=document.getElementById("datastat"); if(el){ el.textContent=t; el.style.color=c; } }
@@ -1363,8 +1373,8 @@ let NEAR_R=null, NEAR_AT='you';
   };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
-let RANKBY='pre';
-try{ RANKBY=localStorage.getItem('fps_rankby')||'pre'; }catch(e){}
+let RANKBY='disc';
+try{ RANKBY=localStorage.getItem('fps_rankby')||'disc'; }catch(e){}
 function rankVal(h){ return RANKBY==='disc' ? h.disc : h.pre; }
 function rankWord(){ return RANKBY==='disc' ? 'Discounted price' : 'Pre-tax price'; }
 function openSettings(){ try{buildAmenPick();}catch(e){}
@@ -1738,7 +1748,7 @@ async function fuelNear(radius){
     const la0=here[1], lo0=here[0], hits=[];
     for(const s of STATIONS){
       const d=miBetween(la0,lo0,s[3],s[4]);
-      if(d<=radius) hits.push({b:s[0],c:s[1],st:s[2],la:s[3],lo:s[4],ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:0,away:Math.round(d*10)/10});
+      if(d<=radius) hits.push({b:s[0],c:s[1],st:s[2],la:s[3],lo:s[4],ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],def:s[10],off:0,away:Math.round(d*10)/10});
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
     LASTHITS=hits; NEAR_R=radius; ROUTE_LEGS=null; ROUTE_MI=null;
@@ -1820,7 +1830,7 @@ async function findFuel(){
         if(best<0.15) break;
       }
       if(best<=maxMiles){ let leg=0; if(ROUTE_LEGS){ for(let k=0;k<ROUTE_LEGS.length;k++){ if(bestI>=ROUTE_LEGS[k].s) leg=k; } }
-        hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI,leg:leg}); }
+        hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],def:s[10],off:Math.round(best*10)/10,pos:bestI,leg:leg}); }
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
     LASTHITS=hits; NEAR_R=null;
@@ -1906,10 +1916,12 @@ function render(hits){
       +'</div>'
       +'<div class="priceline">'
       +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> $'+fmt(dOn?s.disc:s.pre)+'</span>'
+      +'</div>'
+      +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
+      +'<div class="priceline cardbot">'
       +'<button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
       +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a>'
       +'</div>'
-      +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
       +'</div>';
     });
     if(multi) h+='</div>';
@@ -2145,9 +2157,8 @@ function openDetail(i){
     +(save!=null?'<div class="row save"><span>Savings per gallon</span><span class="v">$'+fmt(save)+'</span></div>':'')
     +'<div class="row"><span>'+s.st+' IFTA tax</span><span class="v">$'+fmt(s.ifta)+'</span></div>'
     +'<div class="row pre"><span>Pre-tax cost</span><span class="v">$'+fmt(s.pre)+'</span></div>'
+    +((typeof s.def==='number'&&s.def>0)?'<div class="row"><span>DEF price</span><span class="v">$'+fmt(s.def)+'</span></div>':'')
     +'</div>'
-    +priceDateHTML(s.b)
-    +(/love/i.test(s.b)?'<p class="dnote">Love\'s sends next-day prices in the afternoon (about 1:30\u20133 PM). Love\'s doesn\'t publish the exact time the new price takes over at the pump.</p>':'')
     +((s.prod&&s.prod!=='ULSD')?'<p class="dnote">This store sells '+esc(s.prod)+'.</p>':'')
     +'<a class="drive" target="_blank" rel="noopener" href="'+maps+'">Map</a>'
     +'</div>';
@@ -2327,6 +2338,15 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-22', items:[
+    'Version 1.0.6',
+    'Changed: the app now opens on your discounted price, the same price you pay at the pump with your fuel card. You can still switch to pre-tax in Settings, and the app remembers your choice',
+    'New: the Details window now shows the DEF price at stops that list one',
+    'Changed: the Details and Map buttons moved to the bottom of each stop card',
+    'Changed: removed the extra price-date notes from the Details window to make it easier to read',
+    'Fixed: the Request access form keeps what you typed if you get bumped out before sending it',
+    'Prices can change at the pump at any time. Always check the pump price before you fuel'
+  ]},
   { date:'2026-10-21', items:[
     'Version 1.0.5',
     'New: the version number now shows on the opening screen',
