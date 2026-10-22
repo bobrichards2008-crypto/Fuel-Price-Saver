@@ -146,6 +146,9 @@
   .sthead small.lgs{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 8px;text-align:right}
   button.sthead small.lgs{flex-direction:column;align-items:flex-start;gap:0;text-align:left;line-height:1.3}
   .sthead.hasleg #expandall{min-width:0;padding:0 10px}
+  .sthead.hasleg b{flex:none}
+  .sthead .legtop .legmi{color:#9fb4ce;font-weight:600}
+  .sthead.hasleg small.lgs, button.sthead.hasleg small.lgs{display:block;flex:1 1 0;min-width:0;margin-left:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
   .sthead.hasleg small.lgs{font-size:11.5px}
   .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
@@ -294,7 +297,8 @@
   .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
-  .priceline .onep .plabel{color:#3ab54a;font-weight:normal;font-size:12px}
+  .priceline .onep .plabel{color:#9fb4ce;font-weight:normal;font-size:12px}
+  .priceline .onep .pval{color:#3ab54a}
   .cardbtns{display:inline-flex;gap:8px;flex:none}
   .seebtn,.gobtn{padding:7px 14px;font-size:14px;font-weight:bold;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}
   .seebtn{background:none;border:1px solid #4a7fb5;color:#9fc0e8}
@@ -633,7 +637,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.6</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.7</span></div>
 </div>
 <script>
 (function(){
@@ -1891,8 +1895,8 @@ function render(hits){
     if(!LEGS) return ['','','<small>'+cnt+'</small>'];
     const L=LEGS[gleg[key]]||{}, first=gleg[key]!==curLeg; curLeg=gleg[key];
     if(!first) return ['','','<small>'+cnt+'</small>'];
-    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'</span>',
-      '<small class="lgs"><span>Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</span><span>'+cnt+'</span></small>'];
+    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'<span class="legmi"> \u00b7 Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</span></span>',
+      '<small class="lgs">'+cnt+'</small>'];
   };
   order.forEach(key=>{
     const idx=groups[key], st=gst[key];
@@ -1915,7 +1919,7 @@ function render(hits){
       +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
       +'<div class="priceline">'
-      +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> $'+fmt(dOn?s.disc:s.pre)+'</span>'
+      +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> <span class="pval">$'+fmt(dOn?s.disc:s.pre)+'</span></span>'
       +'</div>'
       +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
       +'<div class="priceline cardbot">'
@@ -2338,6 +2342,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-22', items:[
+    'Version 1.0.7',
+    'Changed: on each stop card the price is now green and the price label is grey, so the price stands out',
+    'Changed: the leg number and miles now sit on the orange line with the cities, and the stop count sits right next to the state name, so both are easier to see. If a line is too long, it is cut off with three dots',
+    'Prices can change at the pump at any time. Always check the pump price before you fuel'
+  ]},
   { date:'2026-10-22', items:[
     'Version 1.0.6',
     'Changed: the app now opens on your discounted price, the same price you pay at the pump with your fuel card. You can still switch to pre-tax in Settings, and the app remembers your choice',
