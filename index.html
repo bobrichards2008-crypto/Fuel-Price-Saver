@@ -197,8 +197,8 @@
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
   .card.top{border:2px solid var(--orange);box-shadow:0 0 12px rgba(242,106,33,.4)}
-  .card.top{animation:topPulse 1.4s ease-in-out 4}
-  @keyframes topPulse{0%,100%{box-shadow:0 0 12px rgba(242,106,33,.4)}50%{box-shadow:0 0 22px 4px rgba(242,106,33,.85)}}
+  .card.top.seen{animation:topPulse 2.6s ease-in-out 3}
+  @keyframes topPulse{0%,100%{box-shadow:0 0 8px rgba(242,106,33,.3)}50%{box-shadow:0 0 16px 3px rgba(242,106,33,.65)}}
   @media (prefers-reduced-motion:reduce){.card.top{animation:none}}
   .cardhead{font-size:15px;margin-bottom:8px}
   .off{float:right;color:#9fb4ce;font-size:13px}
@@ -299,6 +299,8 @@
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
   .priceline .onep .plabel{color:#9fb4ce;font-weight:normal;font-size:12px}
   .priceline .onep .pval{color:#3ab54a}
+  .priceline.pricerow{align-items:center;margin-top:10px;flex-wrap:nowrap}
+  .priceline.pricerow .cardbtns{margin-left:auto;display:flex;gap:8px;flex:none}
   .cardbtns{display:inline-flex;gap:8px;flex:none}
   .seebtn,.gobtn{padding:7px 14px;font-size:14px;font-weight:bold;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}
   .seebtn{background:none;border:1px solid #4a7fb5;color:#9fc0e8}
@@ -637,7 +639,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.7</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.8</span></div>
 </div>
 <script>
 (function(){
@@ -1878,7 +1880,7 @@ function render(hits){
   let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
     +'</p>';
-  if(hits.length>1){
+  if(false){   // 1.0.8: best-price box at the top removed
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
     h+='<div class="bestpin" id="bestflag" onclick="enterScreen();openDetail(0)">'
@@ -1918,14 +1920,12 @@ function render(hits){
       +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
       +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
-      +'<div class="priceline">'
+      +'<div class="priceline pricerow">'
       +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> <span class="pval">$'+fmt(dOn?s.disc:s.pre)+'</span></span>'
+      +'<span class="cardbtns"><button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
+      +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a></span>'
       +'</div>'
       +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
-      +'<div class="priceline cardbot">'
-      +'<button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
-      +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a>'
-      +'</div>'
       +'</div>';
     });
     if(multi) h+='</div>';
@@ -2342,6 +2342,13 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-22', items:[
+    'Version 1.0.8',
+    'Changed: removed the best-price box that showed at the top of your results. The cheapest stops are still in the list below',
+    'Changed: the cheapest stop on your route now glows gently a few times when you scroll to it, then settles',
+    'Changed: the Details and Map buttons now sit on the same line as the price, so each stop card is shorter and you can see more stops at once',
+    'Prices can change at the pump at any time. Always check the pump price before you fuel'
+  ]},
   { date:'2026-10-22', items:[
     'Version 1.0.7',
     'Changed: on each stop card the price is now green and the price label is grey, so the price stands out',
@@ -5224,6 +5231,19 @@ if(document.readyState!=='loading')s();else document.addEventListener('DOMConten
   }
   setTimeout(flush,10000); setInterval(flush,120000);
   document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') flush(); });
+})();
+</script>
+
+<script>
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}
+  });},{threshold:0.6});
+  function watch(){var c=document.querySelector('#results .card.top:not(.seen)');if(c)io.observe(c);}
+  var r=document.getElementById('results');
+  if(r) new MutationObserver(watch).observe(r,{childList:true,subtree:true});
+  // a collapsed state opening counts too: observer fires once the card is visible
 })();
 </script>
 </body>
