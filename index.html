@@ -639,7 +639,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.10</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.11</span></div>
 </div>
 <script>
 (function(){
@@ -1517,7 +1517,7 @@ function getHere(){
       e=>fail(new Error(e.code===1
         ? 'Location is turned off for this app. Allow location, or type a start city'
         : 'Couldn\'t get your location. Type a start city')),
-      {enableHighAccuracy:false, timeout:15000, maximumAge:300000});
+      {enableHighAccuracy:true, timeout:20000, maximumAge:0});
   });
 }
 async function geocode(place){
@@ -2342,6 +2342,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-22', items:[
+    'Version 1.0.11',
+    'Fixed: Your location now uses your phone\u2019s GPS fresh every time, instead of a rough or old location that could put you hundreds of miles away',
+    'Prices can change at the pump at any time. Always check the pump price before you fuel'
+  ]},
   { date:'2026-10-22', items:[
     'Version 1.0.10',
     'Fixed: the stop count now sits right next to the state name on every state, including states with only one stop',
