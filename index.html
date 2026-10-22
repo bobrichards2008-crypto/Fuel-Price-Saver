@@ -299,7 +299,7 @@
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
   .priceline .onep .plabel{color:#9fb4ce;font-weight:normal;font-size:12px}
   .priceline .onep .pval{color:#3ab54a}
-  .priceline.pricerow{align-items:center;margin-top:10px;flex-wrap:nowrap}
+  .priceline.pricerow{align-items:center;margin-top:18px;flex-wrap:nowrap}
   .priceline.pricerow .cardbtns{margin-left:auto;display:flex;gap:8px;flex:none}
   .cardbtns{display:inline-flex;gap:8px;flex:none}
   .seebtn,.gobtn{padding:7px 14px;font-size:14px;font-weight:bold;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}
@@ -639,7 +639,7 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.8</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.9</span></div>
 </div>
 <script>
 (function(){
@@ -2342,6 +2342,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-22', items:[
+    'Version 1.0.9',
+    'Changed: more room between the top line of each stop card and the price line, so it is easier to tap the weather, Details and Map without hitting the wrong one',
+    'Prices can change at the pump at any time. Always check the pump price before you fuel'
+  ]},
   { date:'2026-10-22', items:[
     'Version 1.0.8',
     'Changed: removed the best-price box that showed at the top of your results. The cheapest stops are still in the list below',
