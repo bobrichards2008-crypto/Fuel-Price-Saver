@@ -854,7 +854,7 @@
   <div id="stops"></div>
   <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
   <div id="mainbtns">
-  <div class="btnrow">
+  <div class="btnrow" id="pinbar">
     <button class="go" onclick="addStop()">+ Add stop</button>
     <button class="go" onclick="findFuel()">Find fuel</button>
     <button class="bluebtn" onclick="optimizeStops()">Optimize</button>
@@ -873,7 +873,7 @@
     <div class="popbox">
       <div class="poptitle">Fuel near me</div>
       <label class="nearlbl" for="nearcity">Type a city to check somewhere else</label>
-      <div id="nearwrap" style="position:relative"><input id="nearcity" type="text" placeholder="Your location" autocomplete="off" autocapitalize="words" enterkeyhint="done"><div class="suggest" id="nearsug" style="display:none"></div></div>
+      <div id="nearwrap" style="position:relative"><input id="nearcity" type="text" placeholder="Your location" readonly class="cpick" autocomplete="off" autocapitalize="words" enterkeyhint="done"><div class="suggest" id="nearsug" style="display:none"></div></div>
       <div class="poptext">Show stops within how many miles?</div>
       <div class="btnrow nearmi"><button class="go" onclick="fuelNear(5)">5 mi</button><button class="go" onclick="fuelNear(10)">10 mi</button><button class="go" onclick="fuelNear(15)">15 mi</button></div>
       <div class="btnrow nearmi"><button class="go" onclick="fuelNear(25)">25 mi</button><button class="go" onclick="fuelNear(50)">50 mi</button><button class="go" onclick="fuelNear(75)">75 mi</button></div>
@@ -1158,7 +1158,7 @@ function makeRow(value){
   box.className='stop';
   box.innerHTML =
     '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
-    '<div class="fieldwrap"><input type="text" autocomplete="off">'+
+    '<div class="fieldwrap"><input type="text" autocomplete="off" readonly class="cpick">'+
     '<div class="suggest" style="display:none"></div>'+
     '<div class="legmi"></div></div>'+
     '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
@@ -1198,7 +1198,7 @@ function addStop(){
   if(rows.length>=2){ stopsEl.insertBefore(row, rows[rows.length-1]); }  // insert before the last (end)
   else { stopsEl.appendChild(row); }
   relabel();
-  row.querySelector('input').focus();
+  openCityPicker(row.querySelector('input'),true);
 }
 
 function relabel(){
@@ -2644,6 +2644,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-24', items:[
+    'Version 1.3.10',
+    'New: tapping a city box opens its own full screen to type in. The box stays at the top, the cities show right under it, and the keyboard can\'t cover them',
+    'Tip: type the state first, then the city, like NC Char, to get a short list. A zip code works too',
+    'New: Add stop, Find fuel and Optimize now stay pinned at the bottom of the screen, so they never scroll away on a long trip'
+  ]},
   { date:'2026-10-21', items:[
     'Version 1.3.9',
     'Behind the scenes: counts how often the Find fuel button is used, to help improve the app'
@@ -2819,6 +2825,7 @@ function openNews(){
   if(seen!==APP_VER) document.body.classList.add('has-new');
 })();
 function stepBack(){
+  if(window.CP_OPEN){ cityPickerDone(); return true; }
   if(document.body.classList.contains('on-trip')){
     document.body.classList.remove('on-trip');
     document.getElementById('trippop').classList.remove('show');
@@ -2923,7 +2930,7 @@ function planRow(value){
   box.className='stop';
   box.innerHTML =
     '<button class="mvbtn" type="button" aria-label="Move this stop"></button>'+
-    '<div class="fieldwrap"><input type="text" autocomplete="off">'+
+    '<div class="fieldwrap"><input type="text" autocomplete="off" readonly class="cpick">'+
     '<div class="suggest" style="display:none"></div><div class="legmi"></div></div>'+
     '<button class="remove" type="button" aria-label="Delete this stop">'+TRASH_SVG+'</button>';
   const input=box.querySelector('input'), sug=box.querySelector('.suggest');
@@ -5933,6 +5940,132 @@ if(document.readyState!=='loading')s();else document.addEventListener('DOMConten
     },700);
   }
   if(document.readyState==='complete') setTimeout(restore,350); else window.addEventListener('load',function(){ setTimeout(restore,350); });
+})();
+</script>
+
+<style id="cpstyle">
+  #pinbar{position:fixed;left:0;right:0;bottom:0;z-index:700;margin:0!important;
+    padding:10px max(14px,calc((100vw - 532px)/2)) calc(10px + env(safe-area-inset-bottom));
+    background:#10233f;border-top:2px solid #2b4a70;box-shadow:0 -6px 16px rgba(0,0,0,.35)}
+  #mainbtns #pinbar > *{height:56px}
+  .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  input.cpick{cursor:pointer;caret-color:transparent}
+  #cpop{position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:9660;display:none;
+    flex-direction:column;background:#0c1a30;color:#e8eef6}
+  #cpop.show{display:flex}
+  #cpop .cphead{display:flex;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px}
+  #cpop .cpback{height:44px;padding:0 16px;border-radius:10px;border:1.5px solid #4f7bb0;background:#17304f;
+    color:#e8eef6;font-size:16px;font-weight:700;flex:0 0 auto}
+  #cpop .cptitle{font-size:19px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #cpop .cpbox{position:relative;padding:4px 14px 10px}
+  #cpin{width:100%;box-sizing:border-box;height:56px;padding:0 48px 0 16px;font-size:19px;border-radius:12px;
+    border:2px solid #f26a21;background:#1d3a5e;color:#fff;outline:none}
+  #cpin::placeholder{color:#9fb4ce;font-size:16px}
+  #cpop .cpx{position:absolute;right:22px;top:12px;width:40px;height:40px;border:0;border-radius:50%;
+    background:transparent;color:#9fb4ce;font-size:24px;line-height:40px;display:none}
+  #cpop .cpx.on{display:block}
+  #cplist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 14px 14px}
+  #cplist > div{padding:0 6px;min-height:54px;display:flex;align-items:center;font-size:18px;
+    border-bottom:1px solid #1d3a5e;cursor:pointer}
+  #cplist > div:active{background:#1d3a5e}
+  #cplist .useloc{gap:10px;color:#f26a21;font-weight:700}
+  #cplist .zipmsg{min-height:34px;font-size:14px;color:#9fb4ce;cursor:default;border-bottom:0;padding-top:8px}
+  #cplist .cpempty{color:#9fb4ce;font-size:15px;border:0;cursor:default}
+</style>
+<div id="cpop" role="dialog" aria-modal="true" aria-labelledby="cptitle">
+  <div class="cphead"><button type="button" class="cpback" onclick="history.back()">Back</button><div class="cptitle" id="cptitle"></div></div>
+  <div class="cpbox"><input id="cpin" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="search" placeholder="State, then city, like NC Char"><button type="button" class="cpx" aria-label="Clear">&times;</button></div>
+  <div id="cplist"></div>
+</div>
+<script id="cpscript">
+/* ---- City picker: every city box opens its own full screen, so the keyboard can't hide the list ---- */
+window.CP_OPEN=false;
+var CP={input:null,orig:'',fresh:false,picked:false,timer:null};
+function cpTitle(inp){
+  if(inp.id==='nearcity') return 'Fuel near me';
+  var ph=(inp.placeholder||'').replace(/^\W+/,'').trim();
+  if(inp.closest('#planstops') && /^your location/i.test(ph)) return 'Start';
+  return ph||'City';
+}
+function cpFill(){
+  var pin=document.getElementById('cpin'), list=document.getElementById('cplist'), inp=CP.input;
+  var q=pin.value.trim();
+  document.querySelector('#cpop .cpx').classList.toggle('on',!!pin.value);
+  inp.value=pin.value;                      // the row follows what's typed, like before
+  if(inp.closest('#stops')) try{ markLoc(inp); }catch(e){}
+  clearTimeout(CP.timer);
+  if(q.length<2){ list.innerHTML=''; try{ locOnly(list,inp); }catch(e){} cpEmpty(); return; }
+  CP.timer=setTimeout(function(){ try{ lookup(q,list,inp); }catch(e){} },150);
+}
+function cpEmpty(){
+  var list=document.getElementById('cplist');
+  if(list.style.display==='none' || !list.children.length){
+    list.style.display='block';
+    if(!list.children.length && document.getElementById('cpin').value.trim().length<2){
+      var d=document.createElement('div'); d.className='cpempty'; d.textContent='Type a city, or a zip code'; list.appendChild(d);
+    }
+  }
+}
+function openCityPicker(inp,fresh){
+  if(!inp || window.CP_OPEN) return;
+  CP.input=inp; CP.orig=inp.value; CP.fresh=!!fresh; CP.picked=false;
+  try{ inp.blur(); }catch(e){}
+  var rs=inp.parentNode && inp.parentNode.querySelector('.suggest'); if(rs) rs.style.display='none';
+  var pin=document.getElementById('cpin');
+  document.getElementById('cptitle').textContent=cpTitle(inp);
+  pin.value=(inp.value===HERE)?'':inp.value;
+  document.getElementById('cpop').classList.add('show');
+  window.CP_OPEN=true;
+  try{ enterScreen(); }catch(e){}
+  pin.focus();                              // same tap, so the keyboard comes right up
+  try{ pin.select(); }catch(e){}
+  cpFill();
+}
+// Closes the picker. A city picked keeps it; Back puts the box back the way it was.
+function cityPickerDone(){
+  var inp=CP.input; window.CP_OPEN=false; clearTimeout(CP.timer);
+  try{ document.getElementById('cpin').blur(); }catch(e){}
+  document.getElementById('cpop').classList.remove('show');
+  document.getElementById('cplist').innerHTML='';
+  if(!inp) return;
+  if(!CP.picked){
+    inp.value=CP.orig;
+    if(inp.closest('#stops')){
+      try{ markLoc(inp); }catch(e){}
+      var row=inp.closest('.stop');
+      if(CP.fresh && !inp.value.trim() && row && stopsEl.children.length>2){ row.remove(); try{ relabel(); }catch(e){} }
+      try{ saveRoute(); }catch(e){}
+    }
+  }
+  CP.input=null;
+}
+(function(){
+  var pin=document.getElementById('cpin'), list=document.getElementById('cplist');
+  pin.addEventListener('input',cpFill);
+  document.querySelector('#cpop .cpx').addEventListener('click',function(){ pin.value=''; cpFill(); pin.focus(); });
+  // Enter picks the top city
+  pin.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return; e.preventDefault();
+    var first=[].slice.call(list.children).filter(function(d){ return !/zipmsg|cpempty|useloc/.test(d.className); })[0];
+    if(first) first.click();
+  });
+  // a city (or Use my location) tapped in the list: let it fill the box, then close
+  list.addEventListener('click',function(e){
+    var d=e.target.closest('#cplist > div'); if(!d || /zipmsg|cpempty/.test(d.className)) return;
+    CP.picked=true;
+    setTimeout(function(){ if(window.CP_OPEN) history.back(); },0);
+  },true);
+  // tapping any city box opens the picker
+  document.addEventListener('click',function(e){
+    var inp=e.target.closest && e.target.closest('input.cpick'); if(!inp) return;
+    if(document.body.classList.contains('rowdrag') || (inp.closest('.stop')||{}).classList && inp.closest('.stop').classList.contains('dragging')) return;
+    e.preventDefault(); openCityPicker(inp,false);
+  });
+  // keep the list above the keyboard
+  if(window.visualViewport){
+    var fit=function(){ var p=document.getElementById('cpop'); p.style.height=visualViewport.height+'px'; p.style.top=visualViewport.offsetTop+'px'; };
+    visualViewport.addEventListener('resize',fit); visualViewport.addEventListener('scroll',fit);
+  }
 })();
 </script>
 </body>
