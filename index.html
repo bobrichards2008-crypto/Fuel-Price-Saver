@@ -590,6 +590,8 @@
 
   #fcline{position:absolute;left:0;right:0;top:9px;padding:0 76px;text-align:center;cursor:pointer;display:none;line-height:1.25;white-space:nowrap;overflow:hidden}
   body.has-fcline #fcline{display:block}
+  #fcline{pointer-events:none} #fcline>*{pointer-events:auto}
+  header .gear{z-index:6} header .newtag{z-index:6}
   #fcline .hd{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0c8}
   #fcline .ln{font-size:15px;font-weight:bold;color:#cfe0f2;display:inline-flex;align-items:center;gap:5px}
   #fcline .ln svg{width:14px;height:14px;flex:none}
@@ -2066,14 +2068,38 @@ async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h,w,l
   };
   /* try with road names, try again, then without road names (so the truck route never gets lost over the extras) */
   const one=async(P,extra)=>{
-    try{ return await raw(P,extra,true); }catch(e1){ window.ROUTE_ERR=e1.message; }
+    try{ return await raw(P,extra,true); }catch(e1){ window.ROUTE_ERR=e1.message; if(/no route|NO_ROUTE|route search failed/i.test(e1.message)) throw e1; }
     await wait(900);
     try{ return await raw(P,extra,true); }catch(e2){ window.ROUTE_ERR=e2.message; }
     return await raw(P,extra,false);
   };
+  /* nearest main road (interstate or highway) to a point, so a stop downtown doesn't kill the truck route */
+  const snap=async(p)=>{
+    try{ const u="https://api.tomtom.com/search/2/reverseGeocode/"+(+p[1]).toFixed(5)+","+(+p[0]).toFixed(5)+".json?key="+TT_KEY
+          +"&radius=24000&roadUse="+encodeURIComponent('["LimitedAccess","Arterial"]');
+      const r=await fetch(u); if(!r.ok) return null; const d=await r.json(), A=d.addresses&&d.addresses[0]; if(!A||!A.position) return null;
+      const ll=String(A.position).split(',').map(Number); if(!(isFinite(ll[0])&&isFinite(ll[1]))) return null;
+      if(hvMi(+p[1],+p[0],ll[0],ll[1])>15) return null;
+      return [ll[1],ll[0]];
+    }catch(e){ return null; } };
   const wrap=x=>({code:"Ok",routes:[{geometry:{coordinates:x.co},distance:x.dist,duration:x.dur,legs:x.legs}],
     tt:x.names?{ins:x.ins,toll:x.toll}:null, tollKept:x.tollKept, tollOk:x.tollOk});
-  const a=await one(pts,"");
+  let a;
+  window.ROUTE_SNAPPED=[];
+  try{ a=await one(pts,""); }
+  catch(e0){
+    if(!/no route|NO_ROUTE|route search failed/i.test(e0.message)) throw e0;
+    /* first move the in-between stops onto a main road, then the start and end too */
+    const tries=[pts.map((p,i)=>i>0&&i<pts.length-1), pts.map(()=>true)];
+    for(const which of tries){
+      if(!which.some(Boolean)) continue;
+      const np=await Promise.all(pts.map((p,i)=>which[i]?snap(p):null));
+      const moved=np.map((x,i)=>x?i:-1).filter(i=>i>=0); if(!moved.length) continue;
+      const P2=pts.map((p,i)=>np[i]||p);
+      try{ a=await one(P2,""); pts=P2; window.ROUTE_SNAPPED=moved; window.ROUTE_ERR=null; break; }catch(e1){}
+    }
+    if(!a) throw e0;
+  }
   if(!opt.toll) return wrap(a);
   const lim=opt.max||20, okSt=opt.tollok||[];
   const b=await one(pts,"&avoid=tollRoads").catch(()=>null);
@@ -2138,7 +2164,7 @@ async function findFuel(){
     setBar(50); res.innerHTML='<p class="hint">Routing: '+resolved.join('  \u2192  ')+'</p>';
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
     let rj=null;
-    window.ROUTE_ERR=null; window.ROUTE_CAR=false;
+    window.ROUTE_ERR=null; window.ROUTE_CAR=false; window.ROUTE_SNAPPED=[]; window.ROUTE_NAMES=resolved.slice();
     try{ rj=await ttRoute(pts.map(p=>[p[0],p[1]]),truckOpt()); }catch(e){ rj=null; window.ROUTE_ERR=e.message; }
     if(!rj) window.ROUTE_CAR=true;
     if(!rj){ const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
@@ -2704,6 +2730,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-24', items:[
+    'Version 1.3.17',
+    'Fixed: a stop in the middle of a town, like Point Pleasant, could stop the truck route from loading. The app now moves that stop to the nearest main road and tells you on the Route screen',
+    'Fixed: tapping the Settings gear sometimes opened the Prediction Meter instead',
+    'Always check the route against your truck atlas and the signs'
+  ]},
   { date:'2026-10-24', items:[
     'Version 1.3.16',
     'Fixed: adding a town as a stop to force your route could lose the road names on the Route screen. The app now tries again, and the Route screen tells you if the truck route didn\u2019t load',
@@ -6284,7 +6316,8 @@ function fpRoute(){
   if(!R){ b.innerHTML=carW+'<div class="rtop">Road names aren\u2019t available for this route. Tap Find fuel again to load them.'+(!window.ROUTE_CAR&&window.ROUTE_ERR?'<br><small>Error: '+esc(window.ROUTE_ERR)+'</small>':'')+'</div>'; }
   else{
     var tt=0; R.forEach(function(x){ tt+=x.toll; });
-    var h=carW+'<div class="rtop">'+M(ROUTE_TOTAL)+' miles'+(t.rt==='shortest'?' (shortest route)':'')+'. '+(tt>=1?'Toll roads: about '+M(tt)+' miles.':'No toll roads on this route.');
+    var sn=(window.ROUTE_SNAPPED||[]).map(function(i){ return (window.ROUTE_NAMES||[])[i]; }).filter(Boolean);
+    var h=carW+(sn.length?'<div class="rtop" style="color:#f2b36b">'+esc(sn.join(', '))+(sn.length>1?' were':' was')+' moved to the nearest main road so a truck route could be found.</div>':'')+'<div class="rtop">'+M(ROUTE_TOTAL)+' miles'+(t.rt==='shortest'?' (shortest route)':'')+'. '+(tt>=1?'Toll roads: about '+M(tt)+' miles.':'No toll roads on this route.');
     if(t.toll) h+=' Avoid tolls is on in Your truck'+(window.ROUTE_TOLLOK&&t.tollok?', except in '+esc(t.tollok):'')+(window.ROUTE_TOLLKEPT>0?'. Going around would add about '+M(window.ROUTE_TOLLKEPT)+' miles, so the route keeps them':'')+'.';
     h+='</div>';
     runs.forEach(function(r,k){
