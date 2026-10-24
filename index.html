@@ -2647,6 +2647,13 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-24', items:[
+    'Version 1.3.14',
+    'New: Fuel plan asks how much fuel you want in your tank when you get there, 50 gallons to start. Your reserve is for emergencies, so the plan no longer has you rolling in on it',
+    'The cheapest plan only sends you to another stop if it is at least 5 cents cheaper, so you make fewer stops',
+    'The green box at the top now shows the total for both plans, so you can compare without scrolling',
+    'Prices can change before you get there. Always check the pump price and watch your own gauge'
+  ]},
+  { date:'2026-10-24', items:[
     'Version 1.3.13',
     'Fuel plan now explains that you may owe more on your IFTA return with the cheapest plan, but you still come out ahead because you pay less at the pump',
     'This is an estimate only. What you really owe on IFTA depends on your actual miles, fuel mileage and the tax rates for the quarter'
@@ -6131,10 +6138,11 @@ function cityPickerDone(){
   <div class="fpset">
     <div><label for="fplvl">Fuel in your tank now</label><select id="fplvl" onchange="fpCalc()"></select></div>
     <div><label for="fpmpg">Your fuel mileage</label><input id="fpmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="fpMpg()"></div>
+    <div style="grid-column:1/-1"><label for="fpend">Fuel in your tank when you get there (gallons)</label><input id="fpend" type="number" inputmode="numeric" min="0" max="300" step="5" placeholder="50" onchange="fpEnd()"></div>
     <div class="fpnote" id="fpnote"></div>
   </div>
   <div id="fpout"></div>
-  <div class="fpfine">Prices can change before you get there, so this plan is for buying today. Miles by state are close estimates. The cost column is what you pay at the pump, plus the Kentucky and Virginia surcharge on the fuel you burn in those states. The surcharge is the same either way, so it doesn’t change which plan is cheaper. The savings counts the fuel tax you square up on your IFTA return, so it can differ from the pump totals. Always watch your own gauge.</div>
+  <div class="fpfine">Prices can change before you get there, so this plan is for buying today. Miles by state are close estimates. The cost column is what you pay at the pump, plus the Kentucky and Virginia surcharge on the fuel you burn in those states. The surcharge is the same either way, so it doesn’t change which plan is cheaper. The savings counts the fuel tax you square up on your IFTA return, so it can differ from the difference between the two totals. Both plans include the fuel you want left when you get there. Always watch your own gauge.</div>
  </div>
 </div>
 <script id="fpscript">
@@ -6200,6 +6208,7 @@ function openFuelPlan(){
   if(!sel.options.length) NF_LVLS.forEach(function(v){ var o=document.createElement('option'); o.value=v[0]; o.textContent=v[1]; sel.appendChild(o); });
   sel.value=String(NF_LVL);
   document.getElementById('fpmpg').value=t.mpg||'';
+  document.getElementById('fpend').value=(t.endg>=0&&t.endg!=='')?t.endg:50;
   var ins=[].slice.call(document.querySelectorAll('#stops input')).map(function(i){ return i.value.trim(); }).filter(Boolean);
   document.getElementById('fptrip').textContent=(ins.length>1?ins[0]+' to '+ins[ins.length-1]+', ':'')+Math.round(ROUTE_TOTAL).toLocaleString('en-US')+' miles';
   FP_TAB='cheap';
@@ -6213,15 +6222,21 @@ function fpMpg(){
   if(v>=2&&v<=15){ var t=getTruck()||Object.assign({},TRUCK_DEF); t.mpg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} try{ truckSum(); }catch(e){} }
   fpCalc();
 }
+function fpEnd(){
+  var v=parseFloat(document.getElementById('fpend').value);
+  if(v>=0&&v<=300){ var t=getTruck()||Object.assign({},TRUCK_DEF); t.endg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} }
+  fpCalc();
+}
 function fpTab(k){ FP_TAB=k; fpCalc(); }
 function fpCalc(){
   var t=getTruck()||TRUCK_DEF, out=document.getElementById('fpout');
   NF_LVL=parseFloat(document.getElementById('fplvl').value)||0.25;
   var mi=parseFloat(document.getElementById('fpmpg').value), mpg=(mi>=2&&mi<=15)?mi:6.5;
   var tank=+t.tank||200, res=Math.min(+t.res||0,tank-1), cap=tank-res, start=Math.max(0,tank*NF_LVL-res);
+  var ev=parseFloat(document.getElementById('fpend').value), endTot=(ev>=0&&ev<=tank)?ev:50, endX=Math.max(0,Math.min(cap,endTot-res));   /* gallons above reserve to arrive with */
   var skip=(typeof nfSkip==='function')?nfSkip():[], total=ROUTE_TOTAL;
   document.getElementById('fpnote').textContent='Tank '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'+(mi>=2?'':' (typical, enter yours)')
-    +(skip.length?'. Never buying in '+skip.join(', '):'')+'. Change these in Your truck.';
+    +', arriving with '+Math.round(Math.max(endTot,res))+' gal'+(skip.length?'. Never buying in '+skip.join(', '):'')+'. Change these in Your truck.';
   var runs=fpStateRuns(); if(!runs.length){ out.innerHTML='<div class="fpwarn">Couldn\u2019t work out the states on this route. Tap Find fuel again.</div>'; return; }
   var sur=runs.map(function(r){ var x=FP_SURCH[r.st]||0; return x?r.mi/mpg*x:0; }), surT=0; sur.forEach(function(x){ surT+=x; });
   var stns=LASTHITS.filter(function(h){ return skip.indexOf(h.st)<0 && isFinite(fpCost(h)) && h.rmi>=0 && h.rmi<=total; })
@@ -6232,7 +6247,7 @@ function fpCalc(){
   /* ---- Option 1: buy in each state what that state burns, at its cheapest stop ---- */
   var p1=runs.map(function(r){ return {g:0,stop:null,carried:false,tank:false}; }), fuel=start, owe=[];
   runs.forEach(function(r,k){
-    var need=r.mi/mpg, use=Math.min(fuel,need); fuel-=use; need-=use; if(need<=0.01) p1[k].tank=true;
+    var need=r.mi/mpg+(k===runs.length-1?endX:0), use=Math.min(fuel,need); fuel-=use; need-=use; if(need<=0.01) p1[k].tank=true;
     var here=stns.filter(function(h){ return h.st===r.st && h.rmi>=r.start-1 && h.rmi<=r.end+1; });
     if(!here.length) here=stns.filter(function(h){ return h.rmi>=r.start && h.rmi<=r.end; });
     var best=here.length?here.reduce(function(a,b){ return fpCost(b)<fpCost(a)?b:a; }):null;
@@ -6251,10 +6266,10 @@ function fpCalc(){
   for(var i=0;i<stns.length;i++){
     var s=stns[i]; f-=(s.rmi-pos)/mpg; pos=s.rmi;
     if(f< -0.5){ short=true; f=0; }
-    var j=-1; for(var q=i+1;q<stns.length;q++){ if((stns[q].rmi-s.rmi)/mpg>cap) break; if(fpCost(stns[q])<fpCost(s)){ j=q; break; } }
+    var j=-1; for(var q=i+1;q<stns.length;q++){ if((stns[q].rmi-s.rmi)/mpg>cap) break; if(fpCost(stns[q])<=fpCost(s)-0.05){ j=q; break; } }   /* only chase a stop at least 5 cents cheaper */
     var want;
     if(j>=0) want=(stns[j].rmi-s.rmi)/mpg;
-    else { var toEnd=(total-s.rmi)/mpg; want=toEnd<=cap?toEnd:cap; }
+    else { var toEnd=(total-s.rmi)/mpg+endX; want=toEnd<=cap?toEnd:cap; }
     var g=Math.min(Math.ceil(Math.max(0,want-f)), Math.floor(cap-f));
     if(g>0){ f+=g; buys.push({s:s,g:g,lvl:f}); }
   }
@@ -6263,7 +6278,7 @@ function fpCalc(){
     var A=buys[z-1], B=buys[z];
     if(B.g<20 && A.lvl+B.g<=cap+0.01){ A.g+=B.g; A.lvl+=B.g; buys.splice(z,1); }
   }
-  f-=(total-pos)/mpg; if(f< -0.5) short=true;
+  f-=(total-pos)/mpg; if(f< -0.5) short=true; else if(f<endX-1) warn.push('You\u2019ll get there with less than '+Math.round(endTot)+' gal. There isn\u2019t a stop late enough on the route to top off.');
   if(!stns.length) short=true;
   var p2=runs.map(function(){ return {g:0,stops:[]}; });
   buys.forEach(function(b){ var k=runOf(b.s.rmi); p2[k].g+=b.g; p2[k].stops.push(b); });
@@ -6277,10 +6292,11 @@ function fpCalc(){
   var price=function(h){ return '$'+fmt(rankVal(h)); };
   var save=real1-real2, h='';
   if(short) warn.push('Your fuel won\u2019t reach one of the stops on this plan. Check your gauge, or widen the miles off route in Settings so more stops show up.');
-  if(save>=1) h+='<div class="fpsave"><b>The cheapest plan saves you about '+$(save)+'</b><span>compared to buying in each state, on this run</span></div>'
+  var both='<div style="display:flex;gap:8px;margin-top:10px;font-size:14px;color:#cfdbe9"><div style="flex:1">Cheapest plan<br><b style="font-size:19px;margin:2px 0 0">'+$(pump2+surT)+'</b></div><div style="flex:1">Buy in each state<br><b style="font-size:19px;margin:2px 0 0">'+$(pump1+surT)+'</b></div></div>';
+  if(save>=1) h+='<div class="fpsave"><b>The cheapest plan saves you about '+$(save)+'</b><span>compared to buying in each state, on this run</span>'+both+'</div>'
     +'<div class="fpnote" style="margin:8px 2px 4px;color:#cfdbe9">You may owe more on your IFTA return with the cheapest plan, but you pay less at the pump, so you still come out about '+$(save)+' ahead.</div>'
     +'<div class="fpnote" style="margin:0 2px 6px;font-size:12px">Estimate only. What you really owe on IFTA depends on your actual miles, fuel mileage and the tax rates for the quarter. Check with your IFTA filer.</div>';
-  else h+='<div class="fpsave same"><b>About the same either way</b><span>Buying in each state costs about the same as the cheapest plan on this run</span></div>';
+  else h+='<div class="fpsave same"><b>About the same either way</b><span>Buying in each state costs about the same as the cheapest plan on this run</span>'+both+'</div>';
   warn.forEach(function(w){ h+='<div class="fpwarn">'+w+'</div>'; });
   h+='<div class="fptabs"><button type="button" class="'+(FP_TAB==='cheap'?'on':'')+'" onclick="fpTab(\'cheap\')">Cheapest plan</button>'
     +'<button type="button" class="'+(FP_TAB==='each'?'on':'')+'" onclick="fpTab(\'each\')">Buy in each state</button></div>';
