@@ -2155,12 +2155,19 @@ async function findFuel(){
   const oh=document.getElementById('opthint');
   if(inputs.length<2){ oh.innerHTML='<p class="hint">Enter at least a start and an end.</p>'; return; }
   oh.innerHTML='';
+  /* fresh start: forget the last route, lookups and fuel plan so nothing old carries over */
+  window.ROUTE_LINE=null; window.ROUTE_TT=null; window.ROUTE_TOLLKEPT=null; window.ROUTE_TOLLOK=false;
+  window.ROUTE_ERR=null; window.ROUTE_CAR=false; window.ROUTE_SNAPPED=[]; window.ROUTE_NAMES=[]; window.ROUTE_STOPS=null;
+  ROUTE_CUM=[]; ROUTE_TOTAL=0; ROUTE_LEGS=null; ROUTE_MI=null; LASTHITS=[];
+  for(const k in GEO_CACHE) delete GEO_CACHE[k];
+  try{ fpClose(); document.getElementById('fprt').classList.remove('show'); fpSync(); }catch(e){}
   openResults();
   const maxMiles=parseFloat(document.getElementById('maxmi').value)||2;
   setBar(10); res.innerHTML='<p class="hint">'+(inputs[0]===HERE?'Finding your location...':'Looking up your cities...')+'</p>';
   try{
     const pts=[]; const resolved=[];
     for(let k=0;k<inputs.length;k++){ const g=await geocode(inputs[k]); pts.push(g); resolved.push(shortPlace(g[2]||inputs[k])); setBar(10+Math.round(30*(k+1)/inputs.length)); }
+    window.ROUTE_STOPS=inputs.map((t,k)=>({t:t, f:String(pts[k][2]||''), la:+pts[k][1], lo:+pts[k][0]}));
     setBar(50); res.innerHTML='<p class="hint">Routing: '+resolved.join('  \u2192  ')+'</p>';
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
     let rj=null;
@@ -2730,6 +2737,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-24', items:[
+    'Version 1.3.18',
+    'Every Find fuel now starts fresh, like closing and reopening the app, so an old route can\u2019t carry over',
+    'The Route screen now shows where each of your stops landed. A stop in orange may be in the wrong place. Type the town with its state, like Jackson, OH',
+    'Always check the route against your truck atlas and the signs'
+  ]},
   { date:'2026-10-24', items:[
     'Version 1.3.17',
     'Fixed: a stop in the middle of a town, like Point Pleasant, could stop the truck route from loading. The app now moves that stop to the nearest main road and tells you on the Route screen',
@@ -6309,10 +6322,28 @@ function fpRoads(runs){
     return {roads:out,toll:tm};
   });
 }
+function fpStopsHtml(){
+  var S=window.ROUTE_STOPS; if(!S||!S.length) return '';
+  var moved=window.ROUTE_SNAPPED||[], bad=0;
+  var h='<div class="rst"><b>Where your stops landed</b><div class="rd" style="font-size:14px">';
+  S.forEach(function(x,i){
+    var st=''; try{ st=fpStateAt(x.la,x.lo)||''; }catch(e){}
+    if(st==='??') st='';
+    var m=String(x.t).match(/[,\s]([A-Za-z]{2})\s*$/), want=m?m[1].toUpperCase():'';
+    var off=(want&&st&&want!==st)||(!want&&x.t!==HERE);
+    if(off) bad++;
+    var found=x.t===HERE?'Your location':x.f.split(',').slice(0,3).join(',');
+    h+='<div style="margin-top:6px'+(off?';color:#f2b36b':'')+'">'+(i+1)+'. '+esc(x.t===HERE?'Your location':x.t)+' \u2192 '+esc(found)+(st?' ('+st+')':'')
+      +(moved.indexOf(i)>=0?' \u2014 moved to the nearest main road':'')+'</div>';
+  });
+  h+='</div>'+(bad?'<div class="tl">Orange stops may be in the wrong place. Type the town with its state, like Jackson, OH.</div>':'')+'</div>';
+  return h;
+}
 function fpRoute(){
   var runs=fpStateRuns(), R=runs.length?fpRoads(runs):null, b=document.getElementById('fprtbody'), t=getTruck()||TRUCK_DEF;
   var M=function(x){ return Math.round(x).toLocaleString('en-US'); };
   var carW=window.ROUTE_CAR?'<div class="rtop" style="color:#f2b36b"><b>The truck route didn\u2019t load, so this is a car route. Don\u2019t drive it.</b> Tap Find fuel again.'+(window.ROUTE_ERR?'<br><small>Error: '+esc(window.ROUTE_ERR)+'</small>':'')+'</div>':'';
+  carW+=fpStopsHtml();
   if(!R){ b.innerHTML=carW+'<div class="rtop">Road names aren\u2019t available for this route. Tap Find fuel again to load them.'+(!window.ROUTE_CAR&&window.ROUTE_ERR?'<br><small>Error: '+esc(window.ROUTE_ERR)+'</small>':'')+'</div>'; }
   else{
     var tt=0; R.forEach(function(x){ tt+=x.toll; });
