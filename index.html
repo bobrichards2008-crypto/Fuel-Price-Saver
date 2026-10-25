@@ -600,7 +600,7 @@
   .leglink small{display:block;color:#9fb4ce;font-weight:normal;margin-top:3px}
 
   #fcline{position:absolute;left:0;right:0;top:9px;padding:0 76px;text-align:center;cursor:pointer;display:none;line-height:1.25;white-space:nowrap;overflow:hidden}
-  body.has-fcline #fcline{display:block}
+  body.has-fcline #fcline{display:none!important}
   #fcline{pointer-events:none} #fcline>*{pointer-events:auto}
   header .gear{z-index:6} header .newtag{z-index:6}
   #fcline .hd{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0c8}
@@ -1451,7 +1451,7 @@ function loadLiveData(){
           if(data.loves_arrived) ARRIVED.loves = data.loves_arrived;
           if(data.ta_arrived) ARRIVED.ta = data.ta_arrived;
           checkFresh();
-          if(data.forecast) showForecast(data.forecast);
+          if(data.forecast){ showForecast(data.forecast); setTimeout(function(){ try{ fcDayCheck(); }catch(e){} },2500); }
           fpsStat("\u25CF Prices are live", "#3ab54a");
         }
       })
@@ -2783,13 +2783,15 @@ function enterScreen(){ history.pushState({app:1}, ''); }
 const CHANGELOG = [
   { date:'2026-10-25', items:[
     'Version 1.3.25',
+    'New: when tomorrow\u2019s diesel prediction comes in each afternoon, a pop-up tells you in plain words, like Diesel prices are anticipated to go up tomorrow, the range will vary between 2 and 6 cents a gallon. It shows when you open the app or go to another page, until you check Don\u2019t show this again today. A How does this work? link explains how the prediction is made, starting with crude oil. A new one comes each day. The prediction line at the top of the home screen is gone',
+    'Changed: the Optimizer picks and My picks button you are on now lights up orange, so it doesn\u2019t look like the green Fuel stop optimizer button',
     'Fixed: Fuel stop optimizer no longer sends you to stop after stop for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
     'Fixed: the cheapest plan was adding up more fuel than your trip needs, so it could show a higher total than buying in each state. It now buys only what you need',
     'New: every time you tap Find fuel, a short note explains how Fuel stop optimizer does your fuel planning for you, so you don\u2019t have to sit with a calculator when you are busy or tired. Check Don\u2019t show this tip again and it stops showing. If you go two weeks without using it, a short friendly reminder shows once, with a button to read about it again. A second note about your route shows when you open the plan',
     'Fixed: when you switch to Optimizer picks, the count at the top now shows just your plan stops, like 4 stops in 3 states on your plan, out of 47 on your route',
     'New: Fuel plan is now called Fuel stop optimizer. After you tap Find fuel, it is the big green $ button at the top of your list of stops, and it shows about how much you can save. It is no longer on the home screen',
     'New: the top of your list of stops stays put while you scroll, so the Fuel stop optimizer button is always there',
-    'New: after you look at the plan and tap Back, your list shows only the optimized stops. Next to Fuel stop optimizer are two buttons, Optimizer picks and My picks. Tap the one you want. The one you are on is lit in green',
+    'New: after you look at the plan and tap Back, your list shows only the optimized stops. Next to Fuel stop optimizer are two buttons, Optimizer picks and My picks. Tap the one you want. The one you are on is lit in orange',
     'The Fuel stop optimizer tip now shows the first time you open it',
     'Removed: the Next fuel button on stop cards. Fuel stop optimizer does that job for the whole trip',
     'Changed: the top of the Fuel stop optimizer screen now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel stop optimizer again',
@@ -6695,7 +6697,7 @@ function fpCalc(){
 <div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
 <label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
 <script>
-var FPS_TIPS={fsopt:{t:'Fuel stop optimizer',b:'<b>Good news!</b> Fuel stop optimizer takes a load off your shoulders. It does all your fuel planning for you.<br><br>It fills you up where fuel is cheap and buys light where it\'s high, so you only carry enough to reach the next cheaper stop.<br><br><b>Time is money.</b> When you\'ve got to go, or you\'re just plain tired, you don\'t have time to sit with a calculator weighing every stop against your tank and mileage. Why would you, when one tap does it for you? One less thing to stress about.<br><br>Tap the green <b>$ Fuel stop optimizer</b> button at the top of your stops.'},
+var FPS_TIPS={fsopt:{t:'Fuel stop optimizer',b:'<b>Good news!</b> Fuel stop optimizer takes a load off your shoulders. It does all your fuel planning for you.<br><br>It fills you up where fuel is cheap and buys light where it\'s high, so you only carry enough to reach the next cheaper stop.<br><br><b>Time is money.</b> When you\'ve got to go, or you\'re just plain tired, you don\'t have time to sit with a calculator weighing every stop against your tank and mileage. Why would you, when one tap does it for you? One less thing to stress about.<br><br>Prices change every day, so your savings can go up or down. Run it again before each fuel stop. It only takes a second.<br><br>Tap the green <b>$ Fuel stop optimizer</b> button at the top of your stops.'},
   fsremind:{t:'Friendly reminder',b:'Don\'t forget: tap the green <b>$ Fuel stop optimizer</b> to see where to buy and how much. It could save you real money on this trip.<br><br><button type="button" onclick="fpsTipClose();setTimeout(function(){fpsTipForce(\'fsopt\')},50)" style="width:100%;min-height:46px;border-radius:10px;border:1.5px solid #3ab54a;background:#17304f;color:#fff;font-size:16px;font-weight:700">Read about Fuel stop optimizer again</button>'},
   fsroute:{t:'Your route',b:'On the plan, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
 var FPS_TIPCUR=null;
@@ -6768,7 +6770,7 @@ FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 #fpview{flex:0 0 40%;min-height:58px;border-radius:12px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer;padding:4px}
 #fpview{display:flex;padding:3px;gap:3px;align-items:stretch}
 #fpview .sg{border:0;background:#2b4a70;opacity:.75;font-weight:700;cursor:pointer;min-height:48px;flex:1;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;border-radius:9px;font-size:14px;color:#9fb4ce}
-#fpview .sg.on{background:#3ab54a!important;color:#fff;opacity:1}
+#fpview .sg.on{background:#f26a21!important;color:#fff;opacity:1}
 body.fp-only #results .card:not(.inplan){display:none}
 body.fp-only #results .stgrp.noplan{display:none}
 #fpchoose{display:none;position:fixed;left:0;right:0;bottom:0;z-index:9600;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid #2b4a70}
@@ -6803,6 +6805,88 @@ function fpPreview(){
 (function(){ var r=document.getElementById('results'); if(!r) return;
   new MutationObserver(function(){ if(!document.getElementById('fpbtn')) return; FP_VIEW='all'; window.FP_PLANK=null; window.FP_SAVE=null;
     clearTimeout(window.FP_PVT); window.FP_PVT=setTimeout(function(){ fpPreview(); fpApplyView(); try{ if(document.body.classList.contains('on-results')) fpsRemind(); }catch(e){} },400); }).observe(r,{childList:true});
+})();
+</script>
+
+<style>
+#fcday{position:fixed;inset:0;background:rgba(5,12,24,.72);z-index:9000;display:none;align-items:center;justify-content:center;padding:18px}
+#fcday.show{display:flex}
+#fcday .bx{background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px 18px 14px;color:#e8eef6}
+#fcday .tt{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb4ce;text-align:center;margin-bottom:8px}
+#fcday .big{font-size:22px;font-weight:800;text-align:center;line-height:1.3;margin:4px 0 10px}
+#fcday .tip{font-size:17px;text-align:center;line-height:1.4;margin-bottom:10px}
+#fcday .fine{font-size:12px;color:#9fb4ce;text-align:center;margin-bottom:12px}
+#fcday label{display:flex;gap:10px;align-items:center;justify-content:center;font-size:15px;margin-bottom:12px}
+#fcday label input{width:22px;height:22px}
+#fcday button{width:100%;min-height:48px;border-radius:10px;border:0;background:#f26a21;color:#fff;font-size:18px;font-weight:700}
+</style>
+<div id="fcday"><div class="bx">
+  <div class="tt">Tomorrow's diesel prediction</div>
+  <div class="fine" style="margin-bottom:10px">Tomorrow's price prediction comes in each afternoon between 1 and 4 p.m. Eastern.</div>
+  <div class="big" id="fcdbig"></div>
+  <div class="tip" id="fcdtip"></div>
+  <div style="text-align:center;margin-bottom:10px"><a href="#" id="fcdhowl" onclick="var h=document.getElementById('fcdhow');h.style.display=h.style.display==='block'?'none':'block';return false;" style="color:#f2b36b;font-size:15px;font-weight:700">How does this work?</a></div>
+  <div id="fcdhow" style="display:none;background:#1d3a5e;border-radius:10px;padding:12px;font-size:15px;line-height:1.45;margin-bottom:10px">
+    <b>It all starts with crude oil.</b>
+    <ol style="margin:8px 0 8px 20px;padding:0">
+      <li>Crude oil prices move on the market.</li>
+      <li>Refineries turn crude into diesel and sell it at fuel terminals at a wholesale price called the <b>rack price</b>. It changes every day.</li>
+      <li>Truck stops buy at the rack price, and their pump prices follow it, usually the next day.</li>
+    </ol>
+    <b>How is the price predicted?</b><br>It's not simple math. Every afternoon our system weighs several things together:<ul style="margin:6px 0 6px 20px;padding:0"><li>Daily wholesale rack moves at fuel terminals across the country</li><li>Next-day price changes from hundreds of truck stops</li><li>Recent price trends, day to day</li><li>Many years of price history</li></ul>Run through thousands of calculations, they show where pump prices are most likely headed tomorrow.<br><br><b>How often are we right?</b><br>We're right about 8 times out of 10, and even more often when prices make a big move.
+  </div>
+  <div class="fine">This is a prediction based on past trends, not a guarantee.</div>
+  <label><input type="checkbox" id="fcdx"> Don't show this again today</label>
+  <button type="button" onclick="fcDayClose()">OK</button>
+</div></div>
+<script>
+/* Daily prediction pop-up (Bob, Oct 25): replaces the home-screen line. Shows when the new prediction is in,
+   on every app open and every page change, until he checks the box. Comes back fresh with each new prediction. */
+var FCD_ON=false;
+function fcDayText(f){
+  var c=+f.cents, a=Math.abs(c), up=c>0;
+  var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0);
+  var diff=to?Math.round((to-t)/864e5):1, when=diff===1?'tomorrow':('on '+fpsDayName(to));
+  if(a<0.5) return {big:'Diesel prices are anticipated to stay about the same '+when+'.', tip:'No need to change how you buy.'};
+  var mixed=false; var rng='The range will be about '+Math.round(a)+' cents a gallon.';
+  if(f.low!=null&&f.high!=null){ var lo=+f.low, hi=+f.high;
+    if((lo<0&&hi<0)||(lo>0&&hi>0)){ var p=[Math.abs(lo),Math.abs(hi)].sort(function(x,y){return x-y;});
+      var l=Math.max(1,Math.round(p[0])), h=Math.round(p[1]); if(l<h) rng='The range will vary between '+l+' and '+h+' cents a gallon.'; else rng='The range will be about '+h+' cents a gallon.'; } 
+    else { var dn=Math.round(Math.abs(Math.min(lo,hi))), upc=Math.round(Math.max(lo,hi));
+      if(dn>=1&&upc>=1) mixed=true; if(dn>=1&&upc>=1) rng='The range could be anywhere from <span style="color:#3ab54a">\u25BC '+dn+' cents down</span> to <span style="color:#e74c3c">\u25B2 '+upc+' cents up</span>.'; } }
+  return up ? {big:'<span style="color:#e74c3c">\u25B2</span> Diesel prices are anticipated to go <span style="color:#e74c3c">up</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Fill up today if you can.'}
+            : {big:'<span style="color:#3ab54a">\u25BC</span> Diesel prices are anticipated to go <span style="color:#3ab54a">down</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Buy just enough today and fill up after it drops.'};
+}
+function fcDayBlocked(){
+  try{ var ids=['splash','fpslock']; for(var i=0;i<ids.length;i++){ var e=document.getElementById(ids[i]); if(e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none') return true; } }catch(e){}
+  try{ if(typeof FPS_TIPCUR!=='undefined'&&FPS_TIPCUR) return true; }catch(e){}
+  return false;
+}
+function fcDayCheck(){
+  try{
+    if(FCD_ON) return;
+    var f=(typeof FC!=='undefined'&&FC)||(typeof FCL!=='undefined'&&FCL); if(!f||!f.to) return;
+    var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0); if(!to||to<=t) return;
+    if(localStorage.getItem('fps_fcday_off')===String(f.to)) return;
+    if(fcDayBlocked()){ setTimeout(fcDayCheck,1500); return; }
+    var x=fcDayText(f);
+    document.getElementById('fcdbig').innerHTML=x.big; document.getElementById('fcdtip').textContent=x.tip;
+    document.getElementById('fcdx').checked=false;
+    document.getElementById('fcday').classList.add('show'); FCD_ON=true;
+  }catch(e){}
+}
+function fcDayClose(){
+  try{ var f=(typeof FC!=='undefined'&&FC)||FCL; if(document.getElementById('fcdx').checked&&f&&f.to) localStorage.setItem('fps_fcday_off',String(f.to)); }catch(e){}
+  document.getElementById('fcday').classList.remove('show'); setTimeout(function(){ FCD_ON=false; },300);
+}
+(function(){
+  var last=document.body.className, tm=null;
+  new MutationObserver(function(){
+    var cur=document.body.className.replace(/\b(has-[\w-]+|fp-only)\b/g,'').trim();
+    if(cur!==last){ last=cur; clearTimeout(tm); tm=setTimeout(fcDayCheck,500); }
+  }).observe(document.body,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) setTimeout(fcDayCheck,800); });
+  setInterval(fcDayCheck,60000);
 })();
 </script>
 </body>
