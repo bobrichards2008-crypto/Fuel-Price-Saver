@@ -29,9 +29,9 @@
   .suggest .useloc svg{flex:0 0 auto}
   .suggest.up{top:auto!important;bottom:100%;margin-bottom:3px;overflow-y:auto;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
   #routetools{display:flex;justify-content:space-between;gap:8px;margin:0 0 4px}
-  #fpbtn{display:flex;align-items:center;height:40px;padding:0 14px;border-radius:10px;background:#3ab54a;border:1.5px solid #3ab54a;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
-  #fpbtn.fpoff{opacity:1}
-  #routetools>button{flex:1 1 0;justify-content:center;white-space:nowrap;min-width:0}
+  #results #fpbtn,#fpbtn.fpbig{display:flex!important;flex-direction:row!important;align-items:center;justify-content:center;width:100%;height:52px;margin:6px 0 12px;border-radius:12px;background:#3ab54a;border:1.5px solid #3ab54a;color:#fff!important;font-size:19px!important;font-weight:700;cursor:pointer;white-space:nowrap}
+  #fpbtn.fpoff{opacity:1;background:#2b4a70!important;border-color:#2b4a70!important;color:#cfdbe9!important}
+  #routetools>button{flex:1 1 0;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;justify-content:center;white-space:nowrap;min-width:0;height:48px!important;padding:0 8px!important;font-size:18px!important;font-weight:700}
   #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
   #revbtn svg{flex:0 0 auto}
   #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
@@ -878,7 +878,8 @@
     </div>
   </div>
   <div id="stops"></div>
-  <div id="routetools" style="display:none"><button type="button" id="fpbtn" class="fpoff" onclick="openFuelPlan()" aria-label="Fuel optimizer"><b style="font-size:18px;margin-right:6px">$</b>Fuel optimizer</button><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
+  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
+  <button type="button" id="backres" onclick="openResults();window.scrollTo(0,0)" style="display:none;width:100%;height:48px;margin:0 0 10px;border-radius:12px;background:#17304f;border:1.5px solid #f26a21;color:#fff;font-size:17px;font-weight:700;cursor:pointer">Back to my fuel stops &rarr;</button>
   <div id="mainbtns">
   <div class="btnrow" id="pinbar">
     <button class="go" onclick="addStop()">+ Add stop</button>
@@ -2315,6 +2316,7 @@ function render(hits){
   let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
     +'</p>';
+  if(!NEAR_R) h+='<button type="button" id="fpbtn" class="fpbig" onclick="openFuelPlan()" aria-label="Fuel optimizer"><b style="font-size:22px;margin-right:8px">$</b><span>Fuel optimizer</span></button>';
   if(false){   // 1.0.8: best-price box at the top removed
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
@@ -2780,10 +2782,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
 const CHANGELOG = [
   { date:'2026-10-25', items:[
     'Version 1.3.25',
-    'New: Fuel plan is now called Fuel optimizer. It is the bright green $ button next to Reverse route, and both buttons are the same width',
+    'New: Fuel plan is now called Fuel optimizer. After you tap Find fuel, it is the big green $ button at the top of your list of stops. It is no longer on the home screen',
     'Removed: the Next fuel button on stop cards. Fuel optimizer does that job for the whole trip',
     'The tip now tells you how to add towns as stops to make the route go your way',
     'Changed: the top of the Fuel optimizer screen now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel optimizer again',
+    'Changed: the Fuel optimizer button is grey until you tap Find fuel, then turns bright green so you know it is ready',
+    'New: after you look up fuel, a Back to my fuel stops button shows on the home screen, so you can go back to your list without looking it up again. It goes away if you change your stops',
     'Fixed: the keyboard no longer pops up and covers the Fuel plan window. Tap a box when you want to type, and the window scrolls',
     'New: when you open Fuel optimizer it also asks how much fuel you want in your tank when you arrive. Tap Just my reserve, or pick a quarter, half, three-quarters or full',
     'Changed: stop cards now match the main app. Leg and miles sit on the line with the cities, and the cheapest stop glows a few times when you scroll to it',
@@ -6300,7 +6304,7 @@ function cityPickerDone(){
 <style id="fpstyle">
   #fpbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:800;color:#9fc0e8;line-height:1.1}
   #fpbtn svg{flex:0 0 auto}
-  #fpbtn.fpoff{opacity:1}
+  #fpbtn.fpoff{opacity:1;background:#2b4a70!important;border-color:#2b4a70!important;color:#cfdbe9!important}
   .altdot{display:none;width:10px;height:10px;border-radius:50%;background:#f26a21;margin-left:5px;vertical-align:middle;box-shadow:0 0 0 2px #10233f}
   body.has-alt .altdot{display:inline-block}
   #fpbtn{position:relative} #fpbtn .altdot{position:absolute;top:5px;right:6px;margin:0}
@@ -6666,7 +6670,7 @@ function fpCalc(){
 <div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
 <label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
 <script>
-var FPS_TIPS={fuelplan:{t:'New: Fuel optimizer',b:'After your fuel results come up, go back to the home screen and tap the green <b>$ Fuel optimizer</b> button. It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the Fuel optimizer screen, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
+var FPS_TIPS={fuelplan:{t:'New: Fuel optimizer',b:'After your fuel results come up, tap the green <b>$ Fuel optimizer</b> button at the top of your list of stops. It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the Fuel optimizer screen, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
 var FPS_TIPCUR=null;
 function fpsTip(id){try{var k=FPS_TIPS[id];if(!k||localStorage.getItem('fps_tipoff_'+id)==='1'||FPS_TIPCUR)return;
 FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;
@@ -6710,5 +6714,17 @@ FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 })();
 </script>
 <script>document.addEventListener('focusin',function(e){var p=document.getElementById('fqpop');if(p&&p.contains(e.target)&&e.target.tagName==='INPUT')setTimeout(function(){try{e.target.scrollIntoView({block:'center'});}catch(x){}},300);});</script>
+<script>
+(function(){
+  var stale=false;
+  function sync(){ var b=document.getElementById('backres'), r=document.getElementById('results'); if(!b||!r) return;
+    var ok=!stale && r.children.length>0 && !document.body.classList.contains('on-results');
+    b.style.display=ok?'block':'none'; }
+  new MutationObserver(function(){ stale=false; sync(); }).observe(document.getElementById('results'),{childList:true});
+  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('input',function(e){ var st=document.getElementById('stops'); if(st&&st.contains(e.target)){ stale=true; sync(); } });
+  window.backResSync=function(x){ if(x) stale=true; sync(); };
+})();
+</script>
 </body>
 </html>
