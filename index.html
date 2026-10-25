@@ -2148,7 +2148,7 @@ async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h,w,l
 
 let FF_RUN=0;
 const ALT_LEN=60*0.3048;               /* the length used to check whether a shorter route is being blocked */
-async function findFuel(){
+async function findFuel(){ fpsTip('fuelplan');
   const force60=!!window.FF_FORCE60; window.FF_FORCE60=false;
   if(!getTruck()){ openTruck(findFuel); return; }     // one-time truck setup, then carry on
   prepStart();                                            // blank start = where the driver is now (filled in visibly)
@@ -2761,6 +2761,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-24', items:[
+    'Version 1.3.23',
+    'New tip when you tap Find fuel tells you about the Fuel plan and Route buttons. Check the box to stop seeing it',
+    'Always check the route against your truck atlas and the signs'
+  ]},
+  { date:'2026-10-25', items:[
     'Version 1.3.22',
     'The toll tag on the Fuel plan screen now always shows. Orange means Avoid tolls is on, grey means it is off. Tap it to change it in Your truck',
     'Always check the route against your truck atlas and the signs'
@@ -6568,6 +6573,26 @@ function fpCalc(){
   if(g && window.MutationObserver) new MutationObserver(fpSync).observe(g,{attributes:true,attributeFilter:['class']});
   fpSync();
 })();
+</script>
+<style>
+#fpstip{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9000;padding:18px}
+#fpstip.show{display:flex}
+#fpstip .tb{background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px;color:#e8eef6;font-size:17px;line-height:1.45}
+#fpstip .tt{color:#f26a21;font-weight:700;font-size:19px;margin-bottom:8px}
+#fpstip label{display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:#9fb4ce;font-size:16px}
+#fpstip input{width:22px;height:22px}
+#fpstip button{width:100%;padding:12px;border:0;border-radius:10px;background:#f26a21;color:#fff;font-size:18px;font-weight:700}
+</style>
+<div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
+<label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
+<script>
+var FPS_TIPS={fuelplan:{t:'New: Fuel plan',b:'After your fuel results come up, go back to the home screen and tap <b>Fuel plan</b>. It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the Fuel plan screen, tap <b>Route</b> to see your highways and miles in each state.'}};
+var FPS_TIPCUR=null;
+function fpsTip(id){try{var k=FPS_TIPS[id];if(!k||localStorage.getItem('fps_tipoff_'+id)==='1'||FPS_TIPCUR)return;
+FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;
+document.getElementById('fpstipx').checked=false;document.getElementById('fpstip').classList.add('show');}catch(e){}}
+function fpsTipClose(){try{if(document.getElementById('fpstipx').checked&&FPS_TIPCUR)localStorage.setItem('fps_tipoff_'+FPS_TIPCUR,'1');}catch(e){}
+FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 </script>
 </body>
 </html>
