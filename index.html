@@ -2761,6 +2761,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-24', items:[
+    'Version 1.3.21',
+    'The Fuel plan screen now shows Avoid tolls is on at the top when that setting is turned on. Tap it to open Your truck and change it',
+    'Always check the route against your truck atlas and the signs'
+  ]},
+  { date:'2026-10-25', items:[
     'Version 1.3.20',
     'Routes no longer use your truck length. The map data had wrong length limits on some roads, like US 35, which sent trucks miles out of the way. Height and weight are still used',
     'Removed the orange dot from 1.3.19. It is no longer needed',
@@ -6295,7 +6300,7 @@ function cityPickerDone(){
 </style>
 <div id="fppop" role="dialog" aria-modal="true" aria-labelledby="fph2">
  <div class="fpin">
-  <div class="fphead"><button type="button" class="fpback" onclick="history.back()">Back</button><h2 id="fph2">Fuel plan</h2><button type="button" class="fpback" style="margin-left:auto" onclick="fpRoute()">Route</button></div>
+  <div class="fphead"><button type="button" class="fpback" onclick="history.back()">Back</button><h2 id="fph2">Fuel plan</h2><span id="fptoll" role="button" onclick="fpClose();openTruck()" style="cursor:pointer;display:none;margin-left:auto;background:#f26a21;color:#fff;font-size:12px;font-weight:800;border-radius:8px;padding:4px 8px;line-height:1.2;text-align:center">Avoid tolls is on</span><button type="button" class="fpback" style="margin-left:8px" onclick="fpRoute()">Route</button></div>
   <div id="fprt" onclick="if(event.target===this)this.classList.remove('show')"><div class="fprtin"><div class="fphead"><h2>Your route</h2><button type="button" class="fpback" style="margin-left:auto" onclick="document.getElementById('fprt').classList.remove('show')">Close</button></div><div id="fprtbody"></div></div></div>
   <div class="fptrip" id="fptrip"></div>
   <div class="fpset">
@@ -6434,6 +6439,7 @@ function openFuelPlan(){
   var ins=[].slice.call(document.querySelectorAll('#stops input')).map(function(i){ return i.value.trim(); }).filter(Boolean);
   document.getElementById('fptrip').textContent=(ins.length>1?ins[0]+' to '+ins[ins.length-1]+', ':'')+Math.round(ROUTE_TOTAL).toLocaleString('en-US')+' miles';
   FP_TAB='cheap';
+  { var tg=document.getElementById('fptoll'), rb=tg.nextElementSibling; tg.style.display=t.toll?'inline-block':'none'; rb.style.marginLeft=t.toll?'8px':'auto'; }
   document.getElementById('fppop').classList.add('show'); window.scrollTo(0,0); document.getElementById('fppop').scrollTop=0;
   try{ enterScreen(); }catch(e){}
   fpCalc();
