@@ -27,7 +27,14 @@
   .stop .fieldwrap input.isloc,.stop input.isloc{font-weight:700;color:#fff;padding-left:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cpath d='M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z' fill='%23f26a21'/%3E%3Ccircle cx='8' cy='7.5' r='2.4' fill='%231d3a5e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:15px 19px}
   .suggest .useloc{display:flex;align-items:center;gap:9px;color:#f26a21;font-weight:700}
   .suggest .useloc svg{flex:0 0 auto}
-  #routetools{display:flex;justify-content:flex-end;margin:0 0 4px}
+  .suggest.up{top:auto!important;bottom:100%;margin-bottom:3px;overflow-y:auto;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
+  #routetools{display:flex;justify-content:space-between;gap:8px;margin:0 0 4px}
+  #results #fpbtn,#fpbtn.fpbig{display:flex!important;flex-direction:row!important;align-items:center;justify-content:center;width:100%;height:52px;margin:6px 0 12px;border-radius:12px;background:#3ab54a;border:1.5px solid #3ab54a;color:#fff!important;font-size:19px!important;font-weight:700;cursor:pointer;white-space:nowrap}
+  #fpbtn.fpoff{opacity:1;background:#2b4a70!important;border-color:#2b4a70!important;color:#cfdbe9!important}
+  #routetools>button{flex:1 1 0;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;justify-content:center;white-space:nowrap;min-width:0;height:48px!important;padding:0 8px!important;font-size:18px!important;font-weight:700}
+  #predbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+  #routetools>button{flex:0 0 calc(50% - 4px)!important;max-width:calc(50% - 4px)}
+  #routetools.norev{justify-content:flex-end} #routetools.norev #revbtn{display:none!important}
   #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
   #revbtn svg{flex:0 0 auto}
   #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
@@ -141,19 +148,10 @@
     .trstop .n{color:#000}
     .trbar{display:none}
   }
-  .sthead.hasleg{flex-wrap:wrap}
-  .sthead .legtop{flex-basis:100%;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;order:-1;font-size:12.5px;font-weight:700;color:#f26a21;letter-spacing:.2px;margin-bottom:1px}
-  .sthead small.lgs{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 8px;text-align:right}
-  button.sthead small.lgs{flex-direction:column;align-items:flex-start;gap:0;text-align:left;line-height:1.3}
-  .sthead.hasleg #expandall{min-width:0;padding:0 10px}
-  .sthead.hasleg b{flex:none}
-  .sthead .legtop .legmi{color:#9fb4ce;font-weight:600}
-  .sthead.hasleg small.lgs, button.sthead.hasleg small.lgs{display:block;flex:1 1 0;min-width:0;margin-left:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
-  .sthead.hasleg small.lgs{font-size:11.5px}
   .sthead{display:flex;align-items:baseline;gap:10px;margin:18px 0 8px;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .sthead .stranknote{flex-basis:100%;order:9;font-size:11.5px;color:#9fb4ce;margin-top:2px}
   .sthead b{font-size:17px;letter-spacing:.5px;text-transform:uppercase}
-  .sthead small{margin-left:8px;color:#9fb4ce;font-size:12px}
+  .sthead small{margin-left:auto;color:#9fb4ce;font-size:12px}
   button.sthead{width:100%;background:none;border:none;border-bottom:2px solid var(--line);color:inherit;font:inherit;text-align:left;cursor:pointer;align-items:center;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
   button.sthead small{margin-left:8px}
   .stx{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;background:#17304f;border:1.5px solid #4f7bb0;border-radius:6px;color:#9fc0e8}
@@ -197,6 +195,7 @@
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
   .card.top{border:2px solid var(--orange);box-shadow:0 0 12px rgba(242,106,33,.4)}
+  .sthead .legtop .legmi{color:#9fb4ce;font-weight:600}
   .card.top.seen{animation:topPulse 2.6s ease-in-out 3}
   @keyframes topPulse{0%,100%{box-shadow:0 0 8px rgba(242,106,33,.3)}50%{box-shadow:0 0 16px 3px rgba(242,106,33,.65)}}
   @media (prefers-reduced-motion:reduce){.card.top{animation:none}}
@@ -503,6 +502,97 @@
   .amenpick label.dis{opacity:.4}
   .amenhint{font-size:12px;color:#9fb4ce;margin:4px 0 2px}
   #setpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  #truckpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  .sthead .stname{display:flex;flex-direction:column;gap:2px;min-width:0;flex:0 1 auto}
+  .sthead .stname b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  button.sthead{flex-wrap:nowrap}
+  .sthead #expandall{flex:none;white-space:nowrap}
+  .sthead .stname small{margin:0}
+  .sthead.hasleg{flex-wrap:wrap}
+  .sthead .legtop{flex-basis:100%;order:-1;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;font-weight:700;color:#f26a21;letter-spacing:.2px;margin-bottom:1px}
+  .sthead small.lgi{margin-left:auto;margin-right:0;color:#9fb4ce;font-size:11.5px;white-space:nowrap;align-self:center}
+  button.sthead small.lgi{margin-right:10px}
+  .sthead .lgi + .stx{margin-left:0}
+  .sthead .nfbtn{margin-left:auto;flex:none;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;background:var(--orange);color:#fff;font-weight:bold;font-size:12.5px;padding:7px 10px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .sthead .nfbtn svg{width:16px;height:16px}
+  .sthead .nfbtn + #expandall{margin-left:8px}
+  .sthead .nfbtn + .stx{margin-left:10px}
+  #nfpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  .nfg{display:flex;align-items:center;gap:14px;margin:10px 0 6px}
+  .nfg svg{width:120px;height:98px;flex:none}
+  .nfg .nfpick{flex:1;min-width:0}
+  .nfg label{display:block;font-size:13px;color:#cfdbe9;margin-bottom:5px}
+  .nfg select,.nfmpg input{width:100%;padding:11px;font-size:16px;border:none;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .nfmpg{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;color:#cfdbe9}
+  .nfmpg input{width:90px;flex:none}
+  #nfneedle{transition:transform .9s cubic-bezier(.45,0,.2,1)}
+  #nffill{transition:stroke-dashoffset .9s cubic-bezier(.45,0,.2,1)}
+  .card .nfrow{display:flex;justify-content:flex-end;margin-top:8px}
+  .card .nfbtn{display:inline-flex;align-items:center;gap:6px;background:var(--orange);color:#fff;font-weight:bold;font-size:14px;padding:8px 14px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .card .nfbtn svg{width:17px;height:17px}
+  .nflogbtn{display:block;width:100%;margin-top:12px;padding:12px;border-radius:10px;border:1.5px solid #2fa85a;background:#17304f;color:#7fe0a0;font-size:16px;font-weight:bold;cursor:pointer}
+  #fbpop{z-index:9700}
+  #fbpop .popbox{max-height:calc(100vh - 40px);overflow:auto}
+  #fbpop label{display:block;font-size:13px;color:#cfdbe9}
+  #fbpop input[type=text],#fbpop input[type=number],#fbpop input[type=date],#fbpop select{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:11px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff}
+  .fbrow{display:flex;gap:10px;margin-bottom:10px}
+  .fbrow label{flex:1;min-width:0}
+  .fbrow label:first-child{flex:1.25}
+  #fb_date{padding:11px 6px!important}
+  .fb3 input{padding:11px 8px!important}
+  .fbl{margin-bottom:10px}
+  .fbimp{width:100%;padding:11px;margin:2px 0 8px;border-radius:10px;border:1.5px solid #f26a21;background:transparent;color:#f2b36b;font-size:15px;font-weight:bold;cursor:pointer}
+  .fbhint{font-size:12.5px;color:#9fb4ce;line-height:1.4;margin-bottom:6px}
+  .fbchk{display:flex!important;align-items:flex-start;gap:9px;margin:4px 0 12px;font-size:15px!important;color:#fff!important;font-weight:bold}
+  .fbchk input{width:22px;height:22px;flex:none;margin:0;accent-color:#2fa85a}
+  .fbchk small{display:block;font-weight:normal;font-size:12.5px;color:#9fb4ce;margin-top:2px}
+  .fbwarn{display:none;background:#5a1a17;border:2px solid #e25a4f;color:#ffd6d1;font-weight:bold;font-size:14.5px;line-height:1.4;border-radius:10px;padding:11px;margin:2px 0 10px}
+  .fberr{color:#ff9b7a;font-size:14px;min-height:18px;margin-top:4px}
+  .fbbtns{display:flex;gap:10px;margin-top:10px}
+  .fbbtns button{flex:1;padding:11px;border-radius:10px;font-size:15px;font-weight:bold;background:transparent;cursor:pointer}
+  .fbcancel{border:1.5px solid #4f7bb0;color:#9fc0e8}
+  .fbdel{border:1.5px solid #e25a4f;color:#ff8a80}
+  #flpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #flpop.show{display:block}
+  .fl2{display:flex;gap:10px;margin:14px 0}
+  .fl2 .go{flex:1;padding:13px;font-size:16px}
+  .flblue{flex:1;padding:13px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;font-size:16px;font-weight:bold;cursor:pointer}
+  .flst{display:flex;gap:10px;margin-top:14px}
+  .flst div{flex:1;background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:11px;text-align:center}
+  .flst b{display:block;font-size:22px;color:#fff}
+  .flst small{display:block;font-size:12px;color:#9fb4ce;margin-top:2px}
+  .flnote{font-size:12.5px;color:#9fb4ce;margin-top:8px;line-height:1.4}
+  .flent{display:block;width:100%;text-align:left;background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:12px;margin:0 0 10px;color:#fff;cursor:pointer;font:inherit}
+  .flent .t1{display:flex;justify-content:space-between;gap:8px;font-weight:bold;font-size:15px}
+  .flent .t2{font-size:14px;color:#cfdbe9;margin-top:3px}
+  .flent .t3{font-size:13px;color:#9fb4ce;margin-top:3px}
+  .flent .nood{color:#ff8a80;font-weight:bold}
+  .fltag{font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;white-space:nowrap;align-self:center}
+  .fltag.full{background:#2fa85a;color:#fff}.fltag.part{background:#2b4a70;color:#cfdbe9}
+  .flempty{color:#9fb4ce;text-align:center;padding:24px 8px;line-height:1.5}
+  .ifpick{display:flex;gap:10px;margin:14px 0}
+  .ifpick select,.ifadd{flex:1;width:100%;padding:11px;font-size:16px;border:1px solid #4f7bb0;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .iftbl{width:100%;border-collapse:collapse;font-size:15px}
+  .iftbl th{text-align:left;font-size:12px;color:#f2b36b;text-transform:uppercase;letter-spacing:.4px;padding:6px 4px;border-bottom:1px solid #2b4a70}
+  .iftbl td{padding:7px 4px;border-bottom:1px solid #1f3a5c;vertical-align:middle}
+  .iftbl td.n{text-align:right;white-space:nowrap}
+  .iftbl input{width:96px;padding:8px;font-size:16px;border:1px solid #4f7bb0;border-radius:8px;background:#1d3a5e;color:#fff;text-align:right;box-sizing:border-box}
+  .iftbl tr.tot td{font-weight:bold;border-top:2px solid #4f7bb0;border-bottom:none}
+  .ifmpg{margin-top:10px;font-size:14px;color:#cfdbe9}
+  #fltoast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#2fa85a;color:#fff;font-weight:bold;padding:10px 18px;border-radius:999px;z-index:9800;display:none;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .nfopt{background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:12px;margin-top:10px;line-height:1.4}
+  .nfopt h4{margin:0 0 4px;font-size:13px;color:#f2b36b;text-transform:uppercase;letter-spacing:.4px}
+  .nfopt .nfbig{font-size:17px;font-weight:bold;color:#fff}
+  .nfopt .nfsub{font-size:13.5px;color:#9fb4ce}
+  .nfopt .nfbuy{display:inline-block;margin-top:6px;background:#2fa85a;color:#fff;font-weight:bold;border-radius:8px;padding:4px 10px;font-size:14px}
+  .nfopt .nfbuy.none{background:#2b4a70}
+  .trk label{display:block;font-size:14px;color:#cfdbe9;margin:12px 0 5px}
+  .trk label small{color:#9fb4ce}
+  .trk2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .trk2 input,.trk2 select{flex:1;min-width:60px;padding:12px;font-size:16px;border:none;border-radius:10px;background:#1d3a5e;color:#fff;box-sizing:border-box}
+  .trk2 span{color:#9fb4ce;font-size:14px}
+  .trk .trkchk{display:flex;align-items:center;gap:10px;font-size:15px;color:#fff;margin-top:16px;cursor:pointer}
+  .trk .trkchk input{width:22px;height:22px;accent-color:#f26a21}
   /* fresh-prices tag (green), same rocking tag as What's new */
   .freshtag{background:#3ab54a !important;display:none}
   body.has-new .freshtag{display:none}
@@ -513,7 +603,9 @@
   .leglink small{display:block;color:#9fb4ce;font-weight:normal;margin-top:3px}
 
   #fcline{position:absolute;left:0;right:0;top:9px;padding:0 76px;text-align:center;cursor:pointer;display:none;line-height:1.25;white-space:nowrap;overflow:hidden}
-  body.has-fcline #fcline{display:block}
+  body.has-fcline #fcline{display:none!important}
+  #fcline{pointer-events:none} #fcline>*{pointer-events:auto}
+  header .gear{z-index:6} header .newtag{z-index:6}
   #fcline .hd{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0c8}
   #fcline .ln{font-size:15px;font-weight:bold;color:#cfe0f2;display:inline-flex;align-items:center;gap:5px}
   #fcline .ln svg{width:14px;height:14px;flex:none}
@@ -534,7 +626,7 @@
   if(fromLink){ if(fromLink!==ls('fps_code')) ls('fps_ok',null); ls('fps_code',fromLink); }
   var code = ls('fps_code')||'';
   // 2. device stamp: a random tag saved on this phone.
-  // iPhone fix (1.0.2): the home-screen icon has its own storage, separate from Safari.
+  // iPhone fix (1.3.3): the home-screen icon has its own storage, separate from Safari.
   // The icon's start address carries the code and this phone's stamp (?a=CODE&d=STAMP),
   // so the icon uses the SAME stamp as Safari and the lock sees one phone, not two.
   var dev = ls('fps_dev');
@@ -542,7 +634,7 @@
   if(!dev){ dev = (window.crypto&&crypto.randomUUID)? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)); ls('fps_dev',dev); }
   try{
     q.delete('a'); q.delete('d');
-    if(!inApp && code){ q.set('a',code); q.set('d',dev); }
+    if(!inApp && code){ q.set('a',code); q.set('d',dev); }   // in the browser: keep code+stamp in the address so "Add to Home Screen" saves them
     var rest=q.toString(); history.replaceState(history.state,'',location.pathname+(rest?'?'+rest:'')+location.hash);
   }catch(e){}
   // 3. the cover screen
@@ -616,14 +708,23 @@
   
   var trusted = ls('fps_ok')==='1';
   if(!trusted) show('Checking access…','One moment.',false);   // new phone: hold the app until the answer comes back
-  fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(j){ if(j&&j.ok){ ls('fps_ok','1'); lift(); } else deny(); })
-    .catch(function(){
-      // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
-      if(trusted) return;
-      show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
-    });
+  // ask Google; if no answer, try again a few times. Also ask again whenever the app comes back on screen.
+  function flSet(j){ ls('fps_fl', j.fuellog?'1':'0'); var go=function(){ if(window.flApply) window.flApply(); }; go(); setTimeout(go,1500); }
+  function ask(n, quiet){
+    fetch(ACCESS_URL+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
+      .then(function(r){ ls('fps_dbg',(ls('fps_dbg')||'')+' | try '+n+': got reply '+r.status); return r.json(); })
+      .then(function(j){ ls('fps_dbg',(ls('fps_dbg')||'')+' | read: '+JSON.stringify(j)); if(j&&j.ok){ ls('fps_ok','1'); trusted=true; lift(); if(!('fuellog' in j) && n<10){ ls('fps_dbg',(ls('fps_dbg')||'')+' | no fuel log, asking again'); setTimeout(function(){ ask(n+1,true); },3000); return; } flSet(j); ls('fps_dbg',(ls('fps_dbg')||'')+' | saved '+ls('fps_fl')); } else if(!quiet) deny(); })
+      .catch(function(e){ ls('fps_dbg',(ls('fps_dbg')||'')+' | try '+n+' FAILED: '+e);
+        if(n<10){ setTimeout(function(){ ask(n+1, quiet); }, 3000); return; }
+        // no answer (no signal, Google busy): a phone already approved keeps running; a new phone waits
+        if(trusted||quiet) return;
+        show('Can\'t check access','There\'s no connection right now. Check your signal and try again.',true);
+      });
+  }
+  ls('fps_dbg','started, code '+code);
+  window.fpsAsk=ask;
+  ask(1,false);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible' && trusted) ask(3,true); });
 })();
 </script>
 <div id="splash">
@@ -639,10 +740,13 @@
 </svg>
   <h2><b>FPS</b> Fuel Price Saver</h2>
   <div class="tagline" id="spltag">Fuel savings maximized.</div>
-  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.0.11</span></div>
+  <div class="credit">Created by Bob Richards<br>powered by Claude AI from Anthropic<br><span id="splver" style="opacity:.75">Version 1.2</span></div>
 </div>
 <script>
 (function(){
+  // v1.3.6: a pull-down refresh skips the splash and goes straight back to where the driver was
+  try{ var nv=performance.getEntriesByType('navigation')[0], rs=JSON.parse(sessionStorage.getItem('fps_resume')||'null');
+    if(nv && nv.type==='reload' && rs && Date.now()-rs.t<6*3600*1000){ var s0=document.getElementById('splash'); if(s0) s0.parentNode.removeChild(s0); return; } }catch(e){}
   var started=Date.now();
   function play(){
     var n=document.getElementById('splneedle');
@@ -700,6 +804,9 @@
       <div class="poptext" style="margin:16px 0 6px">Details banner shows:</div>
       <div class="amenhint">Pick up to 4 to show on each stop's details banner.</div>
       <div class="amenpick" id="amenpick"></div>
+      <div id="truckrow" onclick="closeSettings();openTruck()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:flex;align-items:center">
+        <span><b>Your truck</b><small id="trucksum" style="display:block;color:#9fb4ce;margin-top:2px">Height, weight, length, axles, fuel mileage, tolls</small></span>
+        <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <div id="predrow" onclick="closeSettings();openFc()" style="margin-top:16px;padding:12px;border-radius:10px;background:#1d3a5e;cursor:pointer;display:none;align-items:center">
         <span><b>Tomorrow's prediction</b><small style="display:block;color:#9fb4ce;margin-top:2px">What we expect fuel to do tomorrow</small></span>
       </div>
@@ -707,6 +814,62 @@
         <span><b>History of changes</b><small style="display:block;color:#9fb4ce;margin-top:2px">Everything that's been updated, newest first</small></span>
         <span style="margin-left:auto;color:var(--orange);font-size:20px">&rsaquo;</span></div>
       <button class="go" style="padding:10px;margin-top:14px" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+  <div id="truckpop" class="popwrap" style="display:none">
+    <div class="popbox">
+      <div class="poptitle">Your truck</div>
+      <div class="poptext" id="truckintro" style="font-size:14px;color:#9fb4ce;line-height:1.4">Routes are planned for your truck. Change anything that's different, then tap Save.</div>
+      <div class="trk">
+        <label>Height</label>
+        <div class="trk2"><input id="tk_hft" type="number" inputmode="numeric" min="9" max="15"><span>ft</span><input id="tk_hin" type="number" inputmode="numeric" min="0" max="11"><span>in</span></div>
+        <label>Gross weight</label>
+        <div class="trk2"><input id="tk_wt" type="number" inputmode="numeric" min="10000" max="200000" step="1000"><span>lbs</span></div>
+        <label>Total length, tractor and trailer <span style="font-weight:normal;color:#9fb4ce;font-size:12px">(saved, not used for routes)</span></label>
+        <div class="trk2"><input id="tk_len" type="number" inputmode="numeric" min="20" max="120"><span>ft</span></div>
+        <label>Number of axles</label>
+        <div class="trk2"><select id="tk_ax"></select></div>
+        <label>Fuel mileage <small>(optional)</small></label>
+        <div class="trk2"><input id="tk_mpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="e.g. 6.5"><span>mpg</span></div>
+        <label>Fuel tank size, all tanks together</label>
+        <div class="trk2"><input id="tk_tank" type="number" inputmode="numeric" min="50" max="400"><span>gallons</span></div>
+        <label>Reserve to keep in the tank</label>
+        <div class="trk2"><input id="tk_res" type="number" inputmode="numeric" min="0" max="100"><span>gallons</span></div>
+        <label>States you never buy fuel in <small>(optional, e.g. KY, NJ)</small></label>
+        <div class="trk2"><input id="tk_skip" type="text" autocapitalize="characters" placeholder="e.g. KY"></div>
+        <label class="trkchk"><input id="tk_toll" type="checkbox" onchange="tkTollUI()"> Avoid toll roads</label>
+        <div id="tk_tollrow" class="trk2" style="display:none"><span style="margin:0 6px 0 0">unless it adds more than</span><input id="tk_max" type="number" inputmode="numeric" min="1" max="200"><span>miles</span></div>
+        <div id="tk_tollrow2" style="display:none"><label>Toll roads are fine in these states <small>(e.g. WV, the turnpike beats the mountain roads)</small></label>
+        <div class="trk2"><input id="tk_tollok" type="text" autocapitalize="characters" placeholder="e.g. WV"></div></div>
+        <label>Route</label>
+        <div class="trk2"><select id="tk_rt"><option value="fastest">Fastest</option><option value="shortest">Shortest</option></select></div>
+      </div>
+      <div id="tk_err" style="color:#ff9b7a;font-size:13px;min-height:16px;margin-top:8px"></div>
+      <div style="font-size:12px;color:#9fb4ce;line-height:1.4">Routes try to stay clear of low bridges, weight limits and restricted roads for these numbers. There's no guarantee every restriction is caught &mdash; always check the road and the signs for yourself.</div>
+      <button class="go" style="padding:10px;margin-top:12px;width:100%" onclick="saveTruck()">Save</button>
+    </div>
+  </div>
+  <div id="nfpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNf()">
+    <div class="popbox">
+      <div class="poptitle" id="nftitle">Next fuel</div>
+      <div class="poptext" id="nffrom" style="font-size:14px;color:#9fb4ce;line-height:1.4"></div>
+      <div class="nfg">
+        <svg viewBox="0 0 120 98" aria-hidden="true">
+          <path d="M20 70 a40 40 0 0 1 80 0" fill="none" stroke="#2b4a70" stroke-width="9" stroke-linecap="round"/>
+          <path id="nffill" d="M20 70 a40 40 0 0 1 80 0" fill="none" stroke="#f26a21" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="75"/>
+          <g id="nfneedle" style="transform-box:view-box;transform-origin:60px 70px;transform:rotate(45deg)"><line x1="60" y1="70" x2="28" y2="70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+          <circle cx="60" cy="70" r="5" fill="#f26a21"/>
+          <text x="14" y="83" font-size="11" font-weight="bold" fill="#e25a4f" font-family="Arial">E</text>
+          <text x="101" y="83" font-size="11" font-weight="bold" fill="#3fbf6f" font-family="Arial">F</text>
+          <text x="60" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff" font-family="Arial">FPS</text>
+        </svg>
+        <div class="nfpick"><label for="nflvl">Fuel in your tanks right now</label><select id="nflvl" onchange="nfCalc()"></select></div>
+      </div>
+      <div class="nfmpg" id="nfmpgrow"><span>Your fuel mileage</span><input id="nfmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="nfMpgSave()"><span>mpg</span></div>
+      <div id="nfout"></div>
+      <button type="button" id="nflogbtn" class="nflogbtn" style="display:none" onclick="fbOpenFromStop()">Log this fuel buy</button>
+      <div style="font-size:12px;color:#9fb4ce;line-height:1.4;margin-top:12px">Gallons are estimates from your fuel mileage and tank size, keeping your reserve. Prices can change before you get there. Always watch your own gauge.</div>
+      <button class="go" style="padding:10px;margin-top:12px;width:100%" onclick="closeNf()">Close</button>
     </div>
   </div>
   <div id="fcpop" class="popwrap" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -718,7 +881,8 @@
     </div>
   </div>
   <div id="stops"></div>
-  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
+  <div id="routetools" class="norev"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button><button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow's prediction</button></div>
+  <button type="button" id="backres" onclick="openResults();window.scrollTo(0,0)" style="display:none;width:100%;height:48px;margin:0 0 10px;border-radius:12px;background:#17304f;border:1.5px solid #f26a21;color:#fff;font-size:17px;font-weight:700;cursor:pointer">Back to my fuel stops &rarr;</button>
   <div id="mainbtns">
   <div class="btnrow" id="pinbar">
     <button class="go" onclick="addStop()">+ Add stop</button>
@@ -733,6 +897,7 @@
     <a id="gmaps" class="bluebtn off" target="_blank" rel="noopener" onclick="return gmapsTap()" aria-label="Map" title="Map"><svg viewBox="0 0 40 40" width="48" height="48"><path d="M6 11 l9-3 l10 3 l9-3 v21 l-9 3 l-10-3 l-9 3 z" fill="none" stroke="#9fc0e8" stroke-width="2.2" stroke-linejoin="round"/>
 <path d="M15 8 v21 M25 11 v21" stroke="#9fc0e8" stroke-width="1.6"/>
 <path d="M20 26 c-4-5-6-7.5-6-10.5 a6 6 0 0 1 12 0 c0 3-2 5.5-6 10.5z" fill="#f26a21" stroke="#0c1a30" stroke-width="1.2"/><circle cx="20" cy="15.5" r="2.2" fill="#0c1a30"/></svg></a>
+    
     <button class="bluebtn" style="color:#ff2a2a;font-weight:800;border-color:#d11f1f" onclick="askClear()">Clear</button>
   </div>
   <div id="nearpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNear()">
@@ -1076,7 +1241,7 @@ function relabel(){
     setMoveIcon(r,i,n);
     const mb=r.querySelector('.mvbtn'); if(mb) mb.style.display=n===1?'none':'';
   });
-  const rt=document.getElementById('routetools'); if(rt) rt.style.display=n>=2?'':'none';
+  const rt=document.getElementById('routetools'); if(rt){ rt.style.display=''; rt.classList.toggle('norev',n<2); }
 }
 // ---- "Use my location": a real value that rides in its box, offered once ----
 const PIN_SVG='<svg viewBox="0 0 16 20" width="15" height="19" aria-hidden="true"><path d="M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z" fill="#f26a21"/><circle cx="8" cy="7.5" r="2.4" fill="#13273f"/></svg>';
@@ -1289,7 +1454,7 @@ function loadLiveData(){
           if(data.loves_arrived) ARRIVED.loves = data.loves_arrived;
           if(data.ta_arrived) ARRIVED.ta = data.ta_arrived;
           checkFresh();
-          if(data.forecast) showForecast(data.forecast);
+          if(data.forecast){ showForecast(data.forecast); setTimeout(function(){ try{ fcDayCheck(); }catch(e){} },2500); }
           fpsStat("\u25CF Prices are live", "#3ab54a");
         }
       })
@@ -1487,6 +1652,12 @@ function seenFresh(){
   if(FRESH) showPop(FRESH.who+' prices arrived '+fpsClock(FRESH.when),'FRESH PRICES');
 }
 loadLiveData();
+/* Re-pull prices when the app comes back after sitting in the background (10+ min), and every 15 min while open,
+   so a prediction that lands at 2 shows even if the app was opened at noon and left running (Bob, Oct 25). */
+var FPS_LASTLOAD=Date.now();
+function fpsReload(){ if(Date.now()-FPS_LASTLOAD<10*60*1000) return; FPS_LASTLOAD=Date.now(); loadLiveData(); }
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) fpsReload(); });
+setInterval(function(){ if(!document.hidden) fpsReload(); },15*60*1000);
 function hav(la1,lo1,la2,lo2){
   const R=3958.8, p1=la1*Math.PI/180, p2=la2*Math.PI/180;
   const dp=(la2-la1)*Math.PI/180, dl=(lo2-lo1)*Math.PI/180;
@@ -1779,7 +1950,258 @@ async function fuelNear(radius){
   }catch(e){ hideBar(); res.innerHTML='<p class="hint">'+e.message+'.</p>'; }
 }
 
+/* ---- YOUR TRUCK (driver's own numbers, kept on this phone) ---- */
+const TRUCK_DEF={hft:13,hin:6,wt:80000,len:73,ax:5,mpg:'',toll:false,max:20,tank:200,res:25,skip:'',tollok:'WV',rt:'fastest'};
+function getTruck(){ try{ const t=JSON.parse(localStorage.getItem('fps_truck')||'null'); if(t) return Object.assign({},TRUCK_DEF,t); }catch(e){} return null; }
+function truckOpt(){ const t=getTruck()||TRUCK_DEF;
+  return {h:((+t.hft)*12+(+t.hin))*0.0254, w:(+t.wt)*0.45359237, len:(+t.len)*0.3048, ax:+t.ax, toll:!!t.toll, max:+t.max||20, rt:(t.rt==='shortest'?'shortest':'fastest'), tollok:String(t.tollok||'').toUpperCase().match(/[A-Z]{2}/g)||[]}; }
+function truckSum(){ const el=document.getElementById('trucksum'); const t=getTruck(); if(!el) return;
+  el.textContent=t? (t.hft+"' "+t.hin+'" \u2022 '+Number(t.wt).toLocaleString()+' lbs \u2022 '+t.len+' ft \u2022 '+t.ax+' axles'+(t.mpg?' \u2022 '+t.mpg+' mpg':'')+' \u2022 '+t.tank+' gal tank'+(t.toll?' \u2022 no tolls':''))
+    : 'Not set yet. Tap to enter your truck'; }
+let TRUCK_THEN=null;
+function tkTollUI(){ document.getElementById('tk_tollrow').style.display=document.getElementById('tk_toll').checked?'flex':'none'; document.getElementById('tk_tollrow2').style.display=document.getElementById('tk_toll').checked?'block':'none'; }
+function openTruck(then){
+  const t=getTruck()||TRUCK_DEF, $=id=>document.getElementById(id);
+  const ax=$('tk_ax'); if(!ax.options.length){ for(let n=2;n<=9;n++){ const o=document.createElement('option'); o.value=n; o.textContent=n+' axles'; ax.appendChild(o);} }
+  $('tk_hft').value=t.hft; $('tk_hin').value=t.hin; $('tk_wt').value=t.wt; $('tk_len').value=t.len; ax.value=t.ax;
+  $('tk_mpg').value=t.mpg; $('tk_tank').value=t.tank; $('tk_res').value=t.res; $('tk_skip').value=t.skip||''; $('tk_toll').checked=!!t.toll; $('tk_max').value=t.max; $('tk_tollok').value=t.tollok||''; $('tk_rt').value=(t.rt==='shortest'?'shortest':'fastest'); tkTollUI(); $('tk_err').textContent='';
+  $('truckintro').textContent= getTruck()
+    ? "Routes are planned for your truck. Change anything that's different, then tap Save."
+    : "One-time setup: routes are planned for your truck. We filled in a standard tractor-trailer. Change anything that's different, then tap Save.";
+  TRUCK_THEN=then||null;
+  $('truckpop').style.display='flex';
+}
+function saveTruck(){
+  const $=id=>document.getElementById(id), n=id=>parseFloat($(id).value);
+  const t={hft:n('tk_hft'),hin:n('tk_hin')||0,wt:n('tk_wt'),len:n('tk_len'),ax:parseInt($('tk_ax').value,10),
+           mpg:$('tk_mpg').value.trim()?n('tk_mpg'):'',toll:$('tk_toll').checked,max:n('tk_max')||20,
+           tank:n('tk_tank'),res:$('tk_res').value.trim()===''?25:n('tk_res'),
+           skip:($('tk_skip').value.toUpperCase().match(/[A-Z]{2}/g)||[]).join(', '),
+           tollok:($('tk_tollok').value.toUpperCase().match(/[A-Z]{2}/g)||[]).join(', '),rt:$('tk_rt').value};
+  const okSt=Object.values(STATES), badSt=(t.skip?t.skip.split(', '):[]).filter(x=>okSt.indexOf(x)<0);
+  const bad= !(t.hft>=9&&t.hft<=15)?'Height should be between 9 and 15 feet.'
+    : !(t.hin>=0&&t.hin<12)?'Inches should be 0 to 11.'
+    : !(t.wt>=10000&&t.wt<=200000)?'Weight should be between 10,000 and 200,000 lbs.'
+    : !(t.len>=20&&t.len<=120)?'Length should be between 20 and 120 feet.'
+    : (t.mpg!==''&&!(t.mpg>=2&&t.mpg<=15))?'Fuel mileage should be between 2 and 15 mpg, or leave it blank.'
+    : (t.toll&&!(t.max>=1&&t.max<=200))?'Extra miles should be between 1 and 200.'
+    : !(t.tank>=50&&t.tank<=400)?'Tank size should be between 50 and 400 gallons.'
+    : !(t.res>=0&&t.res<t.tank)?'Reserve should be 0 or more, and less than your tank size.'
+    : badSt.length?('Not a state: '+badSt.join(', ')+'. Use two letters, like KY.') : '';
+  if(bad){ $('tk_err').textContent=bad; return; }
+  try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){}
+  $('truckpop').style.display='none'; truckSum();
+  const f=TRUCK_THEN; TRUCK_THEN=null; if(f) f();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',truckSum); else truckSum();
+
+/* ---- NEXT FUEL: how much to buy to reach the cheapest fuel you can make ---- */
+let ROUTE_CUM=[], ROUTE_TOTAL=0, NF_I=null, NF_LVL=0.25, NF_REC=0;
+const NF_LVLS=[[0.125,'1/8 tank'],[0.25,'1/4 tank'],[0.375,'3/8 tank'],[0.5,'1/2 tank'],[0.625,'5/8 tank'],[0.75,'3/4 tank'],[0.875,'7/8 tank'],[1,'Full']];
+function hvMi(a,b,c,d){ const r=Math.PI/180, x=Math.sin((c-a)*r/2), y=Math.sin((d-b)*r/2);
+  return 7917.6*Math.asin(Math.sqrt(x*x+Math.cos(a*r)*Math.cos(c*r)*y*y)); }
+function nfCardBtn(i){ return '';
+  if(NEAR_R||!ROUTE_TOTAL||nfSkip().indexOf(LASTHITS[i].st)>=0) return '';
+  return '<div class="nfrow"><span class="nfbtn" role="button" tabindex="0" onclick="event.stopPropagation();openNf('+i+')">'
+    +'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17a8 8 0 0 1 16 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M12 17l4-6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>Next fuel</span></div>';
+}
+function nfSkip(){ const t=getTruck()||TRUCK_DEF; return (t.skip||'').split(/[^A-Z]+/).filter(Boolean); }
+function openNf(i){
+  NF_I=i; const s=LASTHITS[i], t=getTruck()||TRUCK_DEF, NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
+  const sel=document.getElementById('nflvl');
+  if(!sel.options.length) NF_LVLS.forEach(([v,l])=>{ const o=document.createElement('option'); o.value=v; o.textContent=l; sel.appendChild(o); });
+  sel.value=String(NF_LVL);
+  document.getElementById('nftitle').textContent='Next fuel';
+  document.getElementById('nffrom').textContent='From '+s.b+' in '+s.c+', '+(NAMES[s.st]||s.st)+', at $'+fmt(rankVal(s))+'.';
+  if(window.flApply) flApply();
+  document.getElementById('nfmpg').value=t.mpg||'';
+  const pop=document.getElementById('nfpop'); if(pop.parentElement!==document.body) document.body.appendChild(pop);
+  pop.style.display='flex';
+  nfCalc();
+}
+function closeNf(){ document.getElementById('nfpop').style.display='none'; }
+function nfMpgSave(){
+  const v=parseFloat(document.getElementById('nfmpg').value);
+  if(v>=2&&v<=15){ const t=getTruck()||Object.assign({},TRUCK_DEF); t.mpg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} truckSum(); }
+  nfCalc();
+}
+function nfGauge(f){
+  document.getElementById('nfneedle').style.transform='rotate('+(f*180)+'deg)';
+  document.getElementById('nffill').style.strokeDashoffset=String(100-f*100);
+}
+function nfCalc(){
+  if(NF_I==null) return;
+  const t=getTruck()||TRUCK_DEF, s=LASTHITS[NF_I], out=document.getElementById('nfout');
+  NF_LVL=parseFloat(document.getElementById('nflvl').value)||0.25; nfGauge(NF_LVL);
+  const mpgIn=parseFloat(document.getElementById('nfmpg').value), mpg=(mpgIn>=2&&mpgIn<=15)?mpgIn:6.5;
+  const tank=+t.tank||200, res=Math.min(+t.res||0, tank-1), have=tank*NF_LVL, price=rankVal(s);
+  const at=s.rmi||0, left=Math.max(0,ROUTE_TOTAL-at), skip=nfSkip();
+  const fullRange=(tank-res)*mpg, nowRange=Math.max(0,(have-res)*mpg);
+  const ahead=LASTHITS.filter(h=>(h.rmi||0)>at+0.5 && skip.indexOf(h.st)<0).sort((a,b)=>a.rmi-b.rmi);
+  const G=x=>Math.round(x), M=x=>Math.round(x).toLocaleString(), $p=x=>'$'+fmt(x);
+  const where=h=>esc(h.b)+', '+esc(h.c)+', '+h.st;
+  // gallons to buy here to reach a point d miles ahead and still have the reserve
+  const buyFor=d=>{ const need=d/mpg+res-have; return need<=0?0:Math.min(Math.ceil(need), Math.max(0,Math.floor(tank-have))); };
+  const fits=d=>d/mpg+res<=tank;
+  const buyTag=(g,d)=> g<=0 ? '<span class="nfbuy none">No fuel needed here</span>'
+      : '<span class="nfbuy">Buy about '+g+' gal here</span>'+(fits(d)?'':' <span class="nfsub">(fill up, you\u2019ll still need fuel before you get there)</span>');
+  let h='<div class="nfopt"><h4>Your range</h4><div class="nfbig">About '+M(nowRange)+' miles</div>'
+    +'<div class="nfsub">'+G(have)+' of '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'
+    +(mpgIn>=2?'':' (typical, enter yours above)')+'. A full tank goes about '+M(fullRange)+' miles. '+M(left)+' miles left on your route.</div></div>';
+  if(skip.length) h+='<div class="nfsub" style="margin-top:8px">Skipping stops in '+skip.join(', ')+'.</div>';
+  const cheaper=ahead.find(x=>rankVal(x)<price);
+  NF_REC=cheaper?buyFor(cheaper.rmi-at):buyFor(left);
+  if(cheaper){
+    const d=cheaper.rmi-at, g=buyFor(d);
+    h+='<div class="nfopt"><h4>Next cheaper fuel</h4><div class="nfbig">'+where(cheaper)+'</div>'
+      +'<div class="nfsub">'+M(d)+' miles ahead at '+$p(rankVal(cheaper))+', '+Math.round((price-rankVal(cheaper))*100)+'\u00a2 cheaper a gallon</div>'+buyTag(g,d)+'</div>';
+  }
+  const reach=ahead.filter(x=>x.rmi-at<=fullRange);
+  const best=reach.length?reach.reduce((a,b)=>rankVal(b)<rankVal(a)?b:a):null;
+  if(best&&rankVal(best)<price&&best!==cheaper){
+    const d=best.rmi-at, g=buyFor(d);
+    h+='<div class="nfopt"><h4>Cheapest you can reach on one tank</h4><div class="nfbig">'+where(best)+'</div>'
+      +'<div class="nfsub">'+M(d)+' miles ahead at '+$p(rankVal(best))+', '+Math.round((price-rankVal(best))*100)+'\u00a2 cheaper a gallon</div>'+buyTag(g,d)+'</div>';
+  }
+  const all=ahead.length?ahead.reduce((a,b)=>rankVal(b)<rankVal(a)?b:a):null;
+  if(all&&rankVal(all)<price&&all!==best&&all!==cheaper){
+    h+='<div class="nfopt"><h4>Cheapest on the rest of your route</h4><div class="nfbig">'+where(all)+'</div>'
+      +'<div class="nfsub">'+M(all.rmi-at)+' miles ahead at '+$p(rankVal(all))+'. Too far for one tank, so you\u2019ll fuel at least once before it.</div></div>';
+  }
+  if(!cheaper){
+    const g=buyFor(left);
+    h+='<div class="nfopt"><h4>Best fuel left on your route</h4><div class="nfbig">This is it</div>'
+      +'<div class="nfsub">Nothing cheaper ahead'+(skip.length?' (outside the states you skip)':'')+'. '
+      +(fits(left)?'Buying enough to finish your trip with your reserve:':'Your trip is longer than one tank, so fill up here:')+'</div>'+buyTag(g,left)+'</div>';
+  }
+  out.innerHTML=h;
+}
+
+/* truck-legal routing (TomTom). Returns the same shape as the old router so nothing else changes. */
+const TT_KEY="ARKpg3nDvyWW0qpnA5aSlSpkK78bopJF";
+async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h,w,len,ax,toll,max,tollok:[states],rt} */
+  const q="&travelMode=truck&vehicleCommercial=true&routeType="+(opt.rt==='shortest'?'shortest':'fastest')+"&traffic=true&vehicleHeight="+opt.h+
+    "&vehicleWeight="+Math.round(opt.w)+"&vehicleWidth=2.6"+
+    (opt.ax?"&vehicleNumberOfAxles="+opt.ax:"")+"&key="+TT_KEY;
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  /* one TomTom call -> {co:[[lon,lat]], dist, dur, legs:[{distance,duration}], ins:[{o,r}], toll:[[i0,i1]], names} */
+  const raw=async(P,extra,full)=>{
+    const loc=P.map(p=>(+p[1]).toFixed(5)+","+(+p[0]).toFixed(5)).join(":");
+    const r=await fetch("https://api.tomtom.com/routing/1/calculateRoute/"+loc+"/json?"+q+extra+(full?"&instructionsType=coded&sectionType=tollRoad":""));
+    if(!r.ok){ let t=''; try{ t=(await r.text()).replace(/\s+/g,' ').slice(0,140); }catch(e){} throw new Error("TomTom "+r.status+(t?" "+t:"")); }
+    const d=await r.json(), R=d.routes&&d.routes[0]; if(!R) throw new Error("TomTom found no route");
+    const co=[]; (R.legs||[]).forEach(l=>l.points.forEach(p=>co.push([p.longitude,p.latitude])));
+    return {co:co, dist:R.summary.lengthInMeters, dur:R.summary.travelTimeInSeconds,
+      legs:(R.legs||[]).map(l=>({distance:l.summary.lengthInMeters,duration:l.summary.travelTimeInSeconds})),
+      ins:((R.guidance&&R.guidance.instructions)||[]).map(x=>({o:x.routeOffsetInMeters||0,r:((x.roadNumbers||[])[0]||x.street||'')})),
+      toll:(R.sections||[]).filter(x=>x.sectionType==='TOLL_ROAD').map(x=>[x.startPointIndex,x.endPointIndex]), names:!!full};
+  };
+  /* try with road names, try again, then without road names (so the truck route never gets lost over the extras) */
+  const one=async(P,extra)=>{
+    try{ return await raw(P,extra,true); }catch(e1){ window.ROUTE_ERR=e1.message; if(/no route|NO_ROUTE|route search failed/i.test(e1.message)) throw e1; }
+    await wait(900);
+    try{ return await raw(P,extra,true); }catch(e2){ window.ROUTE_ERR=e2.message; }
+    return await raw(P,extra,false);
+  };
+  /* nearest main road (interstate or highway) to a point, so a stop downtown doesn't kill the truck route */
+  const snap=async(p)=>{
+    try{ const u="https://api.tomtom.com/search/2/reverseGeocode/"+(+p[1]).toFixed(5)+","+(+p[0]).toFixed(5)+".json?key="+TT_KEY
+          +"&radius=24000&roadUse="+encodeURIComponent('["LimitedAccess","Arterial"]');
+      const r=await fetch(u); if(!r.ok) return null; const d=await r.json(), A=d.addresses&&d.addresses[0]; if(!A||!A.position) return null;
+      const ll=String(A.position).split(',').map(Number); if(!(isFinite(ll[0])&&isFinite(ll[1]))) return null;
+      if(hvMi(+p[1],+p[0],ll[0],ll[1])>15) return null;
+      return [ll[1],ll[0]];
+    }catch(e){ return null; } };
+  const wrap=x=>({code:"Ok",routes:[{geometry:{coordinates:x.co},distance:x.dist,duration:x.dur,legs:x.legs}],
+    tt:x.names?{ins:x.ins,toll:x.toll}:null, tollKept:x.tollKept, tollOk:x.tollOk});
+  let a;
+  window.ROUTE_SNAPPED=[];
+  try{ a=await one(pts,""); }
+  catch(e0){
+    if(!/no route|NO_ROUTE|route search failed/i.test(e0.message)) throw e0;
+    /* first move the in-between stops onto a main road, then the start and end too */
+    const tries=[pts.map((p,i)=>i>0&&i<pts.length-1), pts.map(()=>true)];
+    for(const which of tries){
+      if(!which.some(Boolean)) continue;
+      const np=await Promise.all(pts.map((p,i)=>which[i]?snap(p):null));
+      const moved=np.map((x,i)=>x?i:-1).filter(i=>i>=0); if(!moved.length) continue;
+      const P2=pts.map((p,i)=>np[i]||p);
+      try{ a=await one(P2,""); pts=P2; window.ROUTE_SNAPPED=moved; window.ROUTE_ERR=null; break; }catch(e1){}
+    }
+    if(!a) throw e0;
+  }
+  if(!opt.toll) return wrap(a);
+  const lim=opt.max||20, okSt=opt.tollok||[];   /* Bob, Oct 25 (1.3.27): with in-between stops, tolls are decided one leg at a time (see pick) */
+  const b=await one(pts,"&avoid=tollRoads").catch(()=>null);
+  const pickWhole=()=>{ if(b&&(b.dist-a.dist)/1609.34<=lim) return wrap(b);
+    a.tollKept=b?Math.round((b.dist-a.dist)/1609.34):-1; return wrap(a); };
+  /* each leg gets its own toll check: skip tolls on that leg if it adds no more than the limit, else that leg keeps its toll road */
+  const pick=async()=>{
+    if(pts.length<3) return pickWhole();
+    try{
+      const L=await Promise.all(pts.slice(0,-1).map(async(p,k)=>{
+        const P2=[p,pts[k+1]];
+        const ak=await raw(P2,"",true), bk=await raw(P2,"&avoid=tollRoads",true).catch(()=>null);
+        const ex=bk?(bk.dist-ak.dist)/1609.34:-1;
+        return (bk&&ex<=lim)?{r:bk,kept:0}:{r:ak,kept:ak.toll.length?(bk?Math.round(ex):-1):0};
+      }));
+      const h={co:[],dist:0,dur:0,legs:[],ins:[],toll:[],names:true};
+      let kept=0;
+      L.forEach(x=>{ const po=h.co.length, mo=h.dist, r=x.r;
+        r.co.forEach(c=>h.co.push(c)); r.ins.forEach(n=>h.ins.push({o:n.o+mo,r:n.r}));
+        r.toll.forEach(t=>h.toll.push([t[0]+po,t[1]+po]));
+        h.legs.push({distance:r.dist,duration:r.dur}); h.dist+=r.dist; h.dur+=r.dur;
+        if(x.kept>kept) kept=x.kept; });
+      if(kept) h.tollKept=kept;
+      return wrap(h);
+    }catch(e){ return pickWhole(); }
+  };
+  if(!okSt.length || !a.names || !a.toll.length) return pick();
+  /* which state each toll stretch is in */
+  const cum=[0]; for(let i=1;i<a.co.length;i++) cum.push(cum[i-1]+hvMi(a.co[i-1][1],a.co[i-1][0],a.co[i][1],a.co[i][0]));
+  const stOf=i=>{ try{ return fpStateAt(a.co[i][1],a.co[i][0]); }catch(e){ return null; } };
+  const secs=a.toll.map(t=>{ const i0=Math.max(0,Math.min(t[0],a.co.length-1)), i1=Math.max(i0,Math.min(t[1],a.co.length-1));
+    return {i0:i0,i1:i1,ok:okSt.indexOf(stOf(Math.round((i0+i1)/2)))>=0}; });
+  if(secs.every(x=>x.ok)){ a.tollOk=true; return wrap(a); }          // every toll road on it is in a state the driver allows
+  if(!secs.some(x=>x.ok)) return pick();
+  /* mixed: keep the allowed toll roads, go around the rest */
+  const keep=[]; secs.filter(x=>x.ok).forEach(x=>{ const L=keep[keep.length-1];
+    if(L && cum[x.i0]-cum[L.i1]<5) L.i1=x.i1; else keep.push({i0:x.i0,i1:x.i1}); });
+  const legEnd=[]; { let n=0; const per=a.co.length/Math.max(1,a.legs.length);  // point index where each leg ends
+    let acc=0; a.legs.forEach((l,k)=>{ acc+=l.distance/1609.34; let j=n; while(j<a.co.length-1 && cum[j]<acc-0.01) j++; legEnd.push(j); n=j; }); }
+  const legOf=i=>{ for(let k=0;k<legEnd.length;k++) if(i<=legEnd[k]) return k; return legEnd.length-1; };
+  const marks=[]; keep.forEach(x=>{ marks.push({i:x.i0,k:legOf(x.i0),s:1}); marks.push({i:x.i1,k:legOf(x.i1),s:0}); });
+  const segs=[]; let inside=false;
+  for(let k=0;k<pts.length-1;k++){
+    const chain=[{p:pts[k]}].concat(marks.filter(m=>m.k===k).sort((u,v)=>u.i-v.i).map(m=>({p:a.co[m.i],m:m}))).concat([{p:pts[k+1]}]);
+    for(let c=0;c<chain.length-1;c++){
+      if(chain[c].m) inside=!!chain[c].m.s;
+      segs.push({from:chain[c].p,to:chain[c+1].p,toll:inside,leg:k});
+    }
+  }
+  const groups=[]; segs.forEach(sg=>{ const G=groups[groups.length-1];
+    if(G && G.toll===sg.toll){ G.P.push(sg.to); G.segs.push(sg); } else groups.push({toll:sg.toll,P:[sg.from,sg.to],segs:[sg]}); });
+  let parts;
+  try{ parts=await Promise.all(groups.map(G=>raw(G.P,G.toll?"":"&avoid=tollRoads",true))); }catch(e){ return pick(); }
+  const h={co:[],dist:0,dur:0,legs:pts.slice(1).map(()=>({distance:0,duration:0})),ins:[],toll:[],names:true};
+  parts.forEach((x,g)=>{
+    const po=h.co.length, mo=h.dist;
+    x.co.forEach(c=>h.co.push(c));
+    x.ins.forEach(n=>h.ins.push({o:n.o+mo,r:n.r}));
+    x.toll.forEach(t=>h.toll.push([t[0]+po,t[1]+po]));
+    x.legs.forEach((l,j)=>{ const sg=groups[g].segs[j]; if(!sg) return; h.legs[sg.leg].distance+=l.distance; h.legs[sg.leg].duration+=l.duration; });
+    h.dist+=x.dist; h.dur+=x.dur;
+  });
+  if((h.dist-a.dist)/1609.34<=lim){ h.tollOk=true; h.tollMixed=true; return wrap(h); }
+  return pick();
+}
+
+
+let FF_RUN=0;
+const ALT_LEN=60*0.3048;               /* the length used to check whether a shorter route is being blocked */
 async function findFuel(){
+  const force60=!!window.FF_FORCE60; window.FF_FORCE60=false;
+  if(!getTruck()){ openTruck(findFuel); return; }     // one-time truck setup, then carry on
   prepStart();                                            // blank start = where the driver is now (filled in visibly)
   const raw=[...document.querySelectorAll('#stops input')].map(i=>i.value.trim());
   const inputs=raw.filter(x=>x);
@@ -1787,17 +2209,34 @@ async function findFuel(){
   const oh=document.getElementById('opthint');
   if(inputs.length<2){ oh.innerHTML='<p class="hint">Enter at least a start and an end.</p>'; return; }
   oh.innerHTML='';
+  /* fresh start: forget the last route, lookups and fuel plan so nothing old carries over */
+  window.ROUTE_LINE=null; window.ROUTE_TT=null; window.ROUTE_TOLLKEPT=null; window.ROUTE_TOLLOK=false;
+  window.ROUTE_ERR=null; window.ROUTE_CAR=false; window.ROUTE_SNAPPED=[]; window.ROUTE_NAMES=[]; window.ROUTE_STOPS=null;
+  ROUTE_CUM=[]; ROUTE_TOTAL=0; ROUTE_LEGS=null; ROUTE_MI=null; LASTHITS=[];
+  for(const k in GEO_CACHE) delete GEO_CACHE[k];
+  window.ROUTE_ALT=null; window.ROUTE_FORCED=force60; document.body.classList.remove('has-alt');
+  const RUN=++FF_RUN;
+  try{ fpClose(); document.getElementById('fprt').classList.remove('show'); fpSync(); }catch(e){}
   openResults();
   const maxMiles=parseFloat(document.getElementById('maxmi').value)||2;
   setBar(10); res.innerHTML='<p class="hint">'+(inputs[0]===HERE?'Finding your location...':'Looking up your cities...')+'</p>';
   try{
     const pts=[]; const resolved=[];
     for(let k=0;k<inputs.length;k++){ const g=await geocode(inputs[k]); pts.push(g); resolved.push(shortPlace(g[2]||inputs[k])); setBar(10+Math.round(30*(k+1)/inputs.length)); }
+    window.ROUTE_STOPS=inputs.map((t,k)=>({t:t, f:String(pts[k][2]||''), la:+pts[k][1], lo:+pts[k][0]}));
     setBar(50); res.innerHTML='<p class="hint">Routing: '+resolved.join('  \u2192  ')+'</p>';
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
-    const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
-    const rj=await (await fetch(ru)).json();
+    let rj=null;
+    window.ROUTE_ERR=null; window.ROUTE_CAR=false; window.ROUTE_SNAPPED=[]; window.ROUTE_NAMES=resolved.slice();
+    const TOPT=truckOpt(); if(force60&&TOPT.len>ALT_LEN) TOPT.len=ALT_LEN;
+    try{ rj=await ttRoute(pts.map(p=>[p[0],p[1]]),TOPT); }catch(e){ rj=null; window.ROUTE_ERR=e.message; }
+    if(!rj) window.ROUTE_CAR=true;
+    if(!rj){ const ru='https://router.project-osrm.org/route/v1/driving/'+coordStr+'?overview=full&geometries=geojson';
+      rj=await (await fetch(ru)).json(); }
     const line=rj.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+    { const cum=[0]; for(let i=1;i<line.length;i++) cum.push(cum[i-1]+hvMi(line[i-1][0],line[i-1][1],line[i][0],line[i][1]));
+      const k=cum[cum.length-1]>0 ? (rj.routes[0].distance/1609.34)/cum[cum.length-1] : 1;
+      ROUTE_CUM=cum.map(x=>x*k); ROUTE_TOTAL=rj.routes[0].distance/1609.34; }
     const cc=canadaCheck(line);
     if(cc.miles>10){
       hideBar();
@@ -1806,36 +2245,37 @@ async function findFuel(){
       return;
     }
     showLegMiles(rj.routes[0]);
+    window.ROUTE_LINE=line; window.ROUTE_TT=rj.tt||null; window.ROUTE_TOLLKEPT=(rj.tollKept!=null?rj.tollKept:null); window.ROUTE_TOLLOK=!!rj.tollOk;
     ROUTE_MI=Math.round(rj.routes[0].distance/1609);
-    // ---- legs: where each in-between stop falls on the route line, so results follow driving order leg by leg
+    // ---- legs: where each in-between stop falls on the route, so results follow driving order leg by leg
     ROUTE_LEGS=null;
     try{
       const rlegs=rj.routes[0].legs||[];
-      if(rlegs.length>1){
-        const cum=[0]; for(let i=1;i<line.length;i++) cum.push(cum[i-1]+hav(line[i-1][0],line[i-1][1],line[i][0],line[i][1]));
-        const scale=cum[cum.length-1]/((rj.routes[0].distance/1609.34)||1);
+      if(rlegs.length>1 && rlegs.length===pts.length-1){
         const bnd=[0]; let acc=0, lo=0;
         for(let k=0;k<rlegs.length-1;k++){
-          acc+=rlegs[k].distance/1609.34*scale;
+          acc+=(rlegs[k].distance||0)/1609.34;
           const wp=pts[k+1]; let bi=-1, bd=1e9;
           for(let i=lo;i<line.length;i++){
-            if(cum[i]>acc+25) break;
-            if(cum[i]<acc-25) continue;
-            const d=hav(wp[1],wp[0],line[i][0],line[i][1]); if(d<bd){ bd=d; bi=i; }
+            if(ROUTE_CUM[i]>acc+25) break;
+            if(ROUTE_CUM[i]<acc-25) continue;
+            const d=hvMi(wp[1],wp[0],line[i][0],line[i][1]); if(d<bd){ bd=d; bi=i; }
           }
-          if(bi<0){ bi=lo; while(bi<line.length-1&&cum[bi]<acc) bi++; }
+          if(bi<0){ bi=lo; while(bi<line.length-1&&ROUTE_CUM[bi]<acc) bi++; }
           if(bi<lo) bi=lo;
           bnd.push(bi); lo=bi;
         }
         const nm=k=>String(resolved[k]||inputs[k]||'').trim();
-        ROUTE_LEGS=bnd.map((st,k)=>({from:nm(k), to:nm(k+1), s:st, mi:Math.round(rlegs[k].distance/1609)}));
+        ROUTE_LEGS=bnd.map((st,k)=>({from:nm(k), to:nm(k+1), s:st, mi:Math.round((rlegs[k].distance||0)/1609)}));
       }
     }catch(e){ ROUTE_LEGS=null; }
+    if(rj.tollKept>0) oh.innerHTML='<p class="hint">Kept a toll road: going around it adds about '+rj.tollKept+' miles, more than your limit.</p>';
     setBar(70); res.innerHTML='<p class="hint">Matching fuel stops along '+Math.round(rj.routes[0].distance/1609)+' miles...</p>';
     let laMin=90,laMax=-90,loMin=180,loMax=-180;
     for(const[la,lo]of line){ if(la<laMin)laMin=la; if(la>laMax)laMax=la; if(lo<loMin)loMin=lo; if(lo>loMax)loMax=lo; }
     const pad=maxMiles/69+0.3;
     const hits=[];
+    const legOf=i=>{ let leg=0; if(ROUTE_LEGS){ for(let k=0;k<ROUTE_LEGS.length;k++){ if(i>=ROUTE_LEGS[k].s) leg=k; } } return leg; };
     for(const s of STATIONS){
       const la=s[3], lo=s[4];
       if(la<laMin-pad||la>laMax+pad||lo<loMin-pad||lo>loMax+pad) continue;
@@ -1845,16 +2285,32 @@ async function findFuel(){
         if(d<best){ best=d; bestI=i; }
         if(best<0.15) break;
       }
-      if(best<=maxMiles){ let leg=0; if(ROUTE_LEGS){ for(let k=0;k<ROUTE_LEGS.length;k++){ if(bestI>=ROUTE_LEGS[k].s) leg=k; } }
-        hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],def:s[10],off:Math.round(best*10)/10,pos:bestI,leg:leg}); }
+      if(best<=maxMiles){ hits.push({b:s[0],c:s[1],st:s[2],la:la,lo:lo,ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:Math.round(best*10)/10,pos:bestI,rmi:ROUTE_CUM[bestI]||0,leg:legOf(bestI)}); }
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
-    LASTHITS=hits; NEAR_R=null;
+    LASTHITS=hits; NEAR_R=null; try{ fpSync(); }catch(e){}
     setBar(100); hideBar();
     render(hits);
     openResults();
     if(hits.length){ ding(); flagBestPrice(); }
   }catch(e){ hideBar(); res.innerHTML='<p class="hint">Something went wrong: '+e.message+'. The free map service can be busy \u2014 try again.</p>'; }
+}
+
+/* quiet check: is the driver's length setting blocking a much shorter route? */
+async function altCheck(run,P,o){
+  const keep={e:window.ROUTE_ERR,s:window.ROUTE_SNAPPED};
+  try{
+    const r=await ttRoute(P,Object.assign({},o,{len:ALT_LEN}));
+    if(run!==FF_RUN) return;
+    const mi=r.routes[0].distance/1609.34, d=Math.round(ROUTE_TOTAL-mi);
+    if(d>=20){ window.ROUTE_ALT={mi:Math.round(mi),diff:d}; document.body.classList.add('has-alt'); }
+  }catch(e){}
+  finally{ if(run===FF_RUN){ window.ROUTE_ERR=keep.e; window.ROUTE_SNAPPED=keep.s; } }
+}
+function fpUseAlt(){
+  window.FF_FORCE60=true;
+  try{ document.getElementById('fprt').classList.remove('show'); fpClose(); }catch(e){}
+  findFuel();
 }
 
 let BESTFLAG_TIMER=null;
@@ -1887,9 +2343,11 @@ function render(hits){
   const first=st=> Math.min(...groups[st].map(i=>where(hits[i])));
   order.sort((x,y)=>first(x)-first(y));
   const NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
-  let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
+  let h='<div id="reshead"><p class="hint" id="reshint" data-all="'+hits.length+'">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
     +'</p>';
+  if(!NEAR_R) h+='<div id="fprow"><button type="button" id="fpbtn" class="fpbig" onclick="openFuelPlan()" aria-label="Fuel stop optimizer"><b style="font-size:24px;margin-right:8px">$</b><span class="fpl"><span>Fuel stop optimizer</span><small id="fpsave">Tap to see what you\'ll save</small></span></button><div id="fpview"><button type="button" class="sg" id="sgo" onclick="fpPick(\'plan\')">Optimizer picks</button><button type="button" class="sg on" id="sga" onclick="fpPick(\'all\')">My picks</button></div></div>';
+  h+='</div>';
   if(false){   // 1.0.8: best-price box at the top removed
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
@@ -1902,32 +2360,32 @@ function render(hits){
   }
   const dOn=RANKBY==='disc';
   let curLeg=-1;
-  const legBits=(key,n)=>{   // returns [extra class, top line, right-side text]
-    const cnt=n+(n===1?' stop':' stops');
-    if(!LEGS) return ['','','<small>'+cnt+'</small>'];
-    const L=LEGS[gleg[key]]||{}, first=gleg[key]!==curLeg; curLeg=gleg[key];
-    if(!first) return ['','','<small>'+cnt+'</small>'];
-    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'<span class="legmi"> \u00b7 Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</span></span>',
-      '<small class="lgs">'+cnt+'</small>'];
+  const legBits=key=>{   // [extra class, top line, right-side leg text]
+    if(!LEGS) return ['','',''];
+    const first=gleg[key]!==curLeg; curLeg=gleg[key];
+    if(!first) return ['','',''];
+    const L=LEGS[gleg[key]]||{};
+    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'<span class="legmi"> \u00b7 Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</span></span>',''];
   };
   order.forEach(key=>{
     const idx=groups[key], st=gst[key];
-    const LB=legBits(key,idx.length);
     const multi=idx.length>1;
+    const LB=legBits(key);
     h+='<div class="stgrp" id="stg_'+key+'">';
     if(multi){
-      h+='<button class="sthead'+LB[0]+'" aria-expanded="false" onclick="toggleState(\''+key+'\')">'+LB[1]+'<b>'+(NAMES[st]||st)+'</b>'+LB[2]
+      h+='<button class="sthead'+LB[0]+'" aria-expanded="false" onclick="toggleState(\''+key+'\')">'+LB[1]+'<span class="stname"><b>'+(NAMES[st]||st)+'</b><small>'+idx.length+' stops</small></span>'+LB[2]
         +'<span class="stx" aria-label="Show stops"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M12 3a1.2 1.2 0 0 1 1.2 1.2v12.3l4.0-4.0a1.2 1.2 0 1 1 1.7 1.7l-6.0 6.05a1.2 1.2 0 0 1-1.7 0l-6.05-6.05a1.2 1.2 0 1 1 1.7-1.7l4.05 4.0V4.2A1.2 1.2 0 0 1 12 3z\"/></svg></span></button>';
     } else {
-      h+='<div class="sthead'+LB[0]+'">'+LB[1]+'<b>'+(NAMES[st]||st)+'</b>'+LB[2]+'</div>';
+      h+='<div class="sthead'+LB[0]+'">'+LB[1]+'<span class="stname"><b>'+(NAMES[st]||st)+'</b><small>1 stop</small></span>'+LB[2]+'</div>';
     }
     idx.forEach((i,k)=>{
     if(k===1) h+='<div class="stmore">';
     const s=hits[i];
     const g=encodeURIComponent(s.c+', '+s.st);
     const bc=brandClass(s.b);
-    h+='<div class="card '+bc+(i===0?' top':'')+'">'
+    h+='<div class="card '+bc+(i===0?' top':'')+'" data-k="'+s.la+','+s.lo+'">'
       +'<div class="cardhead"><b>'+(k+1)+'.</b><span class="brandtag '+bc+'">'+s.b+'</span> <span class="cardtown">'+s.c+'</span>'
+      +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
       +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
       +'<div class="priceline pricerow">'
@@ -1935,6 +2393,7 @@ function render(hits){
       +'<span class="cardbtns"><button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
       +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a></span>'
       +'</div>'
+      +nfCardBtn(i)
       +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
       +'</div>';
     });
@@ -2352,6 +2811,18 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-25', items:[
+    'Version 1.0.13',
+    'New: Fuel plan button. After you tap Find fuel, it shows every state on your run with the miles, gallons and cost, and names the stops to buy at',
+    'New: Fuel stop optimizer. One tap plans where to fill up and how much to buy so you stop less and save more. Run it again before each fuel stop, since prices change every day',
+    'New: Route button on the Fuel plan shows which highways your route takes in each state and any toll road miles',
+    'New: when tomorrow\u2019s diesel prediction comes in each afternoon (between 1 and 4 p.m. Eastern), a pop-up on the home screen tells you in plain words if prices are expected to go up, go down or stay about the same. Tap Tomorrow\u2019s prediction anytime to see it again',
+    'New: in Your truck, list states where toll roads are fine, like WV. Avoid tolls now checks each leg of your trip on its own, so you are never sent far out of the way',
+    'Changed: routes no longer use your truck length, because the map data had wrong length limits on some roads. Height and weight are still used',
+    'Fixed: a stop in the middle of a town no longer stops the route from loading, and every Find fuel starts fresh',
+    'Fixed: if the app was left open, prices now reload on their own',
+    'Fuel prices change every day, so savings are an estimate, not a guarantee. Always check the route against your truck atlas and the signs'
+  ]},
   { date:'2026-10-24', items:[
     'Version 1.0.12',
     'New: tapping a city box opens its own full screen to type in. The box stays at the top, the cities show right under it, and the keyboard can\'t cover them',
@@ -2508,6 +2979,7 @@ function openNews(){
 })();
 function stepBack(){
   if(window.CP_OPEN){ cityPickerDone(); return true; }
+  { const fp=document.getElementById('fppop'); if(fp && fp.classList.contains('show')){ fpClose(); return true; } }
   if(document.body.classList.contains('on-trip')){
     document.body.classList.remove('on-trip');
     document.getElementById('trippop').classList.remove('show');
@@ -2814,7 +3286,8 @@ async function optimizeStops(){
     <h2>Tools</h2>
     <div class="plsub">Extra helpers for your loads. More are on the way.</div>
     <button class="tlcard" id="tlvspec" onclick="if(!window.FPS_VSOFF)openVspec()"><span class="tlico"><svg viewBox="0 0 48 24" width="44" height="22" aria-hidden="true"><path d="M4 17v-4l5-1 5-6h15l7 6 7 1.5V17z" fill="#f26a21"/><path d="M15.5 7.5h6v4.5h-9.5zM23.5 7.5h4.5l4.8 4.5h-9.3z" fill="#10233f"/><circle cx="13" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/><circle cx="35" cy="18" r="3.6" fill="#10233f" stroke="#e8eef6" stroke-width="1.6"/></svg></span><span><span class="tlt">Vehicle specifications</span><span class="tls" style="display:block">Weight and size of each car on your load</span></span></button>
-    <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 20V9h4v11zM10 20V4h4v16zM16 20v-7h4v7z" fill="#9fc0e8"/></svg></span><span><span class="tlt">Fuel mileage</span><span class="tls" style="display:block">Track your miles per gallon</span></span><span class="soontag">COMING SOON</span></div>
+    <button class="tlcard" id="tlflog" style="display:none" onclick="openFlog()"><span class="tlico"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><rect x="4" y="4" width="10" height="16" rx="1.6" fill="#f26a21"/><rect x="6" y="6.5" width="6" height="4" rx=".8" fill="#10233f"/><path d="M14 8h2a2 2 0 0 1 2 2v6.5a1.4 1.4 0 0 0 2.8 0V9l-2.2-2.6" fill="none" stroke="#f26a21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="tlt">Fuel log &amp; IFTA</span><span class="tls" style="display:block">Log fuel buys, see your fuel mileage, and your IFTA gallons and miles by state</span></span></button>
+    <div class="tlcard soon" id="tlfmsoon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 20V9h4v11zM10 20V4h4v16zM16 20v-7h4v7z" fill="#9fc0e8"/></svg></span><span><span class="tlt">Fuel mileage</span><span class="tls" style="display:block">Track your miles per gallon</span></span><span class="soontag">COMING SOON</span></div>
     <div class="tlcard soon"><span class="tlico"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#9fc0e8" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#9fc0e8" stroke-width="2"/></svg></span><span><span class="tlt">Accounting</span><span class="tls" style="display:block">Expenses and settlements</span></span><span class="soontag">COMING SOON</span></div>
   </div>
     <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
@@ -2828,6 +3301,43 @@ async function optimizeStops(){
   </div>
     <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
   </div>
+<div id="fbpop" class="popwrap" style="display:none" onclick="if(event.target===this)fbClose()">
+  <div class="popbox">
+    <div class="poptitle" id="fb_title">Log a fuel buy</div>
+    <div class="fbrow"><label>Date<input id="fb_date" type="date"></label><label>State<select id="fb_st"></select></label></div>
+    <label class="fbl">Where (optional)<input id="fb_place" type="text" placeholder="Love's, Nashville" autocomplete="off"></label>
+    <button type="button" id="fb_imp" class="fbimp" onclick="fbImp()">Use the card price</button>
+    <div class="fbhint">Fill in any two. The app figures the third.</div>
+    <div class="fbrow fb3"><label>Price a gallon<input id="fb_ppg" type="number" inputmode="decimal" step="0.001" oninput="fbIn('ppg')"></label><label>Gallons<input id="fb_gal" type="number" inputmode="decimal" step="0.001" oninput="fbIn('gal')"></label><label>Total $<input id="fb_tot" type="number" inputmode="decimal" step="0.01" oninput="fbIn('tot')"></label></div>
+    <label class="fbchk"><input id="fb_full" type="checkbox" checked><span>Full fill-up<small>Uncheck if you only put in part of a tank</small></span></label>
+    <label class="fbl">Odometer<input id="fb_odo" type="number" inputmode="numeric" oninput="fbOdoWarn()"></label>
+    <div id="fb_odowarn" class="fbwarn">No odometer reading. Without miles, this fuel buy can&rsquo;t count toward your fuel mileage or cost per mile. You can still save it.</div>
+    <div id="fb_err" class="fberr"></div>
+    <button class="go" style="padding:12px;margin-top:6px;width:100%" onclick="fbSave()">Save</button>
+    <div class="fbbtns"><button type="button" class="fbcancel" onclick="fbClose()">Cancel</button><button type="button" id="fb_del" class="fbdel" onclick="fbDel()">Delete</button></div>
+  </div>
+</div>
+<div id="flpop"><div class="plwrap">
+  <div id="flmain">
+    <h2>Fuel log</h2>
+    <div class="plsub">Your fuel buys are saved on this phone.</div>
+    <div id="flstats"></div>
+    <div class="fl2"><button class="go" onclick="fbOpen()">+ Add a fuel buy</button><button class="flblue" onclick="iftaOpen()">IFTA report</button></div>
+    <div id="fllist"></div>
+  </div>
+  <div id="flifta" style="display:none">
+    <h2>IFTA report</h2>
+    <div class="plsub">Gallons come from your fuel log. Type in your miles for each state from your own records.</div>
+    <div class="ifpick"><select id="if_y" onchange="iftaRender()"></select><select id="if_q" onchange="iftaRender()"><option value="1">Jan &ndash; Mar (Q1)</option><option value="2">Apr &ndash; Jun (Q2)</option><option value="3">Jul &ndash; Sep (Q3)</option><option value="4">Oct &ndash; Dec (Q4)</option></select></div>
+    <div id="iftab"></div>
+    <select id="if_add" class="ifadd" onchange="iftaAddSt(this.value)"></select>
+    <button class="flblue" style="width:100%;margin-top:12px" onclick="iftaCopy()">Copy the numbers</button>
+    <div class="fbhint" style="margin-top:12px">This app does not file for you. Check every number against your own records before you file. There&rsquo;s no guarantee these numbers are complete or correct.</div>
+  </div>
+</div>
+  <div class="trbar"><button class="back" onclick="history.back()">Back</button></div>
+</div>
+<div id="fltoast"></div>
 <div id="mvpop" onclick="if(event.target===this)closeMove()"><div class="mvbox" role="dialog" aria-modal="true" aria-labelledby="mvtitle">
   <div id="mvtitle">Move this stop</div>
   <button class="mvchoice" id="mvup" type="button" onclick="doMove(-1)"><svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M8 16V3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 8l5-5 5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up</button>
@@ -3981,12 +4491,34 @@ async function vsLookup(d){
 
   /* ---------- the car icon: look it up on the web ---------- */
   // Builds an image search for exactly what's on the card, e.g. "2019 Ford F150 SuperCab".
-  function webUrl(d){ var nm=nameOf(d); return nm? 'https://www.google.com/search?udm=2&q='+encodeURIComponent(nm) : ''; }
+  // v1.3.4: one shared photo search. Pictures only, with sale/price/dealer pages filtered out,
+  // shown in a full-screen window INSIDE the app with an X to close and an "Open in browser" link.
+  if(!window.fpsPicQ) window.fpsPicQ=function(nm){ return 'https://www.google.com/search?udm=2&safe=active&q='+encodeURIComponent(nm+' photos -sale -price -prices -dealer -dealership -listing -msrp -auction'); };
+  if(!window.fpsPicSearch) window.fpsPicSearch=function(nm){
+    if(!nm) return; var u=window.fpsPicQ(nm), v=document.getElementById('fpsphv');
+    if(!v){
+      v=document.createElement('div'); v.id='fpsphv';
+      v.style.cssText='position:fixed;inset:0;z-index:2147483000;background:#10233f;display:none;flex-direction:column';
+      v.innerHTML='<div style="flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;color:#e8eef6">'+
+        '<span class="t" style="flex:1;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>'+
+        '<a class="o" target="_blank" rel="noopener" style="font-size:13px;color:#f26a21;text-decoration:none;white-space:nowrap">Open in browser</a>'+
+        '<button class="x" type="button" aria-label="Close" style="width:40px;height:40px;border-radius:9px;border:1px solid #2b4a70;background:#1d3a5e;color:#e8eef6;font-size:20px;font-weight:700;cursor:pointer">\u2715</button></div>'+
+        '<iframe referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" style="flex:1;width:100%;border:0;background:#fff"></iframe>';
+      document.body.appendChild(v);
+      v.querySelector('.x').onclick=function(){ v.style.display='none'; v.querySelector('iframe').src='about:blank'; };
+    }
+    v.querySelector('.t').textContent=nm;
+    v.querySelector('.o').href=u;
+    v.querySelector('iframe').src=u.replace('udm=2&','udm=2&igu=1&');
+    v.style.display='flex';
+  };
+  function webUrl(d){ var nm=nameOf(d); return nm? window.fpsPicQ(nm) : ''; }
   // Installed app: open the search in the SAME window, so Android shows its own bar with an X
   // that closes the search and drops the driver back on the vehicle page. Browser tab: new tab.
   function isApp(){ try{ return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone===true; }catch(e){ return false; } }
   function lookUp(d){
     var u=webUrl(d); if(!u) return;
+    if(window.fpsPicSearch){ window.fpsPicSearch(nameOf(d)); return; }
     if(isApp()){
       try{ if(typeof vsSave==='function') vsSave();
         var rows=[].slice.call(document.querySelectorAll('#vsrows .vsrow')), pop=document.getElementById('vspop');
@@ -4792,7 +5324,7 @@ async function vsLookup(d){
   function anyOpen(){ return POPS.some(function(p){ return $(p).classList.contains('show'); }); }
   function show(id){ $('shade').classList.add('show'); POPS.forEach(function(p){ $(p).classList.toggle('show',p===id); }); $('wrapv').classList.add('popping'); }
   function openWebView(name){
-    var u='https://www.google.com/search?udm=2&igu=1&q='+encodeURIComponent(name);
+    var u=window.fpsPicQ? window.fpsPicQ(name).replace('udm=2&','udm=2&igu=1&') : 'https://www.google.com/search?udm=2&igu=1&q='+encodeURIComponent(name);
     var wv=root.getElementById('wv');
     if(!wv){
       wv=document.createElement('div'); wv.id='wv'; wv.className='wv';
@@ -4801,7 +5333,7 @@ async function vsLookup(d){
       wv.querySelector('.wvx').onclick=function(){ wv.classList.remove('show'); wv.querySelector('iframe').src='about:blank'; };
     }
     wv.querySelector('.ttl').textContent=name;
-    wv.querySelector('iframe').src=u; wv.querySelector('.wvout').href=u.replace('&igu=1','');
+    wv.querySelector('iframe').src=u; wv.querySelector('.wvout').href=u.replace('igu=1&','');
     wv.classList.add('show');
   }
 
@@ -5053,6 +5585,8 @@ async function vsLookup(d){
     var wrap=document.createElement('div'); wrap.className='ac';
     input.parentNode.insertBefore(wrap,input); wrap.appendChild(input);
     var list=document.createElement('div'); list.className='aclist'; wrap.appendChild(list);
+
+
     var hi=-1;
     function fill(items){
       list.innerHTML='';
@@ -5205,6 +5739,213 @@ async function vsLookup(d){
 })();
 </script>
 <script>
+/* ===== FUEL LOG + IFTA REPORT (add-on, switched on per user from the admin dashboard) ===== */
+const FL_KEY='fps_flog', FLMI_KEY='fps_ifta_mi';
+function flOn(){ try{ return localStorage.getItem('fps_fl')==='1'; }catch(e){ return false; } }
+function flLoad(){ try{ const a=JSON.parse(localStorage.getItem(FL_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function flSave(a){ try{ localStorage.setItem(FL_KEY,JSON.stringify(a)); return true; }catch(e){ alert('Could not save on this phone.'); return false; } }
+function flNames(){ const o={}; for(const k in STATES) o[STATES[k]]=k; return o; }
+function flPad(n){ return (n<10?'0':'')+n; }
+function flToday(){ const d=new Date(); return d.getFullYear()+'-'+flPad(d.getMonth()+1)+'-'+flPad(d.getDate()); }
+function flDate(s){ const p=String(s||'').split('-'); if(p.length<3) return s||''; const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return M[+p[1]-1]+' '+(+p[2])+', '+p[0]; }
+function flMoney(x){ return '$'+Number(x).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function flApply(){
+  const on=flOn(), a=document.getElementById('tlflog'), b=document.getElementById('tlfmsoon'), nb=document.getElementById('nflogbtn');
+  if(a) a.style.display=on?'':'none';
+  if(b) b.style.display=on?'none':'';
+  if(nb) nb.style.display=on?'':'none';
+  if(!on){ const f=document.getElementById('flpop'); if(f) f.classList.remove('show'); }
+}
+window.flApply=flApply;
+function flToast(t){ const el=document.getElementById('fltoast'); if(!el) return; el.textContent=t; el.style.display='block'; clearTimeout(flToast.t); flToast.t=setTimeout(()=>el.style.display='none',2200); }
+
+/* ---- one fuel buy ---- */
+let FB={id:null,cardPrice:null,edits:[]};
+function fbOpenFromStop(){
+  if(NF_I==null||!flOn()) return; const s=LASTHITS[NF_I];
+  closeNf();
+  fbOpen({st:s.st, place:s.b+', '+s.c, price:rankVal(s), gal:NF_REC>0?NF_REC:''});
+}
+function fbOpen(o){
+  if(!flOn()) return;
+  o=o||{}; const $=id=>document.getElementById(id), log=flLoad(), N=flNames();
+  FB={id:o.id||null, cardPrice:(o.price!=null&&isFinite(o.price))?+o.price:null, edits:[]};
+  const sel=$('fb_st');
+  if(!sel.options.length){ const op=document.createElement('option'); op.value=''; op.textContent='Pick'; sel.appendChild(op);
+    Object.keys(N).sort().forEach(ab=>{ const x=document.createElement('option'); x.value=ab; x.textContent=ab+' \u2013 '+N[ab]; sel.appendChild(x); }); }
+  sel.value=o.st||'';
+  $('fb_date').value=o.date||flToday();
+  $('fb_place').value=o.place||'';
+  $('fb_ppg').value=o.ppg!=null?o.ppg:'';
+  $('fb_gal').value=(o.gal!=null&&o.gal!=='')?o.gal:'';
+  $('fb_tot').value=o.tot!=null?o.tot:'';
+  if($('fb_gal').value) FB.edits.push('gal');
+  if(o.id){ FB.edits=['ppg','gal']; }
+  $('fb_full').checked=(o.full!=null)?!!o.full:true;
+  const lastOdo=log.reduce((m,e)=>(+e.odo>m?+e.odo:m),0);
+  $('fb_odo').value=(o.odo!=null)?(o.odo||''):(o.id?'':(lastOdo||''));
+  const ib=$('fb_imp');
+  if(FB.cardPrice!=null){ ib.style.display=''; ib.textContent='Use the card price, $'+FB.cardPrice.toFixed(3); } else ib.style.display='none';
+  $('fb_title').textContent=FB.id?'Edit fuel buy':'Log a fuel buy';
+  $('fb_del').style.display=FB.id?'':'none';
+  $('fb_err').textContent='';
+  fbOdoWarn();
+  const pop=$('fbpop'); if(pop.parentElement!==document.body) document.body.appendChild(pop);
+  enterScreen(); pop.style.display='flex';
+}
+function fbClose(){ const p=document.getElementById('fbpop'); if(p&&p.style.display==='flex') history.back(); }
+function fbImp(){ if(FB.cardPrice==null) return; document.getElementById('fb_ppg').value=FB.cardPrice.toFixed(3); fbIn('ppg'); }
+function fbIn(k){
+  FB.edits=FB.edits.filter(x=>x!==k); FB.edits.push(k);
+  const $=id=>document.getElementById(id), v={ppg:parseFloat($('fb_ppg').value), gal:parseFloat($('fb_gal').value), tot:parseFloat($('fb_tot').value)};
+  const keep=FB.edits.filter(x=>v[x]>0).slice(-2);
+  if(keep.length<2) return;
+  const c=['ppg','gal','tot'].find(x=>keep.indexOf(x)<0);
+  if(c==='tot') $('fb_tot').value=(v.ppg*v.gal).toFixed(2);
+  if(c==='gal') $('fb_gal').value=(v.tot/v.ppg).toFixed(3);
+  if(c==='ppg') $('fb_ppg').value=(v.tot/v.gal).toFixed(3);
+}
+function fbOdoWarn(){ document.getElementById('fb_odowarn').style.display=document.getElementById('fb_odo').value.trim()?'none':'block'; }
+function fbSave(){
+  const $=id=>document.getElementById(id), err=$('fb_err'), num=id=>{ const n=parseFloat($(id).value); return isFinite(n)&&n>0?n:null; };
+  const date=$('fb_date').value, st=$('fb_st').value, gal=num('fb_gal'); let ppg=num('fb_ppg'), tot=num('fb_tot');
+  const odoRaw=$('fb_odo').value.trim(), odo=odoRaw?parseFloat(odoRaw):null;
+  err.textContent='';
+  if(!date){ err.textContent='Pick the date.'; return; }
+  if(!st){ err.textContent='Pick the state you bought fuel in. IFTA needs it.'; return; }
+  if(!gal){ err.textContent='Enter the gallons, or the price and the total.'; return; }
+  if(gal>600){ err.textContent='That\u2019s a lot of gallons. Check the number.'; return; }
+  if(odoRaw&&!(odo>=0&&odo<10000000)){ err.textContent='Check the odometer number.'; return; }
+  if(ppg&&!tot) tot=+(ppg*gal).toFixed(2);
+  if(tot&&!ppg) ppg=+(tot/gal).toFixed(3);
+  const e={id:FB.id||('f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)), date:date, st:st,
+    place:$('fb_place').value.trim().slice(0,80), ppg:ppg, gal:+gal.toFixed(3), tot:tot, full:$('fb_full').checked, odo:odo};
+  const log=flLoad(), k=log.findIndex(x=>x.id===e.id);
+  if(k>=0) log[k]=e; else log.push(e);
+  if(!flSave(log)) return;
+  fbClose(); flRender(); flToast(FB.id?'Saved':'Fuel buy saved');
+}
+function fbDel(){
+  if(!FB.id) return;
+  if(!confirm('Delete this fuel buy? This can\u2019t be undone.')) return;
+  flSave(flLoad().filter(x=>x.id!==FB.id)); fbClose(); flRender(); flToast('Deleted');
+}
+
+/* ---- fuel mileage and cost per mile, from full fill-up to full fill-up ---- */
+function flOrder(log){ return log.map((e,i)=>({e:e,i:i})).sort((a,b)=>a.e.date<b.e.date?-1:a.e.date>b.e.date?1:((+a.e.odo||0)-(+b.e.odo||0))||(a.i-b.i)).map(x=>x.e); }
+function flSegs(log){
+  const w=flOrder(log), segs=[]; let a=-1;
+  for(let i=0;i<w.length;i++){
+    if(!(w[i].full&&+w[i].odo>0)) continue;
+    if(a>=0){ let g=0,c=0,cOk=true; for(let j=a+1;j<=i;j++){ g+=+w[j].gal||0; if(w[j].tot) c+=+w[j].tot; else cOk=false; }
+      const mi=w[i].odo-w[a].odo; if(mi>0&&g>0) segs.push({mi:mi,g:g,c:c,cOk:cOk,date:w[i].date}); }
+    a=i;
+  }
+  return segs;
+}
+function flRender(){
+  const box=document.getElementById('fllist'), stb=document.getElementById('flstats'); if(!box) return;
+  const log=flLoad(), N=flNames();
+  const segs=flSegs(log), cut=new Date(); cut.setDate(cut.getDate()-90);
+  const cutS=cut.getFullYear()+'-'+flPad(cut.getMonth()+1)+'-'+flPad(cut.getDate());
+  const rec=segs.filter(x=>x.date>=cutS);
+  const last=segs.length?segs[segs.length-1]:null;
+  const mi=rec.reduce((a,x)=>a+x.mi,0), g=rec.reduce((a,x)=>a+x.g,0);
+  const cOk=rec.length&&rec.every(x=>x.cOk), c=rec.reduce((a,x)=>a+x.c,0);
+  if(last){
+    stb.innerHTML='<div class="flst"><div><b>'+(last.mi/last.g).toFixed(2)+'</b><small>mpg, last fill-up</small></div>'
+      +'<div><b>'+(g?(mi/g).toFixed(2):'--')+'</b><small>mpg, last 3 months</small></div>'
+      +'<div><b>'+(cOk&&mi?Math.round(c/mi*100)+'\u00a2':'--')+'</b><small>fuel cost a mile</small></div></div>'
+      +'<div class="flnote">Figured from full fill-up to full fill-up using your odometer. '+(cOk?'':'Cost a mile needs a price or total on every buy. ')+'These are estimates.</div>';
+  } else {
+    stb.innerHTML='<div class="flnote">Your fuel mileage shows up after two full fill-ups with odometer readings.</div>';
+  }
+  if(!log.length){ box.innerHTML='<div class="flempty">No fuel buys yet.<br>Tap <b>Next fuel</b> on a stop, then <b>Log this fuel buy</b>, or use <b>+ Add a fuel buy</b> above.</div>'; return; }
+  box.innerHTML=flOrder(log).reverse().map(e=>{
+    const line=(+e.gal).toFixed(3).replace(/\.?0+$/,'')+' gal'+(e.ppg?' \u00d7 $'+(+e.ppg).toFixed(3):'')+(e.tot?' = '+flMoney(e.tot):'');
+    return '<button type="button" class="flent" onclick="fbEdit(\''+e.id+'\')"><div class="t1"><span>'+flDate(e.date)+' \u2022 '+esc(N[e.st]||e.st)+'</span>'
+      +'<span class="fltag '+(e.full?'full':'part')+'">'+(e.full?'FULL':'PARTIAL')+'</span></div>'
+      +(e.place?'<div class="t3">'+esc(e.place)+'</div>':'')
+      +'<div class="t2">'+line+'</div>'
+      +'<div class="t3">'+(e.odo?'Odometer '+Math.round(e.odo).toLocaleString():'<span class="nood">No odometer</span>')+'</div></button>';
+  }).join('');
+}
+function fbEdit(id){ const e=flLoad().find(x=>x.id===id); if(e) fbOpen(Object.assign({},e)); }
+function openFlog(){
+  if(!flOn()) return;
+  const p=document.getElementById('flpop');
+  enterScreen(); document.getElementById('flmain').style.display=''; document.getElementById('flifta').style.display='none';
+  p.classList.add('show'); document.body.classList.add('on-flog'); p.scrollTop=0; flRender();
+}
+
+/* ---- IFTA report: gallons by state from the log, miles by state typed in ---- */
+function iftaMiles(){ try{ return JSON.parse(localStorage.getItem(FLMI_KEY)||'{}')||{}; }catch(e){ return {}; } }
+function iftaKey(){ return document.getElementById('if_y').value+'-Q'+document.getElementById('if_q').value; }
+function iftaOpen(){
+  const now=new Date(), y=now.getFullYear(), ys={}; ys[y]=1; ys[y-1]=1;
+  flLoad().forEach(e=>{ const n=parseInt(String(e.date).slice(0,4),10); if(n) ys[n]=1; });
+  const sy=document.getElementById('if_y'); sy.innerHTML=Object.keys(ys).sort().reverse().map(v=>'<option>'+v+'</option>').join('');
+  sy.value=String(y); document.getElementById('if_q').value=String(Math.floor(now.getMonth()/3)+1);
+  enterScreen(); document.getElementById('flmain').style.display='none'; document.getElementById('flifta').style.display='';
+  document.getElementById('flpop').scrollTop=0; iftaRender();
+}
+function iftaData(){
+  const y=+document.getElementById('if_y').value, q=+document.getElementById('if_q').value;
+  const from=y+'-'+flPad((q-1)*3+1)+'-01', to=q===4?(y+1)+'-01-01':y+'-'+flPad(q*3+1)+'-01';
+  const gal={}; flLoad().forEach(e=>{ if(e.date>=from&&e.date<to) gal[e.st]=(gal[e.st]||0)+(+e.gal||0); });
+  const mi=iftaMiles()[iftaKey()]||{}, sts={};
+  Object.keys(gal).forEach(k=>sts[k]=1); Object.keys(mi).forEach(k=>sts[k]=1);
+  return {gal:gal, mi:mi, sts:Object.keys(sts).sort()};
+}
+function iftaRender(){
+  const d=iftaData(), N=flNames(), tab=document.getElementById('iftab');
+  let tm=0, tg=0;
+  let h='<table class="iftbl"><tr><th>State</th><th style="text-align:right">Miles</th><th style="text-align:right">Gallons</th></tr>';
+  d.sts.forEach(st=>{ const m=d.mi[st], g=d.gal[st]||0; tm+=+m||0; tg+=g;
+    h+='<tr><td>'+esc(N[st]||st)+'</td><td class="n"><input type="number" inputmode="numeric" min="0" value="'+(m!=null&&m!==''?m:'')+'" placeholder="0" onchange="iftaMi(\''+st+'\',this.value)"></td>'
+      +'<td class="n">'+(g?g.toFixed(1):'0')+'</td></tr>'; });
+  h+='<tr class="tot"><td>Total</td><td class="n">'+Math.round(tm).toLocaleString()+'</td><td class="n">'+tg.toFixed(1)+'</td></tr></table>';
+  if(!d.sts.length) h='<div class="flempty">Nothing for this quarter yet.<br>Fuel buys you log show up here by state. Add a state below to type in miles.</div>';
+  else h+='<div class="ifmpg">Average fuel mileage for the quarter: <b>'+(tm&&tg?(tm/tg).toFixed(2)+' mpg':'--')+'</b> (total miles \u00f7 total gallons)</div>';
+  tab.innerHTML=h;
+  const add=document.getElementById('if_add');
+  add.innerHTML='<option value="">+ Add a state for miles</option>'+Object.keys(N).sort().filter(ab=>d.sts.indexOf(ab)<0).map(ab=>'<option value="'+ab+'">'+ab+' \u2013 '+N[ab]+'</option>').join('');
+}
+function iftaMi(st,v){
+  const all=iftaMiles(), k=iftaKey(), o=all[k]||{}, n=parseFloat(v);
+  if(isFinite(n)&&n>=0) o[st]=Math.round(n); else delete o[st];
+  all[k]=o; try{ localStorage.setItem(FLMI_KEY,JSON.stringify(all)); }catch(e){}
+  iftaRender();
+}
+function iftaAddSt(st){ if(!st) return; const all=iftaMiles(), k=iftaKey(), o=all[k]||{}; if(o[st]==null) o[st]=''; all[k]=o;
+  try{ localStorage.setItem(FLMI_KEY,JSON.stringify(all)); }catch(e){} iftaRender(); }
+function iftaCopy(){
+  const d=iftaData(), N=flNames(); let tm=0,tg=0;
+  let t='IFTA '+document.getElementById('if_y').value+' Q'+document.getElementById('if_q').value+'\nState\tMiles\tGallons\n';
+  d.sts.forEach(st=>{ const m=+d.mi[st]||0, g=d.gal[st]||0; tm+=m; tg+=g; t+=(N[st]||st)+'\t'+m+'\t'+g.toFixed(1)+'\n'; });
+  t+='Total\t'+tm+'\t'+tg.toFixed(1)+'\n';
+  const ok=()=>flToast('Copied');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,()=>alert(t)); else alert(t);
+}
+
+/* ---- phone back arrow: close the fuel buy, then IFTA, then the log ---- */
+(function(){
+  const ob=window.stepBack;
+  window.stepBack=function(){
+    const fb=document.getElementById('fbpop'), fl=document.getElementById('flpop');
+    if(fb&&fb.style.display==='flex'){ fb.style.display='none'; return true; }
+    if(fl&&fl.classList.contains('show')){
+      const ift=document.getElementById('flifta');
+      if(ift.style.display!=='none'){ ift.style.display='none'; document.getElementById('flmain').style.display=''; flRender(); return true; }
+      fl.classList.remove('show'); document.body.classList.remove('on-flog'); return true;
+    }
+    return ob.apply(this,arguments);
+  };
+  try{ stepBack=window.stepBack; }catch(e){}
+})();
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',flApply); else flApply();
+</script>
+<script>
 /* ===== Admin app switch: Vehicle specifications on/off (set on the FPS Access dashboard) ===== */
 (function(){
   var FEAT_URL='https://script.google.com/macros/s/AKfycbyR5zyILyw7FZ19dIs_Sz27bMeYHe-j9ST-0d-F0R2lU9a9aFqO2zlYLZR9criLJDpi/exec?page=features';
@@ -5233,8 +5974,23 @@ async function vsLookup(d){
 </script>
 <script>/*FPS-SW*/if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller,_rl=0;navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update();});}).catch(function(){});navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!_rl){_rl=1;location.reload();}});}</script>
 <script>
-(function(){function s(){try{var v=null;for(var i=0;i<CHANGELOG.length&&!v;i++){for(var j=0;j<CHANGELOG[i].items.length;j++){var m=/^Version\s+[\d.]+/.exec(CHANGELOG[i].items[j]);if(m){v=m[0];break;}}}var e=document.getElementById('splver');if(v&&e)e.textContent=v;}catch(x){}}
-if(document.readyState!=='loading')s();else document.addEventListener('DOMContentLoaded',s);setTimeout(s,50);})();
+/* ===== FL CHECK: open the app with ?flcheck=1 to see the fuel-log answer ===== */
+(function(){
+  if(!/[?&]flcheck=1/.test(location.search)) return;
+  var URL_='https://script.google.com/macros/s/AKfycbyR5zyILyw7FZ19dIs_Sz27bMeYHe-j9ST-0d-F0R2lU9a9aFqO2zlYLZR9criLJDpi/exec';
+  function g(k){ try{ return localStorage.getItem(k); }catch(e){ return 'ERR'; } }
+  function box(t){ var d=document.getElementById('flck'); if(!d){ d=document.createElement('div'); d.id='flck';
+    d.style.cssText='position:fixed;left:10px;right:10px;top:40px;z-index:2147483647;background:#fff;color:#000;padding:14px;border:3px solid #f26a21;border-radius:10px;font:15px/1.5 monospace;white-space:pre-wrap;word-break:break-all';
+    document.body.appendChild(d); } d.textContent=t; }
+  setTimeout(function(){
+    var code=g('fps_code')||'', dev=g('fps_dev')||'';
+    var head='Code: '+code+'\nPhone ID: '+dev+'\nSaved fuel switch: '+g('fps_fl')+'\nTile showing: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()+'\n\nServer says:\n';
+    box(head+'asking...');
+    fetch(URL_+'?code='+encodeURIComponent(code)+'&dev='+encodeURIComponent(dev),{cache:'no-store'})
+      .then(function(r){return r.text();}).then(function(t){ setTimeout(function(){ box(head+t+'\n\nAfter answer, saved fuel switch: '+g('fps_fl')+'\nApp check: '+g('fps_dbg')+'\nTile showing now: '+(function(){var a=document.getElementById('tlflog');return a?(a.style.display==='none'?'no':'yes'):'missing';})()); },2000); })
+      .catch(function(e){ box(head+'NO ANSWER: '+e); });
+  },20000);
+})();
 </script>
 <script>
 /* ===== TAP TRACKER: counts button taps, sends them to the access server ===== */
@@ -5265,17 +6021,81 @@ if(document.readyState!=='loading')s();else document.addEventListener('DOMConten
   document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') flush(); });
 })();
 </script>
+<script>
+(function(){function s(){try{var v=null;for(var i=0;i<CHANGELOG.length&&!v;i++){for(var j=0;j<CHANGELOG[i].items.length;j++){var m=/^Version\s+[\d.]+/.exec(CHANGELOG[i].items[j]);if(m){v=m[0];break;}}}var e=document.getElementById('splver');if(v&&e)e.textContent=v;}catch(x){}}
+if(document.readyState!=='loading')s();else document.addEventListener('DOMContentLoaded',s);setTimeout(s,50);})();
+</script>
 
 <script>
+/* v1.3.5: city/state lists drop UP (open above the box) so they never slide behind the keyboard or other stuff */
 (function(){
-  if(!('IntersectionObserver' in window)) return;
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){
-    if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}
-  });},{threshold:0.6});
-  function watch(){var c=document.querySelector('#results .card.top:not(.seen)');if(c)io.observe(c);}
-  var r=document.getElementById('results');
-  if(r) new MutationObserver(watch).observe(r,{childList:true,subtree:true});
-  // a collapsed state opening counts too: observer fires once the card is visible
+  function place(el){
+    if(!el.classList || !el.classList.contains('suggest') || el.closest('#vsrows')) return;
+    if(el.style.display==='none' || !el.parentElement) return;
+    var r=el.parentElement.getBoundingClientRect(), room=Math.floor(r.top-12);
+    var up=room>=140, mh=up? Math.min(room, Math.round(window.innerHeight*0.6))+'px' : '';
+    if(el.classList.contains('up')!==up) el.classList.toggle('up',up);
+    if(el.style.maxHeight!==mh) el.style.maxHeight=mh;
+  }
+  function start(){
+    new MutationObserver(function(ms){ ms.forEach(function(m){ place(m.target); }); })
+      .observe(document.body,{subtree:true,attributes:true,attributeFilter:['style']});
+  }
+  if(document.body) start(); else document.addEventListener('DOMContentLoaded',start);
+})();
+</script>
+
+<script>
+/* v1.3.6: refresh comes back to the same page (vehicle specs, results, details, tools, fuel log, trip, what's new, settings) */
+(function(){
+  var NEAR=null;
+  try{ NEAR=JSON.parse(sessionStorage.getItem('fps_resume')||'null'); NEAR=NEAR&&NEAR.near||null; }catch(e){}
+  if(typeof window.fuelNear==='function'){ var fn0=window.fuelNear;
+    window.fuelNear=function(r){ try{ NEAR={typed:(document.getElementById('nearcity').value||'').trim(), r:r}; }catch(e){} return fn0.apply(this,arguments); }; }
+  if(typeof window.findFuel==='function'){ var ff0=window.findFuel;
+    window.findFuel=function(){ NEAR=null; return ff0.apply(this,arguments); }; }
+  var POPS=['vs2','vspop','toolspop','planpop','trippop','flpop','news'];
+  function snap(){
+    try{
+      var b=document.body.classList, cls=[].filter.call(b,function(c){ return c.indexOf('on-')===0; });
+      var sc={}; POPS.forEach(function(id){ var e=document.getElementById(id); if(e && e.scrollTop) sc[id]=e.scrollTop; });
+      var sp=document.getElementById('setpop');
+      sessionStorage.setItem('fps_resume', JSON.stringify({ t:Date.now(), cls:cls,
+        det:(typeof CUR_DETAIL!=='undefined'?CUR_DETAIL:null), svc:(typeof svcIndex!=='undefined'?svcIndex:null), svcFrom:(typeof svcFrom!=='undefined'?svcFrom:null),
+        near:(cls.indexOf('on-results')>=0?NEAR:null), y:window.scrollY||0, sc:sc,
+        set: !!(sp && sp.style.display==='flex') }));
+    }catch(e){}
+  }
+  window.addEventListener('pagehide',snap); window.addEventListener('beforeunload',snap);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') snap(); });
+
+  function call(n){ try{ var f=window[n]; if(typeof f==='function') return f.apply(null,[].slice.call(arguments,1)); }catch(e){} }
+  async function restore(){
+    var nv=null, rs=null;
+    try{ nv=performance.getEntriesByType('navigation')[0]; rs=JSON.parse(sessionStorage.getItem('fps_resume')||'null'); }catch(e){}
+    if(!nv || nv.type!=='reload' || !rs || !(Date.now()-rs.t<6*3600*1000)) return;
+    var has=function(c){ return rs.cls.indexOf(c)>=0; };
+    try{
+      if(has('on-results')){
+        if(rs.near){ var nc=document.getElementById('nearcity'); if(nc) nc.value=rs.near.typed||''; await call('fuelNear', rs.near.r); }
+        else await call('findFuel');
+        if((has('on-detail') || (has('on-svc') && rs.svcFrom==='detail')) && rs.det!=null) call('openDetail', rs.det);
+        if(has('on-svc') && rs.svc!=null) call('openServices', rs.svc, rs.svcFrom);
+      }
+      if(has('on-news')) call('openNews');
+      if(has('on-tools')) call('openTools');
+      if(has('on-vspec') || has('on-vspec2')) call('openVspec');
+      if(has('on-flog')) call('openFlog');
+      if(has('on-plan')) call('openPlan');
+      if(has('on-trip')) await call('runTrip');
+      if(rs.set) call('openSettings');
+    }catch(e){}
+    setTimeout(function(){
+      try{ if(rs.y) window.scrollTo(0,rs.y);
+        Object.keys(rs.sc||{}).forEach(function(id){ var e=document.getElementById(id); if(e) e.scrollTop=rs.sc[id]; }); }catch(e){}
+    },700);
+  }
+  if(document.readyState==='complete') setTimeout(restore,350); else window.addEventListener('load',function(){ setTimeout(restore,350); });
 })();
 </script>
 
@@ -5402,6 +6222,602 @@ function cityPickerDone(){
     var fit=function(){ var p=document.getElementById('cpop'); p.style.height=visualViewport.height+'px'; p.style.top=visualViewport.offsetTop+'px'; };
     visualViewport.addEventListener('resize',fit); visualViewport.addEventListener('scroll',fit);
   }
+})();
+</script>
+<style id="fpstyle">
+  #fpbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:800;color:#9fc0e8;line-height:1.1}
+  #fpbtn svg{flex:0 0 auto}
+  #fpbtn.fpoff{opacity:1;background:#2b4a70!important;border-color:#2b4a70!important;color:#cfdbe9!important}
+  .altdot{display:none;width:10px;height:10px;border-radius:50%;background:#f26a21;margin-left:5px;vertical-align:middle;box-shadow:0 0 0 2px #10233f}
+  body.has-alt .altdot{display:inline-block}
+  #fpbtn{position:relative} #fpbtn .altdot{position:absolute;top:5px;right:6px;margin:0}
+  #fppop{position:fixed;inset:0;z-index:9500;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #fppop.show{display:block}
+  #fppop .fpin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
+  #fppop .fphead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  #fprt{display:none;position:fixed;inset:0;z-index:60;background:rgba(5,12,24,.75);padding:16px;overflow-y:auto}
+  #fprt.show{display:block}
+  #fprt .fprtin{background:#10233f;border:1.5px solid #4f7bb0;border-radius:14px;padding:14px;max-width:560px;margin:20px auto}
+  #fprt .rst{border-top:1px solid #2b4a70;padding:10px 0}
+  #fprt .rst b{font-size:17px}
+  #fprt .rst .rd{font-size:15px;color:#e8eef6;margin-top:4px;line-height:1.45}
+  #fprt .rst .tl{font-size:13.5px;color:#f2b36b;margin-top:3px}
+  #fprt .rtop{font-size:14px;color:#cfdbe9;margin:4px 0 10px;line-height:1.45}
+  #fppop .fpback{height:44px;padding:0 16px;border-radius:10px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:16px;font-weight:700}
+  #fppop h2{margin:0;font-size:21px}
+  #fppop .fptrip{color:#9fb4ce;font-size:14px;margin:2px 0 12px}
+  #fppop .fpset{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#17304f;border:1px solid #2b4a70;border-radius:12px;padding:12px}
+  #fppop .fpset label{display:block;font-size:13px;color:#cfdbe9;margin-bottom:4px}
+  #fppop .fpset select,#fppop .fpset input{width:100%;box-sizing:border-box;padding:11px;font-size:16px;border:none;border-radius:10px;background:#1d3a5e;color:#fff}
+  #fppop .fpnote{grid-column:1/-1;font-size:12.5px;color:#9fb4ce;line-height:1.4}
+  #fppop .fpsave{margin:14px 0 4px;padding:16px;border-radius:12px;background:#163d2a;border:1.5px solid #2fa85a;text-align:center}
+  #fppop .fpsave b{display:block;font-size:24px;color:#fff;margin-bottom:4px}
+  #fppop .fpsave span{font-size:13.5px;color:#cfe9d8}
+  #fppop .fpsave.same{background:#17304f;border-color:#4f7bb0}
+  #fppop .fptabs{display:flex;gap:8px;margin:14px 0 8px}
+  #fppop .fptabs button{flex:1;padding:12px 6px;border-radius:10px;border:1.5px solid #4f7bb0;background:#17304f;color:#9fc0e8;font-size:15px;font-weight:800}
+  #fppop .fptabs button.on{background:#f26a21;border-color:#f26a21;color:#fff}
+  #fppop .fptot{font-size:14px;color:#cfdbe9;margin:2px 2px 10px}
+  #fppop .fptot b{color:#fff}
+  #fppop table{width:100%;border-collapse:collapse;font-size:15px}
+  #fppop th{font-size:12.5px;color:#9fb4ce;font-weight:700;text-align:right;padding:6px 4px;border-bottom:2px solid #2b4a70}
+  #fppop th:first-child,#fppop td:first-child{text-align:left}
+  #fppop td{padding:10px 4px;border-bottom:1px solid #1d3a5e;text-align:right;vertical-align:top;font-variant-numeric:tabular-nums}
+  #fppop td small{display:block;font-size:12.5px;color:#9fb4ce;font-weight:400;margin-top:3px;line-height:1.3}
+  #fppop td small.buy{color:#f2b36b}
+  #fppop td .stn{font-weight:800}
+  #fppop tr.skip td{color:#9fb4ce}
+  #fppop tfoot td{font-weight:800;border-bottom:0;border-top:2px solid #2b4a70}
+  #fppop .fpwarn{margin:10px 0;padding:10px 12px;border-radius:10px;background:#3a2414;border:1px solid #f2b36b;color:#f6d2a8;font-size:13.5px;line-height:1.4}
+  #fppop .fpfine{font-size:12px;color:#9fb4ce;line-height:1.45;margin-top:14px}
+</style>
+<div id="fppop" role="dialog" aria-modal="true" aria-labelledby="fph2">
+ <div class="fpin">
+  <div class="fphead"><button type="button" class="fpback" onclick="history.back()">Back</button><h2 id="fph2">Fuel plan</h2><span id="fptoll" role="button" onclick="fpClose();openTruck()" style="cursor:pointer;display:none;margin-left:auto;background:#f26a21;color:#fff;font-size:12px;font-weight:800;border-radius:8px;padding:4px 8px;line-height:1.2;text-align:center">Avoid tolls is on</span><button type="button" class="fpback" style="margin-left:8px" onclick="fpRoute()">Route</button></div>
+  <div id="fprt" onclick="if(event.target===this)this.classList.remove('show')"><div class="fprtin"><div class="fphead"><h2>Your route</h2><button type="button" class="fpback" style="margin-left:auto" onclick="document.getElementById('fprt').classList.remove('show')">Close</button></div><div id="fprtbody"></div></div></div>
+  <div id="fpfull" style="display:none;background:#f26a21;color:#fff;border-radius:10px;padding:10px 12px;margin:8px 0;font-size:16px;font-weight:600">You have most of a tank. Prices may change by the time you need fuel. Check the plan again after you've burned some fuel.</div>
+  <div class="fptrip" id="fptrip"></div>
+  <div class="fpset">
+    <div style="display:none"><label for="fplvl">Fuel in your tank now</label><select id="fplvl" onchange="fpCalc()"></select></div>
+    <div style="display:none"><label for="fpmpg">Your fuel mileage</label><input id="fpmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="fpMpg()"></div>
+    <div style="display:none"><label for="fpend">Fuel in your tank when you get there (gallons)</label><input id="fpend" type="number" inputmode="numeric" min="0" max="300" step="5" placeholder="50" onchange="fpEnd()"></div>
+    <div id="fprep" style="grid-column:1/-1;color:#cfdbe9;font-size:16px;line-height:1.4"></div>
+    <div class="fpnote" id="fpnote"></div>
+  </div>
+  <div id="fpout"></div>
+  <div class="fpfine">Prices can change before you get there, so this plan is for buying today. Miles by state are close estimates. The cost column is what you pay at the pump, plus the Kentucky and Virginia surcharge on the fuel you burn in those states. The surcharge is the same either way, so it doesn’t change which plan is cheaper. The savings counts the fuel tax you square up on your IFTA return, so it can differ from the difference between the two totals. Both plans include the fuel you want left when you get there. Always watch your own gauge.</div>
+ </div>
+</div>
+<script id="fpscript">
+/* ---- FUEL PLAN: how much to buy in each state, buying-in-every-state vs the cheapest plan ---- */
+var FP_SURCH={KY:0.105,VA:0.143};   /* state road-tax surcharge per gallon burned in-state (IFTA, 3rd quarter 2026) */
+var FP_SHAPES='AL:-8736,3500,-8561,3498,-8543,3412,-8518,3286,-8507,3258,-8496,3242,-8500,3232,-8489,3226,-8506,3214,-8505,3201,-8514,3184,-8504,3154,-8511,3128,-8500,3100,-8550,3100,-8760,3100,-8763,3087,-8741,3067,-8745,3051,-8737,3043,-8752,3028,-8766,3025,-8791,3041,-8793,3066,-8801,3069,-8810,3050,-8814,3032,-8839,3037,-8847,3190,-8824,3380,-8810,3489,-8820,3500,-8736,3500;AZ:-10904,3700,-10905,3133,-11107,3133,-11225,3170,-11482,3249,-11472,3272,-11452,3276,-11447,3284,-11452,3303,-11466,3303,-11473,3341,-11452,3355,-11450,3370,-11454,3393,-11442,3411,-11426,3417,-11414,3431,-11433,3445,-11447,3471,-11463,3488,-11463,3500,-11457,3514,-11460,3532,-11468,3552,-11474,3610,-11437,3614,-11425,3602,-11415,3603,-11405,3620,-11405,3700,-11050,3701,-10904,3700;AR:-9447,3650,-9015,3650,-9006,3630,-9022,3618,-9038,3600,-8973,3600,-8976,3581,-8991,3576,-8994,3560,-9013,3544,-9011,3520,-9021,3502,-9031,3500,-9025,3491,-9041,3483,-9048,3466,-9059,3462,-9057,3442,-9075,3437,-9074,3430,-9095,3414,-9089,3403,-9107,3387,-9123,3356,-9106,3343,-9114,3335,-9109,3314,-9117,3300,-9361,3302,-9404,3302,-9404,3355,-9418,3359,-9438,3354,-9448,3364,-9443,3540,-9462,3650,-9447,3650;CA:-12323,4201,-12238,4201,-12104,4200,-12000,4200,-12000,4026,-12000,3900,-11871,3810,-11750,3722,-11654,3650,-11585,3597,-11463,3500,-11463,3488,-11447,3471,-11433,3445,-11414,3431,-11426,3417,-11442,3411,-11454,3393,-11450,3370,-11452,3355,-11473,3341,-11466,3303,-11452,3303,-11447,3284,-11452,3276,-11472,3272,-11605,3262,-11713,3254,-11725,3267,-11725,3288,-11733,3312,-11747,3330,-11778,3354,-11818,3376,-11826,3370,-11841,3374,-11839,3384,-11857,3404,-11880,3400,-11922,3415,-11928,3427,-11956,3442,-11988,3441,-12014,3448,-12047,3445,-12065,3458,-12061,3486,-12067,3490,-12063,3510,-12089,3525,-12091,3545,-12100,3546,-12117,3564,-12128,3567,-12133,3578,-12172,3620,-12190,3632,-12194,3664,-12186,3661,-12179,3680,-12193,3698,-12211,3696,-12234,3712,-12242,3724,-12240,3736,-12252,3752,-12252,3778,-12233,3778,-12241,3815,-12249,3811,-12250,3793,-12270,3789,-12294,3803,-12298,3827,-12313,3845,-12333,3857,-12344,3870,-12374,3896,-12369,3903,-12382,3937,-12376,3955,-12385,3983,-12411,4011,-12436,4026,-12441,4044,-12416,4088,-12411,4103,-12416,4114,-12407,4144,-12415,4172,-12426,4178,-12421,4200,-12323,4201;CO:-10792,4100,-10573,4100,-10405,4100,-10205,4100,-10205,4000,-10204,3699,-10300,3700,-10434,3699,-10687,3699,-10742,3700,-10904,3700,-10904,3817,-10906,3828,-10905,3913,-10905,4100,-10792,4100;CT:-7305,4204,-7180,4202,-7180,4201,-7180,4141,-7186,4132,-7195,4134,-7239,4126,-7291,4128,-7313,4115,-7337,4110,-7366,4099,-7373,4110,-7348,4121,-7355,4129,-7349,4205,-7305,4204;DE:-7541,3980,-7551,3968,-7561,3962,-7559,3946,-7544,3931,-7540,3907,-7519,3881,-7509,3880,-7505,3845,-7569,3846,-7579,3972,-7562,3983,-7541,3980;DC:-7704,3899,-7691,3890,-7704,3879,-7712,3893,-7704,3899;FL:-8550,3100,-8500,3100,-8487,3071,-8350,3065,-8222,3057,-8217,3036,-8205,3036,-8200,3056,-8204,3075,-8195,3083,-8172,3075,-8144,3071,-8138,3027,-8126,2979,-8097,2915,-8052,2846,-8059,2841,-8057,2809,-8038,2774,-8009,2702,-8003,2680,-8004,2657,-8015,2574,-8024,2572,-8034,2547,-8030,2538,-8050,2520,-8057,2524,-8076,2516,-8108,2512,-8117,2522,-8113,2538,-8135,2582,-8153,2590,-8168,2584,-8180,2609,-8183,2629,-8204,2652,-8209,2667,-8206,2688,-8217,2692,-8215,2679,-8225,2676,-8257,2730,-8269,2744,-8239,2784,-8259,2782,-8272,2769,-8285,2789,-8268,2843,-8264,2889,-8276,2900,-8280,2915,-8299,2918,-8322,2942,-8340,2952,-8341,2967,-8354,2972,-8364,2989,-8402,3010,-8436,3006,-8434,2990,-8445,2993,-8487,2974,-8531,2970,-8530,2981,-8540,2994,-8592,3024,-8630,3036,-8663,3040,-8691,3037,-8752,3028,-8737,3043,-8745,3051,-8741,3067,-8763,3087,-8760,3100,-8550,3100;GA:-8311,3500,-8332,3479,-8334,3468,-8301,3447,-8290,3449,-8275,3427,-8271,3415,-8256,3394,-8233,3382,-8219,3363,-8193,3346,-8194,3335,-8176,3316,-8149,3301,-8143,3284,-8142,3263,-8128,3256,-8112,3229,-8112,3212,-8089,3203,-8113,3169,-8118,3152,-8128,3136,-8129,3121,-8140,3113,-8144,3071,-8172,3075,-8195,3083,-8204,3075,-8200,3056,-8205,3036,-8217,3036,-8222,3057,-8350,3065,-8487,3071,-8500,3100,-8511,3128,-8504,3154,-8514,3184,-8505,3201,-8506,3214,-8489,3226,-8500,3232,-8496,3242,-8507,3258,-8518,3286,-8543,3412,-8561,3498,-8432,3499,-8362,3498,-8311,3500;ID:-11605,4900,-11605,4798,-11572,4770,-11572,4742,-11553,4730,-11532,4726,-11530,4719,-11493,4692,-11489,4681,-11462,4671,-11461,4664,-11432,4665,-11446,4627,-11449,4604,-11439,4588,-11457,4577,-11450,4567,-11455,4556,-11433,4546,-11409,4559,-11399,4570,-11381,4560,-11383,4552,-11374,4533,-11357,4513,-11345,4506,-11346,4487,-11334,4478,-11313,4477,-11300,4445,-11289,4439,-11278,4449,-11247,4448,-11224,4457,-11210,4452,-11187,4456,-11182,4451,-11162,4455,-11139,4476,-11123,4458,-11105,4448,-11105,4200,-11216,4200,-11404,4200,-11703,4200,-11703,4383,-11690,4416,-11698,4424,-11717,4426,-11724,4439,-11704,4475,-11693,4478,-11683,4493,-11685,4502,-11673,4514,-11667,4532,-11646,4562,-11655,4575,-11678,4582,-11692,4599,-11692,4617,-11706,4634,-11704,4643,-11704,4776,-11703,4900,-11605,4900;IL:-9064,4251,-8879,4249,-8780,4249,-8784,4230,-8768,4208,-8752,4171,-8753,3935,-8764,3917,-8751,3896,-8750,3878,-8762,3864,-8766,3851,-8784,3829,-8795,3828,-8792,3815,-8800,3810,-8806,3787,-8803,3780,-8816,3766,-8807,3748,-8848,3739,-8851,3729,-8842,3715,-8855,3707,-8891,3722,-8903,3721,-8918,3704,-8913,3698,-8929,3699,-8952,3728,-8944,3735,-8952,3754,-8952,3769,-8984,3790,-8995,3788,-9006,3801,-9036,3822,-9035,3837,-9018,3863,-9021,3873,-9011,3885,-9025,3892,-9047,3896,-9059,3887,-9066,3893,-9073,3926,-9106,3947,-9137,3973,-9149,4003,-9151,4024,-9142,4038,-9140,4056,-9112,4067,-9109,4082,-9096,4092,-9095,4110,-9111,4124,-9105,4141,-9066,4146,-9034,4159,-9031,4174,-9018,4181,-9014,4200,-9017,4213,-9039,4223,-9042,4233,-9064,4251;IN:-8599,4176,-8481,4176,-8481,4169,-8480,4050,-8482,3910,-8489,3906,-8481,3879,-8499,3878,-8517,3869,-8543,3873,-8542,3853,-8559,3845,-8566,3833,-8583,3828,-8592,3802,-8604,3796,-8626,3805,-8630,3817,-8652,3804,-8650,3793,-8673,3789,-8680,3799,-8705,3789,-8713,3779,-8738,3794,-8751,3790,-8760,3798,-8768,3790,-8793,3789,-8803,3780,-8806,3787,-8800,3810,-8792,3815,-8795,3828,-8784,3829,-8766,3851,-8762,3864,-8750,3878,-8751,3896,-8764,3917,-8753,3935,-8752,4171,-8743,4164,-8712,4164,-8682,4176,-8599,4176;IA:-9137,4350,-9122,4350,-9120,4335,-9106,4325,-9118,4313,-9114,4291,-9107,4275,-9071,4264,-9064,4251,-9042,4233,-9039,4223,-9017,4213,-9014,4200,-9018,4181,-9031,4174,-9034,4159,-9066,4146,-9105,4141,-9111,4124,-9095,4110,-9096,4092,-9109,4082,-9112,4067,-9140,4056,-9142,4038,-9153,4041,-9173,4062,-9183,4061,-9326,4058,-9463,4057,-9577,4059,-9588,4072,-9583,4098,-9593,4120,-9592,4145,-9610,4154,-9612,4168,-9606,4180,-9613,4197,-9626,4204,-9645,4249,-9663,4271,-9654,4286,-9651,4305,-9643,4312,-9656,4322,-9653,4340,-9658,4348,-9645,4350,-9137,4350;KS:-10191,4000,-9531,4000,-9521,3991,-9488,3983,-9511,3954,-9498,3944,-9482,3921,-9461,3916,-9462,3700,-10009,3700,-10204,3699,-10205,4000,-10191,4000;KY:-8390,3877,-8368,3863,-8352,3870,-8314,3863,-8303,3873,-8289,3876,-8285,3859,-8273,3856,-8259,3842,-8262,3812,-8250,3793,-8234,3778,-8229,3767,-8210,3755,-8197,3754,-8235,3727,-8272,3712,-8272,3704,-8287,3698,-8288,3689,-8307,3685,-8314,3674,-8367,3660,-8369,3658,-8454,3659,-8529,3663,-8549,3662,-8659,3666,-8785,3663,-8807,3668,-8805,3650,-8930,3651,-8942,3650,-8936,3662,-8922,3658,-8913,3698,-8918,3704,-8903,3721,-8891,3722,-8855,3707,-8842,3715,-8851,3729,-8848,3739,-8807,3748,-8816,3766,-8803,3780,-8793,3789,-8768,3790,-8760,3798,-8751,3790,-8738,3794,-8713,3779,-8705,3789,-8680,3799,-8673,3789,-8650,3793,-8652,3804,-8630,3817,-8626,3805,-8604,3796,-8592,3802,-8583,3828,-8566,3833,-8559,3845,-8542,3853,-8543,3873,-8517,3869,-8499,3878,-8481,3879,-8489,3906,-8482,3910,-8443,3910,-8423,3890,-8422,3881,-8390,3877;LA:-9361,3302,-9117,3300,-9107,3289,-9114,3284,-9115,3264,-9101,3251,-9099,3222,-9111,3199,-9134,3185,-9140,3162,-9150,3164,-9152,3128,-9164,3127,-9157,3107,-9164,3100,-8975,3100,-8985,3067,-8968,3045,-8964,3029,-8952,3018,-8982,3004,-8984,2995,-8960,2988,-8950,3004,-8929,2988,-8930,2975,-8942,2970,-8965,2975,-8962,2966,-8970,2951,-8951,2939,-8920,2935,-8909,2920,-8900,2918,-8916,2901,-8934,2904,-8948,2922,-8985,2931,-8985,2948,-9003,2943,-9002,2928,-9010,2915,-9023,2913,-9033,2928,-9056,2928,-9065,2913,-9080,2909,-9096,2918,-9109,2919,-9122,2944,-9145,2955,-9153,2953,-9162,2974,-9188,2971,-9189,2984,-9215,2972,-9211,2962,-9231,2954,-9262,2958,-9297,2972,-9323,2978,-9377,2973,-9384,2969,-9393,2979,-9369,3014,-9377,3033,-9370,3044,-9373,3058,-9363,3068,-9353,3094,-9354,3115,-9382,3156,-9382,3178,-9404,3199,-9404,3302,-9361,3302;ME:-7070,4306,-7082,4313,-7081,4323,-7097,4334,-7103,4466,-7108,4530,-7065,4544,-7072,4551,-7056,4566,-7039,4574,-7042,4580,-7026,4589,-7031,4606,-7021,4633,-7006,4642,-7000,4669,-6923,4746,-6904,4743,-6903,4724,-6890,4718,-6858,4729,-6838,4729,-6823,4736,-6795,4720,-6779,4707,-6778,4594,-6780,4568,-6746,4560,-6751,4549,-6742,4538,-6749,4528,-6735,4513,-6716,4516,-6698,4480,-6719,4465,-6731,4471,-6741,4460,-6755,4462,-6757,4453,-6775,4454,-6805,4433,-6812,4448,-6822,4449,-6817,4433,-6840,4425,-6846,4438,-6857,4431,-6883,4431,-6883,4446,-6898,4443,-6896,4432,-6910,4410,-6907,4404,-6926,4392,-6944,4397,-6955,4384,-6971,4382,-6983,4372,-6999,4374,-7003,4385,-7025,4368,-7019,4357,-7036,4353,-7037,4344,-7056,4332,-7070,4306;MD:-7599,3795,-7602,3795,-7604,3795,-7599,3795|-7948,3972,-7579,3972,-7569,3846,-7505,3845,-7524,3803,-7540,3801,-7567,3795,-7589,3791,-7588,3807,-7596,3814,-7585,3821,-7600,3837,-7605,3830,-7626,3832,-7633,3850,-7626,3850,-7626,3874,-7619,3883,-7628,3915,-7617,3933,-7600,3937,-7597,3956,-7610,3954,-7610,3944,-7637,3931,-7644,3920,-7646,3891,-7656,3877,-7651,3854,-7638,3838,-7640,3826,-7632,3814,-7636,3806,-7659,3822,-7692,3829,-7702,3845,-7721,3836,-7728,3848,-7713,3863,-7704,3879,-7691,3890,-7704,3899,-7712,3893,-7725,3903,-7746,3908,-7746,3922,-7757,3931,-7772,3932,-7783,3960,-7800,3960,-7817,3969,-7827,3962,-7843,3962,-7847,3951,-7877,3959,-7896,3944,-7909,3947,-7929,3930,-7949,3921,-7948,3972;MA:-7092,4289,-7082,4287,-7078,4270,-7082,4255,-7098,4242,-7099,4227,-7077,4225,-7064,4209,-7066,4196,-7055,4193,-7054,4181,-7026,4172,-6994,4181,-7001,4167,-7048,4155,-7066,4155,-7076,4164,-7093,4161,-7093,4154,-7112,4150,-7120,4168,-7122,4171,-7133,4178,-7138,4202,-7153,4202,-7180,4201,-7180,4202,-7305,4204,-7349,4205,-7351,4209,-7327,4275,-7246,4273,-7130,4270,-7119,4279,-7092,4289;MI:-8345,4173,-8481,4169,-8481,4176,-8599,4176,-8682,4176,-8662,4189,-8648,4212,-8636,4225,-8626,4244,-8621,4272,-8623,4301,-8653,4359,-8643,4381,-8650,4408,-8627,4434,-8622,4457,-8625,4469,-8609,4474,-8607,4490,-8581,4495,-8561,4513,-8563,4477,-8552,4475,-8539,4493,-8539,4524,-8531,4531,-8503,4536,-8512,4558,-8494,4576,-8471,4577,-8446,4565,-8422,4564,-8410,4549,-8391,4548,-8360,4535,-8349,4536,-8332,4514,-8345,4503,-8332,4488,-8327,4471,-8333,4434,-8354,4425,-8359,4405,-8383,4399,-8396,4376,-8391,4367,-8367,4359,-8348,4371,-8326,4397,-8292,4407,-8275,4399,-8264,4385,-8254,4344,-8252,4323,-8241,4298,-8252,4261,-8268,4256,-8269,4269,-8280,4265,-8292,4235,-8313,4224,-8319,4201,-8344,4181,-8345,4173|-8551,4573,-8549,4561,-8562,4559,-8557,4576,-8551,4573|-8759,4510,-8774,4520,-8765,4534,-8789,4536,-8779,4550,-8778,4568,-8799,4580,-8810,4592,-8853,4602,-8866,4599,-8909,4614,-9012,4634,-9023,4651,-9042,4657,-9003,4667,-8985,4679,-8941,4684,-8913,4699,-8900,4700,-8889,4710,-8858,4725,-8842,4737,-8818,4746,-8796,4738,-8835,4708,-8844,4697,-8844,4679,-8825,4693,-8790,4691,-8763,4681,-8739,4654,-8726,4649,-8701,4653,-8695,4647,-8670,4644,-8616,4667,-8588,4669,-8551,4668,-8526,4675,-8506,4676,-8503,4648,-8483,4644,-8463,4649,-8455,4642,-8442,4650,-8413,4653,-8412,4618,-8399,4603,-8379,4599,-8377,4609,-8358,4609,-8348,4599,-8356,4591,-8411,4598,-8437,4593,-8466,4605,-8474,4594,-8470,4585,-8483,4587,-8502,4601,-8534,4609,-8550,4610,-8566,4597,-8592,4593,-8621,4596,-8632,4591,-8635,4580,-8666,4570,-8665,4583,-8678,4586,-8684,4573,-8707,4572,-8717,4566,-8733,4542,-8761,4512,-8759,4510|-8881,4798,-8906,4785,-8919,4783,-8918,4794,-8855,4817,-8867,4801,-8881,4798;MN:-9201,4671,-9209,4675,-9229,4667,-9229,4608,-9235,4602,-9264,4593,-9287,4572,-9289,4558,-9277,4557,-9264,4544,-9276,4529,-9274,4512,-9281,4475,-9255,4457,-9234,4455,-9223,4444,-9193,4433,-9188,4420,-9159,4403,-9143,4399,-9124,4378,-9127,4362,-9122,4350,-9137,4350,-9645,4350,-9645,4530,-9668,4541,-9686,4560,-9658,4582,-9656,4593,-9660,4633,-9672,4644,-9680,4666,-9679,4692,-9682,4697,-9686,4761,-9705,4795,-9713,4814,-9716,4855,-9710,4868,-9723,4900,-9515,4900,-9515,4938,-9496,4937,-9482,4930,-9469,4878,-9459,4872,-9426,4870,-9422,4865,-9384,4863,-9379,4852,-9347,4855,-9347,4859,-9321,4864,-9298,4862,-9273,4854,-9266,4844,-9251,4845,-9237,4822,-9230,4832,-9205,4836,-9201,4827,-9171,4820,-9171,4811,-9157,4804,-9126,4808,-9108,4818,-9084,4824,-9075,4809,-9058,4812,-9038,4809,-9014,4811,-8987,4799,-8962,4801,-8964,4795,-8997,4783,-9044,4773,-9074,4763,-9117,4737,-9136,4721,-9164,4703,-9209,4679,-9201,4671;MS:-8847,3500,-8820,3500,-8810,3489,-8824,3380,-8847,3190,-8839,3037,-8850,3032,-8874,3035,-8884,3041,-8908,3037,-8942,3025,-8952,3018,-8964,3029,-8968,3045,-8985,3067,-8975,3100,-9164,3100,-9157,3107,-9164,3127,-9152,3128,-9150,3164,-9140,3162,-9134,3185,-9111,3199,-9099,3222,-9101,3251,-9115,3264,-9114,3284,-9107,3289,-9117,3300,-9109,3314,-9114,3335,-9106,3343,-9123,3356,-9107,3387,-9089,3403,-9095,3414,-9074,3430,-9075,3437,-9057,3442,-9059,3462,-9048,3466,-9041,3483,-9025,3491,-9031,3500,-8847,3500;MO:-9183,4061,-9173,4062,-9153,4041,-9142,4038,-9151,4024,-9149,4003,-9137,3973,-9106,3947,-9073,3926,-9066,3893,-9059,3887,-9047,3896,-9025,3892,-9011,3885,-9021,3873,-9018,3863,-9035,3837,-9036,3822,-9006,3801,-8995,3788,-8984,3790,-8952,3769,-8952,3754,-8944,3735,-8952,3728,-8929,3699,-8913,3698,-8922,3658,-8936,3662,-8942,3650,-8948,3650,-8954,3650,-8953,3625,-8973,3600,-9038,3600,-9022,3618,-9006,3630,-9015,3650,-9447,3650,-9462,3650,-9462,3700,-9461,3916,-9482,3921,-9498,3944,-9511,3954,-9488,3983,-9521,3991,-9531,4000,-9555,4026,-9577,4059,-9463,4057,-9326,4058,-9183,4061;MT:-10405,4900,-10404,4786,-10405,4594,-10404,4500,-10406,4500,-10592,4500,-10908,4500,-11105,4500,-11105,4448,-11123,4458,-11139,4476,-11162,4455,-11182,4451,-11187,4456,-11210,4452,-11224,4457,-11247,4448,-11278,4449,-11289,4439,-11300,4445,-11313,4477,-11334,4478,-11346,4487,-11345,4506,-11357,4513,-11374,4533,-11383,4552,-11381,4560,-11399,4570,-11409,4559,-11433,4546,-11455,4556,-11450,4567,-11457,4577,-11439,4588,-11449,4604,-11446,4627,-11432,4665,-11461,4664,-11462,4671,-11489,4681,-11493,4692,-11530,4719,-11532,4726,-11553,4730,-11572,4742,-11572,4770,-11605,4798,-11605,4900,-11150,4899,-10945,4900,-10405,4900;NE:-10332,4300,-10163,4300,-9850,4300,-9847,4295,-9795,4277,-9783,4287,-9769,4284,-9722,4284,-9669,4266,-9663,4252,-9645,4249,-9626,4204,-9613,4197,-9606,4180,-9612,4168,-9610,4154,-9592,4145,-9593,4120,-9583,4098,-9588,4072,-9577,4059,-9555,4026,-9531,4000,-10191,4000,-10205,4000,-10205,4100,-10405,4100,-10405,4300,-10332,4300;NV:-11703,4200,-11404,4200,-11405,3700,-11405,3620,-11415,3603,-11425,3602,-11437,3614,-11474,3610,-11468,3552,-11460,3532,-11457,3514,-11463,3500,-11585,3597,-11654,3650,-11750,3722,-11871,3810,-12000,3900,-12000,4026,-12000,4200,-11870,4199,-11703,4200;NH:-7108,4530,-7103,4466,-7097,4334,-7081,4323,-7082,4313,-7070,4306,-7082,4287,-7092,4289,-7119,4279,-7130,4270,-7246,4273,-7254,4281,-7253,4295,-7245,4301,-7246,4315,-7238,4357,-7220,4377,-7212,4399,-7203,4408,-7203,4432,-7170,4442,-7154,4459,-7163,4475,-7149,4491,-7150,4501,-7136,4527,-7113,4524,-7108,4530;NJ:-7424,4114,-7390,4100,-7402,4071,-7419,4064,-7427,4049,-7400,4041,-7398,4030,-7410,3976,-7441,3936,-7461,3925,-7480,3899,-7489,3916,-7518,3924,-7553,3946,-7556,3961,-7556,3963,-7551,3968,-7541,3980,-7515,3989,-7513,3996,-7482,4013,-7477,4022,-7506,4042,-7507,4054,-7520,4058,-7521,4069,-7505,4087,-7513,4097,-7488,4118,-7483,4129,-7470,4136,-7424,4114;NM:-10742,3700,-10687,3699,-10434,3699,-10300,3700,-10300,3650,-10304,3650,-10305,3402,-10307,3300,-10307,3200,-10662,3200,-10664,3190,-10653,3179,-10821,3179,-10821,3133,-10905,3133,-10904,3700,-10742,3700;NY:-7334,4501,-7333,4480,-7339,4462,-7329,4444,-7332,4425,-7344,4404,-7335,4377,-7340,4369,-7325,4352,-7328,4283,-7327,4275,-7351,4209,-7349,4205,-7355,4129,-7348,4121,-7373,4110,-7366,4099,-7323,4091,-7314,4097,-7277,4097,-7259,4100,-7228,4116,-7226,4104,-7210,4099,-7247,4085,-7324,4063,-7356,4058,-7378,4059,-7394,4054,-7402,4071,-7390,4100,-7424,4114,-7470,4136,-7474,4143,-7489,4144,-7507,4161,-7505,4175,-7517,4187,-7525,4186,-7536,4200,-7976,4200,-7976,4225,-7976,4227,-7915,4255,-7905,4269,-7885,4278,-7893,4295,-7901,4299,-7907,4326,-7849,4338,-7797,4337,-7776,4334,-7753,4323,-7739,4328,-7696,4327,-7670,4334,-7642,4352,-7624,4353,-7623,4380,-7614,4396,-7636,4407,-7631,4420,-7591,4437,-7576,4451,-7528,4485,-7483,4502,-7415,4499,-7334,4501;NC:-8098,3656,-8029,3655,-7951,3654,-7587,3655,-7575,3615,-7603,3619,-7607,3614,-7641,3608,-7646,3603,-7668,3601,-7667,3594,-7640,3599,-7636,3594,-7606,3599,-7596,3590,-7578,3594,-7572,3570,-7578,3558,-7590,3557,-7615,3532,-7648,3531,-7654,3514,-7639,3497,-7628,3494,-7649,3466,-7667,3469,-7699,3467,-7721,3461,-7756,3442,-7783,3416,-7797,3385,-7818,3392,-7854,3385,-7968,3480,-8080,3482,-8078,3494,-8093,3511,-8104,3504,-8104,3515,-8228,3520,-8255,3516,-8276,3507,-8311,3500,-8362,3498,-8432,3499,-8429,3523,-8410,3525,-8402,3541,-8377,3556,-8350,3557,-8325,3572,-8299,3577,-8278,3600,-8264,3606,-8261,3597,-8222,3616,-8204,3612,-8191,3630,-8172,3635,-8168,3659,-8098,3656;ND:-9723,4900,-9710,4868,-9716,4855,-9713,4814,-9705,4795,-9686,4761,-9682,4697,-9679,4692,-9680,4666,-9672,4644,-9660,4633,-9656,4593,-10405,4594,-10404,4786,-10405,4900,-9723,4900;OH:-8052,4198,-8052,4064,-8067,4058,-8060,4047,-8060,4032,-8074,4008,-8083,3971,-8122,3939,-8135,3934,-8146,3941,-8157,3927,-8169,3927,-8181,3908,-8178,3897,-8189,3887,-8204,3903,-8222,3879,-8217,3863,-8229,3858,-8233,3845,-8259,3842,-8273,3856,-8285,3859,-8289,3876,-8303,3873,-8314,3863,-8352,3870,-8368,3863,-8390,3877,-8422,3881,-8423,3890,-8443,3910,-8482,3910,-8480,4050,-8481,4169,-8345,4173,-8307,4160,-8293,4151,-8284,4159,-8262,4143,-8248,4138,-8201,4151,-8174,4149,-8144,4167,-8101,4185,-8052,4198,-8052,4198;OK:-10009,3700,-9462,3700,-9462,3650,-9443,3540,-9448,3364,-9487,3375,-9497,3386,-9522,3396,-9529,3387,-9555,3388,-9560,3393,-9584,3383,-9594,3389,-9615,3384,-9635,3369,-9642,3377,-9663,3385,-9685,3385,-9692,3396,-9717,3374,-9726,3386,-9737,3382,-9746,3391,-9769,3398,-9787,3385,-9795,3399,-9809,3400,-9817,3411,-9836,3416,-9849,3406,-9857,3415,-9877,3414,-9899,3422,-9919,3421,-9926,3440,-9958,3442,-9970,3438,-9992,3457,-10000,3456,-10000,3650,-10181,3650,-10300,3650,-10300,3700,-10204,3699,-10009,3700;OR:-12321,4617,-12312,4619,-12290,4608,-12281,4596,-12276,4566,-12225,4555,-12181,4571,-12154,4573,-12122,4567,-12118,4560,-12064,4575,-12051,4570,-12021,4573,-11996,4582,-11953,4591,-11913,4593,-11899,4600,-11692,4599,-11678,4582,-11655,4575,-11646,4562,-11667,4532,-11673,4514,-11685,4502,-11683,4493,-11693,4478,-11704,4475,-11724,4439,-11717,4426,-11698,4424,-11690,4416,-11703,4383,-11703,4200,-11870,4199,-12000,4200,-12104,4200,-12238,4201,-12323,4201,-12421,4200,-12436,4212,-12443,4244,-12442,4266,-12455,4284,-12445,4300,-12438,4327,-12424,4356,-12417,4381,-12406,4466,-12408,4477,-12398,4514,-12394,4566,-12399,4594,-12395,4611,-12355,4626,-12337,4615,-12321,4617;PA:-7976,4225,-7976,4200,-7536,4200,-7525,4186,-7517,4187,-7505,4175,-7507,4161,-7489,4144,-7474,4143,-7470,4136,-7483,4129,-7488,4118,-7513,4097,-7505,4087,-7521,4069,-7520,4058,-7507,4054,-7506,4042,-7477,4022,-7482,4013,-7513,3996,-7515,3989,-7541,3980,-7562,3983,-7579,3972,-7948,3972,-8052,3972,-8052,4064,-8052,4198,-8052,4198,-8033,4203,-7976,4227,-7976,4225;RI:-7120,4168,-7112,4150,-7132,4147,-7120,4168|-7153,4202,-7138,4202,-7133,4178,-7122,4171,-7134,4173,-7145,4158,-7148,4137,-7186,4132,-7180,4141,-7180,4201,-7153,4202;SC:-8276,3507,-8255,3516,-8228,3520,-8104,3515,-8104,3504,-8093,3511,-8078,3494,-8080,3482,-7968,3480,-7854,3385,-7872,3380,-7894,3364,-7915,3338,-7919,3317,-7936,3301,-7958,3301,-7963,3289,-7987,3276,-8000,3261,-8021,3255,-8043,3240,-8045,3233,-8066,3225,-8089,3203,-8112,3212,-8112,3229,-8128,3256,-8142,3263,-8143,3284,-8149,3301,-8176,3316,-8194,3335,-8193,3346,-8219,3363,-8233,3382,-8256,3394,-8271,3415,-8275,3427,-8290,3449,-8301,3447,-8334,3468,-8332,3479,-8311,3500,-8276,3507;SD:-10405,4594,-9656,4593,-9658,4582,-9686,4560,-9668,4541,-9645,4530,-9645,4350,-9658,4348,-9653,4340,-9656,4322,-9643,4312,-9651,4305,-9654,4286,-9663,4271,-9645,4249,-9663,4252,-9669,4266,-9722,4284,-9769,4284,-9783,4287,-9795,4277,-9847,4295,-9850,4300,-10163,4300,-10332,4300,-10405,4300,-10406,4500,-10404,4500,-10405,4594;TN:-8805,3650,-8807,3668,-8785,3663,-8659,3666,-8549,3662,-8529,3663,-8454,3659,-8369,3658,-8367,3660,-8168,3659,-8172,3635,-8191,3630,-8204,3612,-8222,3616,-8261,3597,-8264,3606,-8278,3600,-8299,3577,-8325,3572,-8350,3557,-8377,3556,-8402,3541,-8410,3525,-8429,3523,-8432,3499,-8561,3498,-8736,3500,-8820,3500,-8847,3500,-9031,3500,-9021,3502,-9011,3520,-9013,3544,-8994,3560,-8991,3576,-8976,3581,-8973,3600,-8953,3625,-8954,3650,-8948,3650,-8942,3650,-8930,3651,-8805,3650;TX:-10181,3650,-10000,3650,-10000,3456,-9992,3457,-9970,3438,-9958,3442,-9926,3440,-9919,3421,-9899,3422,-9877,3414,-9857,3415,-9849,3406,-9836,3416,-9817,3411,-9809,3400,-9795,3399,-9787,3385,-9769,3398,-9746,3391,-9737,3382,-9726,3386,-9717,3374,-9692,3396,-9685,3385,-9663,3385,-9642,3377,-9635,3369,-9615,3384,-9594,3389,-9584,3383,-9560,3393,-9555,3388,-9529,3387,-9522,3396,-9497,3386,-9487,3375,-9448,3364,-9438,3354,-9418,3359,-9404,3355,-9404,3302,-9404,3199,-9382,3178,-9382,3156,-9354,3115,-9353,3094,-9363,3068,-9373,3058,-9370,3044,-9377,3033,-9369,3014,-9393,2979,-9384,2969,-9400,2968,-9452,2955,-9471,2962,-9474,2979,-9487,2967,-9497,2970,-9502,2956,-9491,2950,-9490,2931,-9508,2911,-9538,2887,-9599,2860,-9605,2865,-9623,2858,-9623,2864,-9648,2860,-9659,2872,-9666,2870,-9640,2844,-9659,2836,-9677,2841,-9680,2823,-9703,2804,-9726,2769,-9740,2733,-9751,2736,-9754,2723,-9743,2726,-9748,2700,-9756,2699,-9756,2684,-9747,2676,-9744,2646,-9733,2635,-9731,2616,-9722,2599,-9752,2589,-9765,2602,-9789,2607,-9820,2606,-9847,2622,-9867,2624,-9882,2637,-9903,2641,-9917,2654,-9927,2684,-9945,2702,-9942,2717,-9951,2734,-9948,2748,-9961,2764,-9971,2766,-9988,2780,-9993,2798,-10008,2814,-10030,2828,-10040,2858,-10050,2866,-10063,2891,-10067,2910,-10080,2924,-10101,2937,-10106,2946,-10126,2954,-10141,2975,-10185,2980,-10211,2979,-10234,2987,-10239,2977,-10263,2973,-10281,2952,-10292,2919,-10298,2918,-10312,2899,-10328,2898,-10353,2914,-10415,2938,-10427,2951,-10451,2964,-10468,2992,-10469,3018,-10486,3039,-10490,3057,-10501,3069,-10539,3086,-10560,3109,-10577,3117,-10595,3136,-10621,3147,-10638,3173,-10653,3179,-10664,3190,-10662,3200,-10307,3200,-10307,3300,-10305,3402,-10304,3650,-10300,3650,-10181,3650;UT:-11216,4200,-11105,4200,-11105,4100,-10905,4100,-10905,3913,-10906,3828,-10904,3817,-10904,3700,-11050,3701,-11405,3700,-11404,4200,-11216,4200;VT:-7150,4501,-7149,4491,-7163,4475,-7154,4459,-7170,4442,-7203,4432,-7203,4408,-7212,4399,-7220,4377,-7238,4357,-7246,4315,-7245,4301,-7253,4295,-7254,4281,-7246,4273,-7327,4275,-7328,4283,-7325,4352,-7340,4369,-7335,4377,-7344,4404,-7332,4425,-7329,4444,-7339,4462,-7333,4480,-7334,4501,-7231,4500,-7150,4501;VA:-7540,3801,-7524,3803,-7538,3786,-7551,3780,-7559,3757,-7580,3720,-7597,3712,-7603,3726,-7594,3756,-7567,3795,-7540,3801|-7602,3795,-7599,3795,-7604,3795,-7602,3795|-7835,3946,-7783,3913,-7772,3932,-7757,3931,-7746,3922,-7746,3908,-7725,3903,-7712,3893,-7704,3879,-7713,3863,-7725,3859,-7733,3845,-7728,3834,-7701,3837,-7696,3822,-7661,3815,-7651,3802,-7624,3789,-7636,3761,-7625,3739,-7638,3729,-7640,3716,-7627,3708,-7641,3696,-7662,3712,-7667,3707,-7649,3695,-7599,3692,-7587,3655,-7951,3654,-8029,3655,-8098,3656,-8168,3659,-8367,3660,-8314,3674,-8307,3685,-8288,3689,-8287,3698,-8272,3704,-8272,3712,-8235,3727,-8197,3754,-8199,3745,-8185,3729,-8168,3720,-8155,3721,-8136,3734,-8123,3724,-8097,3729,-8051,3748,-8047,3742,-8030,3751,-8029,3769,-8018,3785,-8000,3800,-7992,3818,-7972,3836,-7965,3859,-7948,3846,-7931,3841,-7921,3850,-7900,3885,-7887,3876,-7840,3917,-7835,3946;WA:-11703,4900,-11704,4776,-11704,4643,-11706,4634,-11692,4617,-11692,4599,-11899,4600,-11913,4593,-11953,4591,-11996,4582,-12021,4573,-12051,4570,-12064,4575,-12118,4560,-12122,4567,-12154,4573,-12181,4571,-12225,4555,-12276,4566,-12281,4596,-12290,4608,-12312,4619,-12321,4617,-12337,4615,-12355,4626,-12373,4630,-12387,4624,-12407,4633,-12403,4646,-12390,4654,-12410,4674,-12424,4729,-12432,4736,-12443,4774,-12462,4789,-12471,4818,-12460,4838,-12439,4829,-12398,4816,-12370,4817,-12342,4812,-12316,4817,-12304,4808,-12280,4809,-12264,4787,-12252,4788,-12249,4759,-12242,4732,-12232,4735,-12242,4758,-12240,4780,-12223,4803,-12236,4812,-12237,4829,-12247,4847,-12242,4860,-12249,4875,-12265,4878,-12280,4889,-12276,4900,-11703,4900|-12272,4831,-12259,4835,-12261,4815,-12277,4823,-12272,4831|-12303,4858,-12292,4872,-12277,4856,-12281,4842,-12304,4846,-12303,4858;WV:-8052,4064,-8052,3972,-7948,3972,-7949,3921,-7929,3930,-7909,3947,-7896,3944,-7877,3959,-7847,3951,-7843,3962,-7827,3962,-7817,3969,-7800,3960,-7783,3960,-7772,3932,-7783,3913,-7835,3946,-7840,3917,-7887,3876,-7900,3885,-7921,3850,-7931,3841,-7948,3846,-7965,3859,-7972,3836,-7992,3818,-8000,3800,-8018,3785,-8029,3769,-8030,3751,-8047,3742,-8051,3748,-8097,3729,-8123,3724,-8136,3734,-8155,3721,-8168,3720,-8185,3729,-8199,3745,-8197,3754,-8210,3755,-8229,3767,-8234,3778,-8250,3793,-8262,3812,-8259,3842,-8233,3845,-8229,3858,-8217,3863,-8222,3879,-8204,3903,-8189,3887,-8178,3897,-8181,3908,-8169,3927,-8157,3927,-8146,3941,-8135,3934,-8122,3939,-8083,3971,-8074,4008,-8060,4032,-8060,4047,-8067,4058,-8052,4064;WI:-9042,4657,-9023,4651,-9012,4634,-8909,4614,-8866,4599,-8853,4602,-8810,4592,-8799,4580,-8778,4568,-8779,4550,-8789,4536,-8765,4534,-8774,4520,-8759,4510,-8763,4497,-8782,4495,-8798,4472,-8804,4456,-8793,4454,-8778,4464,-8761,4484,-8740,4491,-8724,4517,-8703,4522,-8705,4509,-8719,4497,-8747,4455,-8755,4432,-8754,4416,-8764,4410,-8774,4388,-8770,4369,-8779,4356,-8791,4325,-8789,4300,-8776,4278,-8780,4249,-8879,4249,-9064,4251,-9071,4264,-9107,4275,-9114,4291,-9118,4313,-9106,4325,-9120,4335,-9122,4350,-9127,4362,-9124,4378,-9143,4399,-9159,4403,-9188,4420,-9193,4433,-9223,4444,-9234,4455,-9255,4457,-9281,4475,-9274,4512,-9276,4529,-9264,4544,-9277,4557,-9289,4558,-9287,4572,-9264,4593,-9235,4602,-9229,4608,-9229,4667,-9209,4675,-9201,4671,-9179,4669,-9109,4686,-9084,4696,-9075,4689,-9089,4675,-9056,4658,-9042,4657;WY:-10908,4500,-10592,4500,-10406,4500,-10405,4300,-10405,4100,-10573,4100,-10792,4100,-10905,4100,-11105,4100,-11105,4200,-11105,4448,-11105,4500,-10908,4500', FP_POLY=null, FP_TAB='cheap';
+function fpPolys(){
+  if(FP_POLY) return FP_POLY; FP_POLY=[];
+  FP_SHAPES.split(';').forEach(function(s){
+    var st=s.slice(0,2);
+    s.slice(3).split('|').forEach(function(r){
+      var a=r.split(',').map(Number), xs=[], ys=[], x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+      for(var i=0;i<a.length;i+=2){ var x=a[i]/100, y=a[i+1]/100; xs.push(x); ys.push(y);
+        if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+      FP_POLY.push({st:st,xs:xs,ys:ys,b:[x0,x1,y0,y1]});
+    });
+  });
+  return FP_POLY;
+}
+function fpIn(p,x,y){
+  if(x<p.b[0]||x>p.b[1]||y<p.b[2]||y>p.b[3]) return false;
+  var c=false, xs=p.xs, ys=p.ys, n=xs.length;
+  for(var i=0,j=n-1;i<n;j=i++){
+    if(((ys[i]>y)!==(ys[j]>y)) && (x<(xs[j]-xs[i])*(y-ys[i])/(ys[j]-ys[i])+xs[i])) c=!c;
+  }
+  return c;
+}
+function fpStateAt(la,lo,hint){
+  var P=fpPolys(), i;
+  if(hint) for(i=0;i<P.length;i++) if(P[i].st===hint && fpIn(P[i],lo,la)) return hint;
+  for(i=0;i<P.length;i++) if(fpIn(P[i],lo,la)) return P[i].st;
+  return null;
+}
+/* which roads the route uses in each state, from TomTom's turn list */
+function fpRoads(runs){
+  var T=window.ROUTE_TT; if(!T||!T.ins||!T.ins.length) return null;
+  var segs=[], prev='';
+  for(var i=0;i<T.ins.length;i++){
+    var a=T.ins[i].o/1609.34, b=(i+1<T.ins.length?T.ins[i+1].o/1609.34:ROUTE_TOTAL), r=T.ins[i].r||prev; prev=r;
+    if(b>a) segs.push({a:a,b:b,r:r});
+  }
+  var C=ROUTE_CUM||[], tolls=(T.toll||[]).map(function(x){ var n=C.length-1; return {a:C[Math.min(x[0],n)]||0,b:C[Math.min(x[1],n)]||0}; });
+  var ov=function(a,b,c,d){ return Math.max(0,Math.min(b,d)-Math.max(a,c)); };
+  return runs.map(function(run){
+    var list=[];
+    segs.forEach(function(g){ var m=ov(g.a,g.b,run.start,run.end); if(m<=0) return; var nm=g.r||'local roads';
+      if(list.length && list[list.length-1].r===nm) list[list.length-1].mi+=m; else list.push({r:nm,mi:m}); });
+    list=list.filter(function(x){ return x.mi>=1; });
+    var out=[]; list.forEach(function(x){ if(out.length && out[out.length-1].r===x.r) out[out.length-1].mi+=x.mi; else out.push(x); });
+    var tm=0; tolls.forEach(function(t){ tm+=ov(t.a,t.b,run.start,run.end); });
+    return {roads:out,toll:tm};
+  });
+}
+function fpStopsHtml(){
+  var S=window.ROUTE_STOPS; if(!S||!S.length) return '';
+  var moved=window.ROUTE_SNAPPED||[], bad=0;
+  var h='<div class="rst"><b>Where your stops landed</b><div class="rd" style="font-size:14px">';
+  S.forEach(function(x,i){
+    var st=''; try{ st=fpStateAt(x.la,x.lo)||''; }catch(e){}
+    if(st==='??') st='';
+    var m=String(x.t).match(/[,\s]([A-Za-z]{2})\s*$/), want=m?m[1].toUpperCase():'';
+    var off=(want&&st&&want!==st)||(!want&&x.t!==HERE);
+    if(off) bad++;
+    var found=x.t===HERE?'Your location':x.f.split(',').slice(0,3).join(',');
+    h+='<div style="margin-top:6px'+(off?';color:#f2b36b':'')+'">'+(i+1)+'. '+esc(x.t===HERE?'Your location':x.t)+' \u2192 '+esc(found)+(st?' ('+st+')':'')
+      +(moved.indexOf(i)>=0?' \u2014 moved to the nearest main road':'')+'</div>';
+  });
+  h+='</div>'+(bad?'<div class="tl">Orange stops may be in the wrong place. Type the town with its state, like Jackson, OH.</div>':'')+'</div>';
+  return h;
+}
+function fpRoute(){
+  var runs=fpStateRuns(), R=runs.length?fpRoads(runs):null, b=document.getElementById('fprtbody'), t=getTruck()||TRUCK_DEF;
+  var M=function(x){ return Math.round(x).toLocaleString('en-US'); };
+  var carW=window.ROUTE_CAR?'<div class="rtop" style="color:#f2b36b"><b>The truck route didn\u2019t load, so this is a car route. Don\u2019t drive it.</b> Tap Find fuel again.'+(window.ROUTE_ERR?'<br><small>Error: '+esc(window.ROUTE_ERR)+'</small>':'')+'</div>':'';
+  carW+=fpStopsHtml();
+  if(!R){ b.innerHTML=carW+'<div class="rtop">Road names aren\u2019t available for this route. Tap Find fuel again to load them.'+(!window.ROUTE_CAR&&window.ROUTE_ERR?'<br><small>Error: '+esc(window.ROUTE_ERR)+'</small>':'')+'</div>'; }
+  else{
+    var tt=0; R.forEach(function(x){ tt+=x.toll; });
+    var sn=(window.ROUTE_SNAPPED||[]).map(function(i){ return (window.ROUTE_NAMES||[])[i]; }).filter(Boolean);
+    var h=carW+(sn.length?'<div class="rtop" style="color:#f2b36b">'+esc(sn.join(', '))+(sn.length>1?' were':' was')+' moved to the nearest main road so a truck route could be found.</div>':'')+'<div class="rtop">'+M(ROUTE_TOTAL)+' miles'+(t.rt==='shortest'?' (shortest route)':'')+'. '+(tt>=1?'Toll roads: about '+M(tt)+' miles.':'No toll roads on this route.');
+    if(t.toll) h+=' Avoid tolls is on in Your truck'+(window.ROUTE_TOLLOK&&t.tollok?', except in '+esc(t.tollok):'')+(window.ROUTE_TOLLKEPT>0?'. Going around would add about '+M(window.ROUTE_TOLLKEPT)+' miles, so the route keeps them':'')+'.';
+    h+='</div>';
+    runs.forEach(function(r,k){
+      h+='<div class="rst"><b>'+esc(r.st==='??'?'Other':r.st)+'</b> &nbsp;'+M(r.mi)+' mi<div class="rd">'
+        +(R[k].roads.length?R[k].roads.map(function(x){ return esc(x.r)+' <span style="color:#9fb4ce">'+M(x.mi)+' mi</span>'; }).join(' &rarr; '):'Local roads')+'</div>'
+        +(R[k].toll>=1?'<div class="tl">Toll road about '+M(R[k].toll)+' mi</div>':'')+'</div>';
+    });
+    h+='<div class="fpfine">Road names and miles come from the truck route the app planned. They can be off a mile or two near state lines. To make the route go your way, add a town on that road as a stop. Always check the route against your own knowledge of the road and your truck atlas.</div>';
+    b.innerHTML=h;
+  }
+  document.getElementById('fprt').classList.add('show'); document.getElementById('fprt').scrollTop=0;
+}
+/* miles in each state, in driving order */
+function fpStateRuns(){
+  var L=window.ROUTE_LINE, C=ROUTE_CUM; if(!L||!L.length||!C||!C.length) return [];
+  var runs=[], cur=null, last=null, next=0;
+  for(var i=0;i<L.length-1;i++){
+    var a=C[i]||0, b=C[i+1]||a; if(b<=a) continue;
+    if(a>=next || cur===null){ var m=fpStateAt((L[i][0]+L[i+1][0])/2,(L[i][1]+L[i+1][1])/2,last); if(m) last=m; next=a+0.5; }
+    var st=last||'??';
+    if(cur && cur.st===st){ cur.end=b; } else { cur={st:st,start:a,end:b}; runs.push(cur); }
+  }
+  if(runs.length) runs[runs.length-1].end=ROUTE_TOTAL;
+  // border wiggle: fold runs under 3 miles into the run before
+  var out=[];
+  runs.forEach(function(r){
+    if(out.length && (r.end-r.start<3 || r.st==='??')){ out[out.length-1].end=r.end; return; }
+    if(out.length && out[out.length-1].st===r.st){ out[out.length-1].end=r.end; return; }
+    out.push({st:r.st,start:r.start,end:r.end});
+  });
+  if(out.length && out[0].st==='??' && out[1]){ out[1].start=out[0].start; out.shift(); }
+  out.forEach(function(r){ r.mi=r.end-r.start; });
+  return out;
+}
+function fpCost(h){ var p=+h.pre; return (isFinite(p)&&p>0)?p:+h.disc; }   /* real cost: fuel tax taken out */
+function fpPump(h){ return +h.disc; }
+function fpOn(){ var g=document.getElementById('gmaps'); return !!(g && !g.classList.contains('off') && !NEAR_R && window.ROUTE_LINE && LASTHITS.length && ROUTE_TOTAL); }
+function fpSync(){ var b=document.getElementById('fpbtn'); if(b) b.classList.toggle('fpoff',!fpOn()); }
+var FP_NOWG=null;
+function openFuelPlan(){
+  if(!fpOn()){ showPop('Tap Find fuel first','FUEL STOP OPTIMIZER'); return; }
+  var t=getTruck()||TRUCK_DEF, first=!t.fpset;
+  document.getElementById('fqfirst').style.display=first?'block':'none';
+  document.getElementById('fqtank').value=first?'':(t.tank||'');
+  document.getElementById('fqmpg').value=first?'':(t.mpg||'');
+  document.getElementById('fqnow').value=''; document.getElementById('fqerr').textContent='';
+  document.getElementById('fqend').value=(t.endg>=0&&t.endg!=='')?t.endg:(+t.res||25);
+  document.getElementById('fqpop').classList.add('show');
+  document.getElementById('fqpop').scrollTop=0;
+}
+function fqGo(){ try{ localStorage.setItem('fps_fsopt_last',String(Date.now())); }catch(e){} setTimeout(function(){ try{ fpsTip('fsroute'); }catch(e){} },600);
+
+  var t=getTruck()||Object.assign({},TRUCK_DEF), first=!t.fpset, e=document.getElementById('fqerr');
+  var g=parseFloat(document.getElementById('fqnow').value);
+  if(first){
+    var tk=parseFloat(document.getElementById('fqtank').value), m=parseFloat(document.getElementById('fqmpg').value);
+    if(!(tk>=20&&tk<=400)){ e.textContent='Enter your tank size in gallons (both tanks together).'; return; }
+    if(!(m>=2&&m<=15)){ e.textContent='Enter your miles per gallon, like 5.8.'; return; }
+    t.tank=tk; t.mpg=m;
+  }
+  var tank=+t.tank||200;
+  if(!(g>=0&&g<=tank)){ e.textContent='Enter how many gallons you have now (0 to '+tank+').'; return; }
+  var eg=parseFloat(document.getElementById('fqend').value);
+  if(!(eg>=0&&eg<=tank)){ e.textContent='Enter how many gallons you want when you arrive (0 to '+tank+').'; return; }
+  t.endg=Math.max(eg,+t.res||0);
+  t.fpset=true; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(x){} try{ truckSum(); }catch(x){}
+  try{ var t2=getTruck()||t; t2.lastnow=g; localStorage.setItem('fps_truck',JSON.stringify(t2)); }catch(x){}
+  FP_NOWG=g; document.getElementById('fqpop').classList.remove('show'); fpOpenReal();
+}
+function fqFr(f){
+  var t=getTruck()||TRUCK_DEF, tk=parseFloat(document.getElementById('fqtank').value)||(+t.tank||200);
+  document.getElementById('fqnow').value=Math.round(tk*f); document.getElementById('fqerr').textContent='';
+}
+function fqEnd(f){
+  var t=getTruck()||TRUCK_DEF, tk=parseFloat(document.getElementById('fqtank').value)||(+t.tank||200);
+  document.getElementById('fqend').value=f?Math.round(tk*f):(+t.res||25); document.getElementById('fqerr').textContent='';
+}
+function fqClose(){ document.getElementById('fqpop').classList.remove('show'); }
+function fpOpenReal(){
+  var t=getTruck()||TRUCK_DEF, sel=document.getElementById('fplvl');
+  if(!sel.options.length) NF_LVLS.forEach(function(v){ var o=document.createElement('option'); o.value=v[0]; o.textContent=v[1]; sel.appendChild(o); });
+  sel.value=String(NF_LVL);
+  { var og=sel.querySelector('option[value="g"]'); if(FP_NOWG!=null){ if(!og){ og=document.createElement('option'); og.value='g'; sel.insertBefore(og,sel.firstChild); } og.textContent=FP_NOWG+' gallons'; sel.value='g'; } else if(og) og.remove(); }
+  document.getElementById('fpmpg').value=t.mpg||'';
+  document.getElementById('fpend').value=(t.endg>=0&&t.endg!=='')?t.endg:50;
+  var ins=[].slice.call(document.querySelectorAll('#stops input')).map(function(i){ return i.value.trim(); }).filter(Boolean);
+  document.getElementById('fptrip').textContent=(ins.length>1?ins[0]+' to '+ins[ins.length-1]+', ':'')+Math.round(ROUTE_TOTAL).toLocaleString('en-US')+' miles';
+  FP_TAB='cheap';
+  { var tg=document.getElementById('fptoll'), rb=tg.nextElementSibling; tg.style.display='inline-block'; rb.style.marginLeft='8px';
+    tg.textContent=t.toll?'Avoid tolls is on':'Avoid tolls is off'; tg.style.background=t.toll?'#f26a21':'#2b4a70'; tg.style.color=t.toll?'#fff':'#cfdbe9'; }
+  if(window.FP_SILENT){ fpCalc(); return; }
+  document.getElementById('fppop').classList.add('show'); window.scrollTo(0,0); document.getElementById('fppop').scrollTop=0;
+  try{ enterScreen(); }catch(e){}
+  fpCalc();
+}
+function fpClose(){ document.getElementById('fppop').classList.remove('show');
+  try{ if(window.FP_PLANK&&FP_PLANK.length){ FP_VIEW='plan'; fpApplyView(); window.scrollTo(0,0); } }catch(e){} }
+function fpMpg(){
+  var v=parseFloat(document.getElementById('fpmpg').value);
+  if(v>=2&&v<=15){ var t=getTruck()||Object.assign({},TRUCK_DEF); t.mpg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} try{ truckSum(); }catch(e){} }
+  fpCalc();
+}
+function fpEnd(){
+  var v=parseFloat(document.getElementById('fpend').value);
+  if(v>=0&&v<=300){ var t=getTruck()||Object.assign({},TRUCK_DEF); t.endg=v; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(e){} }
+  fpCalc();
+}
+function fpTab(k){ FP_TAB=k; fpCalc(); }
+function fpCalc(){
+  var t=getTruck()||TRUCK_DEF, out=document.getElementById('fpout');
+  NF_LVL=parseFloat(document.getElementById('fplvl').value)||0.25;
+  var mi=parseFloat(document.getElementById('fpmpg').value), mpg=(mi>=2&&mi<=15)?mi:6.5;
+  var tank=+t.tank||200, res=Math.min(+t.res||0,tank-1), cap=tank-res, start=Math.max(0,((FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?Math.min(FP_NOWG,tank):tank*NF_LVL)-res);
+  var ev=parseFloat(document.getElementById('fpend').value), endTot=(ev>=0&&ev<=tank)?ev:50, endX=Math.max(0,Math.min(cap,endTot-res));   /* gallons above reserve to arrive with */
+  { var nowG=(FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?FP_NOWG:tank*NF_LVL; document.getElementById('fpfull').style.display=(nowG>=tank*0.75)?'block':'none'; }
+  var skip=(typeof nfSkip==='function')?nfSkip():[], total=ROUTE_TOTAL;
+  { var nowR=(FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?FP_NOWG:Math.round(tank*NF_LVL);
+    var B=function(v){ return '<b style="color:#fff;font-size:18px">'+v+'</b>'; };
+    document.getElementById('fprep').innerHTML='You have '+B(Math.round(nowR)+' gal')+' now, get '+B(mpg+' mpg')+', and arrive with '+B(Math.round(Math.max(endTot,res))+' gal')+'.'; }
+  document.getElementById('fpnote').textContent='Tank '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'+(mi>=2?'':' (typical, enter yours)')
+    +', arriving with '+Math.round(Math.max(endTot,res))+' gal'+(skip.length?'. Never buying in '+skip.join(', '):'')+'. Change these in Your truck.';
+  var runs=fpStateRuns(); if(!runs.length){ out.innerHTML='<div class="fpwarn">Couldn\u2019t work out the states on this route. Tap Find fuel again.</div>'; return; }
+  var sur=runs.map(function(r){ var x=FP_SURCH[r.st]||0; return x?r.mi/mpg*x:0; }), surT=0; sur.forEach(function(x){ surT+=x; });
+  var stns=LASTHITS.filter(function(h){ return skip.indexOf(h.st)<0 && isFinite(fpCost(h)) && h.rmi>=0 && h.rmi<=total; })
+                   .slice().sort(function(a,b){ return a.rmi-b.rmi||fpCost(a)-fpCost(b); });
+  var warn=[];
+  var runOf=function(m){ for(var k=0;k<runs.length;k++) if(m>=runs[k].start-0.01 && m<=runs[k].end+0.01) return k; return runs.length-1; };
+
+  /* ---- Option 1: buy in each state what that state burns, at its cheapest stop ---- */
+  var p1=runs.map(function(r){ return {g:0,stop:null,carried:false,tank:false}; }), fuel=start, owe=[];
+  runs.forEach(function(r,k){
+    var need=r.mi/mpg+(k===runs.length-1?endX:0), use=Math.min(fuel,need); fuel-=use; need-=use; if(need<=0.01) p1[k].tank=true;
+    var here=stns.filter(function(h){ return h.st===r.st && h.rmi>=r.start-1 && h.rmi<=r.end+1; });
+    if(!here.length) here=stns.filter(function(h){ return h.rmi>=r.start && h.rmi<=r.end; });
+    var best=here.length?here.reduce(function(a,b){ return fpCost(b)<fpCost(a)?b:a; }):null;
+    p1[k].stop=best;
+    if(need>0) owe.push({k:k,g:need});
+  });
+  owe.forEach(function(o){
+    var k=o.k; if(!p1[k].stop){ var j=k; while(j>=0 && !p1[j].stop) j--; if(j<0){ j=k; while(j<runs.length && !p1[j].stop) j++; }
+      if(j>=0 && j<runs.length){ p1[j].carried=true; k=j; } else return; }
+    p1[k].g+=o.g;
+  });
+  p1.forEach(function(x){ x.g=Math.ceil(x.g); });
+  // nobody stops for a few gallons: move a buy under 20 gal to the stop before it, if the tank has room
+  var p1fit=function(){ var fl=start, ps=0; for(var k=0;k<runs.length;k++){ var x=p1[k]; if(!x.stop||x.g<=0) continue;
+      fl-=(x.stop.rmi-ps)/mpg; ps=x.stop.rmi; if(fl<0) fl=0; if(fl+x.g>cap+0.5) return false; fl+=x.g; } return true; };
+  for(var k1=1;k1<runs.length;k1++){
+    var x1=p1[k1]; if(!(x1.g>0 && x1.g<20)) continue;
+    var j1=k1-1; while(j1>=0 && !(p1[j1].stop && p1[j1].g>0)) j1--; if(j1<0) continue;
+    var gg=x1.g; p1[j1].g+=gg; x1.g=0;
+    if(p1fit()) p1[j1].carried=true; else { p1[j1].g-=gg; x1.g=gg; }
+  }
+
+  /* ---- Option 2: cheapest plan (fuel tax taken out), carrying fuel through the pricey states ---- */
+  /* Cheapest plan with a real cost for every stop: about a gallon burned getting off and on, plus the time on your clock.
+     A stop has to save more than that, so it won't hop stop to stop buying 10 gallons. */
+  var buys=[], f=start, pos=0, short=false;
+  var U=5, C=Math.floor(cap/U), n=stns.length, INF=1e15;
+  var stopCost=function(h){ return fpCost(h)*1 + 15; };
+  /* jump straight from one buy stop to the next, so fuel is only rounded once per stop, never at every stop passed */
+  var dp=[], par=[], bestEnd=INF, endPar=null;
+  for(var i=0;i<n;i++){ dp.push(new Array(C+1).fill(INF)); par.push(new Array(C+1).fill(null)); }
+  if(start-total/mpg>=endX-0.01){ bestEnd=0; endPar='none'; }
+  for(var j=0;j<n;j++){ var arr=start-stns[j].rmi/mpg; if(arr<0) break; var nx=Math.min(C,Math.floor(arr/U+1e-9)); if(0<dp[j][nx]){ dp[j][nx]=0; par[j][nx]=null; } }
+  for(var i=0;i<n;i++){
+    var pr=fpCost(stns[i]), sc=stopCost(stns[i]), dE=(total-stns[i].rmi)/mpg;
+    for(var av=0;av<=C;av++){ var c0=dp[i][av]; if(c0>=INF) continue;
+      for(var k=av+1;k<=C;k++){
+        var c=c0+(k-av)*U*pr+sc;
+        if(k*U-dE>=endX-0.01 && c<bestEnd){ bestEnd=c; endPar={i:i,a:av,k:k}; }
+        for(var j=i+1;j<n;j++){ var ar=k*U-(stns[j].rmi-stns[i].rmi)/mpg; if(ar<0) break;
+          var nx=Math.floor(ar/U+1e-9); if(c<dp[j][nx]){ dp[j][nx]=c; par[j][nx]={i:i,a:av,k:k}; } }
+      }
+    }
+  }
+  if(endPar){
+    var tg=[]; var cur=(endPar==='none')?null:endPar;
+    while(cur){ tg.unshift({i:cur.i,k:cur.k}); cur=par[cur.i][cur.a]; }
+    /* now buy with exact fuel: fill to each target level */
+    f=start; pos=0;
+    tg.forEach(function(t){ var st=stns[t.i]; f-=(st.rmi-pos)/mpg; pos=st.rmi; if(f<0) f=0;
+      var g=Math.max(0,Math.ceil(Math.min(t.k*U,cap)-f)); if(g>0){ f+=g; buys.push({s:st,g:g,lvl:f}); } });
+  } else short=true;
+  f-=(total-pos)/mpg; if(f< -0.5) short=true; else if(f<endX-1) warn.push('You\u2019ll get there with less than '+Math.round(endTot)+' gal. There isn\u2019t a stop late enough on the route to top off.');
+  if(!stns.length) short=true;
+  var p2=runs.map(function(){ return {g:0,stops:[]}; });
+  buys.forEach(function(b){ var k=runOf(b.s.rmi); p2[k].g+=b.g; p2[k].stops.push(b); });
+
+  var sum=function(arr,fn){ var x=0; arr.forEach(function(a){ x+=fn(a); }); return x; };
+  var real1=sum(p1,function(x){ return x.stop?x.g*fpCost(x.stop):0; }), pump1=sum(p1,function(x){ return x.stop?x.g*fpPump(x.stop):0; });
+  var real2=sum(buys,function(b){ return b.g*fpCost(b.s); }), pump2=sum(buys,function(b){ return b.g*fpPump(b.s); });
+  var gal1=sum(p1,function(x){ return x.g; }), gal2=sum(buys,function(b){ return b.g; });
+  var n1=p1.filter(function(x){ return x.g>0; }).length, n2=buys.length;
+  var $=function(x){ return '$'+Math.round(x).toLocaleString('en-US'); }, M=function(x){ return Math.round(x).toLocaleString('en-US'); };
+  var price=function(h){ return '$'+fmt(rankVal(h)); };
+  var save=real1-real2, h='';
+  try{ window.FP_SAVE=save; window.FP_PLANK=buys.map(function(b){ return b.s.la+','+b.s.lo; }); fpBtnSync(); }catch(e){}
+  if(short) warn.push('Your fuel won\u2019t reach one of the stops on this plan. Check your gauge, or widen the miles off route in Settings so more stops show up.');
+  var both='<div style="display:flex;gap:8px;margin-top:10px;font-size:14px;color:#cfdbe9"><div style="flex:1">Cheapest plan<br><b style="font-size:19px;margin:2px 0 0">'+$(pump2+surT)+'</b></div><div style="flex:1">Buy in each state<br><b style="font-size:19px;margin:2px 0 0">'+$(pump1+surT)+'</b></div></div>';
+  if(save>=1) h+='<div class="fpsave"><b>The cheapest plan saves you about '+$(save)+'</b><span>compared to buying in each state, on this run</span>'+both+'</div>'
+    +'<div class="fpnote" style="margin:8px 2px 4px;color:#cfdbe9">You may owe more on your IFTA return with the cheapest plan, but you pay less at the pump, so you still come out about '+$(save)+' ahead.</div>'
+    +'<div class="fpnote" style="margin:0 2px 6px;font-size:12px">Estimate only. What you really owe on IFTA depends on your actual miles, fuel mileage and the tax rates for the quarter. Check with your IFTA filer.</div>';
+  else h+='<div class="fpsave same"><b>About the same either way</b><span>Buying in each state costs about the same as the cheapest plan on this run</span>'+both+'</div>';
+  warn.forEach(function(w){ h+='<div class="fpwarn">'+w+'</div>'; });
+  h+='<div class="fptabs"><button type="button" class="'+(FP_TAB==='cheap'?'on':'')+'" onclick="fpTab(\'cheap\')">Cheapest plan</button>'
+    +'<button type="button" class="'+(FP_TAB==='each'?'on':'')+'" onclick="fpTab(\'each\')">Buy in each state</button></div>';
+  var cheap=FP_TAB==='cheap';
+  h+='<div class="fptot">'+(cheap?n2:n1)+' fuel stop'+((cheap?n2:n1)===1?'':'s')+', <b>'+M(cheap?gal2:gal1)+' gal</b>, <b>'+$((cheap?pump2:pump1)+surT)+'</b>'+(surT>=0.5?' (includes '+$(surT)+' state surcharge)':' at the pump')+'</div>';
+  h+='<table><thead><tr><th>State</th><th>Miles</th><th>Gallons</th><th>Cost</th></tr></thead><tbody>';
+  runs.forEach(function(r,k){
+    var line='', g=0, c=0;
+    if(cheap){
+      g=p2[k].g; c=sum(p2[k].stops,function(b){ return b.g*fpPump(b.s); });
+      if(g>0) line=p2[k].stops.map(function(b){ return '<small class="buy"><span class="stn">'+esc(b.s.b)+', '+esc(b.s.c)+'</span> at '+price(b.s)+(p2[k].stops.length>1?', '+b.g+' gal':'')+'</small>'; }).join('');
+      else line='<small>'+(skip.indexOf(r.st)>=0?'You don\u2019t buy here':'Skip, drive through on what you have')+'</small>';
+    }else{
+      var x=p1[k]; g=x.g; c=x.stop?x.g*fpPump(x.stop):0;
+      if(g>0) line='<small class="buy"><span class="stn">'+esc(x.stop.b)+', '+esc(x.stop.c)+'</span> at '+price(x.stop)+(x.carried?', includes fuel for the next state':'')+'</small>';
+      else line='<small>'+(skip.indexOf(r.st)>=0?'You don\u2019t buy here':(x.tank?'Covered by fuel already in the tank':(x.stop?'Covered by fuel bought before':'No stop on your list here, fuel bought before')))+'</small>';
+    }
+    if(sur[k]>=0.5){ c+=sur[k]; line+='<small>Includes '+$(sur[k])+' '+esc(r.st)+' surcharge on the '+M(r.mi/mpg)+' gal you burn here, paid on your IFTA return</small>'; }
+    h+='<tr class="'+(g>0?'':'skip')+'"><td><b>'+esc(r.st==='??'?'Other':r.st)+'</b>'+line+'</td><td>'+M(r.mi)+'</td><td>'+(g>0?M(g):'0')+'</td><td>'+(c>=0.5?$(c):'')+'</td></tr>';
+  });
+  h+='</tbody><tfoot><tr><td>Total</td><td>'+M(total)+'</td><td>'+M(cheap?gal2:gal1)+'</td><td>'+$((cheap?pump2:pump1)+surT)+'</td></tr></tfoot></table>';
+  out.innerHTML=h;
+}
+(function(){
+  var g=document.getElementById('gmaps');
+  if(g && window.MutationObserver) new MutationObserver(fpSync).observe(g,{attributes:true,attributeFilter:['class']});
+  fpSync();
+})();
+</script>
+<style>
+#fpstip{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9000;padding:18px}
+#fpstip.show{display:flex}
+#fpstip .tb{background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px;color:#e8eef6;font-size:17px;line-height:1.45}
+#fpstip .tt{color:#f26a21;font-weight:700;font-size:19px;margin-bottom:8px}
+#fpstip label{display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:#9fb4ce;font-size:16px}
+#fpstip input{width:22px;height:22px}
+#fpstip button{width:100%;padding:12px;border:0;border-radius:10px;background:#f26a21;color:#fff;font-size:18px;font-weight:700}
+</style>
+<div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
+<label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
+<script>
+var FPS_TIPS={fsopt:{t:'Fuel stop optimizer',b:'<b>Good news!</b> Your fuel stops are now automatically planned for maximum savings at the touch of a button.<br><br>It fills you up where fuel is cheap and buys light where it\'s high, so you only carry enough to reach the next cheaper stop.<br><br><b>Your time is valuable.</b> When you\'ve got to go, or you\'re just plain tired, you don\'t have time to sit with a calculator weighing every stop against your tank and mileage. Why would you, when one tap does it for you? One less thing to stress about.<br><br>Prices change every day, so your savings can go up or down. Run it again before each fuel stop. It only takes a second.<br><br>Tap the green <b>$ Fuel stop optimizer</b> button at the top of your stops.'},
+  fsremind:{t:'Friendly reminder',b:'Don\'t forget: tap the green <b>$ Fuel stop optimizer</b> to see where to buy and how much. It could save you real money on this trip.<br><br><button type="button" onclick="fpsTipClose();setTimeout(function(){fpsTipForce(\'fsopt\')},50)" style="width:100%;min-height:46px;border-radius:10px;border:1.5px solid #3ab54a;background:#17304f;color:#fff;font-size:16px;font-weight:700">Read about Fuel stop optimizer again</button>'},
+  fsroute:{t:'Your route',b:'On the plan, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
+var FPS_TIPCUR=null;
+function fpsTip(id){try{var k=FPS_TIPS[id];if(!k||localStorage.getItem('fps_tipoff_'+id)==='1'||FPS_TIPCUR)return;
+FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;
+document.getElementById('fpstipx').checked=false;document.getElementById('fpstip').classList.add('show');}catch(e){}}
+function fpsTipForce(id){try{var k=FPS_TIPS[id];if(!k||FPS_TIPCUR)return;FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;document.getElementById('fpstipx').checked=false;document.getElementById('fpstip').classList.add('show');}catch(e){}}
+function fpsRemind(){try{var now=Date.now(),D=864e5;
+  if(localStorage.getItem('fps_tipoff_fsopt')!=='1'){ fpsTip('fsopt'); return; }
+  var last=+localStorage.getItem('fps_fsopt_last')||0; if(!last){ localStorage.setItem('fps_fsopt_last',String(now)); return; }
+  if(now-last>=14*D){ localStorage.setItem('fps_fsopt_last',String(now)); fpsTipForce('fsremind'); }
+}catch(e){}}
+function fpsTipClose(){try{if(document.getElementById('fpstipx').checked&&FPS_TIPCUR)localStorage.setItem('fps_tipoff_'+FPS_TIPCUR,'1');}catch(e){}
+FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
+</script>
+<style>
+#fqpop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:8990;padding:12px 18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#fqpop.show{display:flex}
+#fqpop .tb{margin-bottom:320px;background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px;color:#e8eef6;font-size:17px}
+#fqpop .tt{color:#f26a21;font-weight:700;font-size:19px;margin-bottom:10px}
+#fqpop label{display:block;margin:10px 0 4px;color:#9fb4ce;font-size:16px}
+#fqpop input{width:100%;box-sizing:border-box;padding:11px;font-size:19px;border-radius:9px;border:1px solid #4f7bb0;background:#1d3a5e;color:#e8eef6}
+#fqpop .row{display:flex;gap:10px;margin-top:16px}
+#fqpop button{flex:1;padding:12px;border:0;border-radius:10px;font-size:18px;font-weight:700}
+#fqfr button,#fqer button{flex:1;padding:10px 0;border:1px solid #4f7bb0;border-radius:9px;background:#1d3a5e;color:#e8eef6;font-size:18px;font-weight:700}
+#fqerr{color:#e25a4f;font-size:15px;min-height:18px;margin-top:8px}
+</style>
+<div id="fqpop" role="dialog" aria-modal="true"><div class="tb"><div class="tt">Fuel plan</div>
+<div id="fqfirst"><div style="color:#9fb4ce;font-size:15px">First time only. These save to Your truck.</div>
+<label for="fqtank">Tank size (gallons, both tanks)</label><input id="fqtank" type="number" inputmode="decimal">
+<label for="fqmpg">Miles per gallon</label><input id="fqmpg" type="number" inputmode="decimal" step="0.1"></div>
+<label for="fqnow">How many gallons do you have now?</label>
+<div id="fqfr" style="display:flex;gap:6px;margin-bottom:8px"><button type="button" onclick="fqFr(.125)">&#8539;</button><button type="button" onclick="fqFr(.25)">&frac14;</button><button type="button" onclick="fqFr(.5)">&frac12;</button><button type="button" onclick="fqFr(.75)">&frac34;</button><button type="button" onclick="fqFr(1)">Full</button></div><input id="fqnow" type="number" inputmode="decimal">
+<label for="fqend">How much fuel do you want in your tank when you arrive?</label>
+<div style="color:#9fb4ce;font-size:14px;margin:-2px 0 6px">Not every delivery has a fuel stop next door.</div>
+<div id="fqer" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap"><button type="button" onclick="fqEnd(0)" style="flex:2;font-size:15px">Just my reserve</button><button type="button" onclick="fqEnd(.25)">&frac14;</button><button type="button" onclick="fqEnd(.5)">&frac12;</button><button type="button" onclick="fqEnd(.75)">&frac34;</button><button type="button" onclick="fqEnd(1)">Full</button></div><input id="fqend" type="number" inputmode="decimal">
+<div id="fqerr"></div>
+<div class="row"><button style="background:#2b4a70;color:#e8eef6" onclick="fqClose()">Cancel</button><button style="background:#f26a21;color:#fff" onclick="fqGo()">Go</button></div></div></div>
+<script>
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}
+  });},{threshold:0.6});
+  function watch(){var c=document.querySelector('#results .card.top:not(.seen)');if(c)io.observe(c);}
+  var r=document.getElementById('results');
+  if(r) new MutationObserver(watch).observe(r,{childList:true,subtree:true});
+  // a collapsed state opening counts too: observer fires once the card is visible
+})();
+</script>
+<script>document.addEventListener('focusin',function(e){var p=document.getElementById('fqpop');if(p&&p.contains(e.target)&&e.target.tagName==='INPUT')setTimeout(function(){try{e.target.scrollIntoView({block:'center'});}catch(x){}},300);});</script>
+<script>
+(function(){
+  var stale=false;
+  function sync(){ var b=document.getElementById('backres'), r=document.getElementById('results'); if(!b||!r) return;
+    var ok=!stale && r.children.length>0 && !document.body.classList.contains('on-results');
+    b.style.display=ok?'block':'none'; }
+  new MutationObserver(function(){ stale=false; sync(); }).observe(document.getElementById('results'),{childList:true});
+  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('input',function(e){ var st=document.getElementById('stops'); if(st&&st.contains(e.target)){ stale=true; sync(); } });
+  window.backResSync=function(x){ if(x) stale=true; sync(); };
+})();
+</script>
+<style>
+#reshead{position:sticky;top:0;z-index:60;background:var(--navy);padding:4px 0 2px;margin:0 -2px}
+#fprow{display:flex;gap:8px;margin:6px 0 10px}
+#results #fpbtn.fpbig{flex:1 1 auto;width:auto;height:auto;min-height:58px;margin:0;padding:6px 10px}
+#fpbtn .fpl{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+#fpbtn .fpl small{font-size:14px;font-weight:600;color:#eafbe9}
+#fpview{flex:0 0 40%;min-height:58px;border-radius:12px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer;padding:4px}
+#fpview{display:flex;padding:3px;gap:3px;align-items:stretch}
+#fpview .sg{border:0;background:#2b4a70;opacity:.75;font-weight:700;cursor:pointer;min-height:48px;flex:1;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;border-radius:9px;font-size:14px;color:#9fb4ce}
+#fpview .sg.on{background:#f26a21!important;color:#fff;opacity:1}
+body.fp-only #results .card:not(.inplan){display:none}
+body.fp-only #results .stgrp.noplan{display:none}
+#fpchoose{display:none;position:fixed;left:0;right:0;bottom:0;z-index:9600;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid #2b4a70}
+#fppop.show #fpchoose{display:flex}
+#fpchoose button{flex:1;height:46px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;border:1.5px solid #4f7bb0;background:#17304f;color:#fff}
+#fpchoose button:first-child{background:#3ab54a;border-color:#3ab54a}
+</style>
+<script>
+var FP_VIEW='all';
+function fpBtnSync(){
+  var sm=document.getElementById('fpsave'); if(sm&&window.FP_SAVE!=null) sm.textContent=FP_SAVE>=1?'Saves about $'+Math.round(FP_SAVE).toLocaleString('en-US'):'Tap to see your plan';
+  var o=document.getElementById('sgo'), a=document.getElementById('sga'); if(o&&a){ o.classList.toggle('on',FP_VIEW==='plan'); a.classList.toggle('on',FP_VIEW!=='plan'); }
+}
+function fpApplyView(){
+  var on=FP_VIEW==='plan'&&window.FP_PLANK&&FP_PLANK.length, keys=on?FP_PLANK:[];
+  document.querySelectorAll('#results .card[data-k]').forEach(function(c){ c.classList.toggle('inplan',keys.indexOf(c.getAttribute('data-k'))>=0); });
+  document.querySelectorAll('#results .stgrp').forEach(function(g){ var has=!!g.querySelector('.card.inplan'); g.classList.toggle('noplan',!has);
+    if(on&&has&&!g.classList.contains('open')){ g.classList.add('open'); var b=g.querySelector('button.sthead'); if(b) b.setAttribute('aria-expanded','true'); } });
+  document.body.classList.toggle('fp-only',!!on); fpBtnSync();
+  var hn=document.getElementById('reshint'); if(hn){ if(!hn.dataset.full) hn.dataset.full=hn.innerHTML;
+    if(on){ var n=document.querySelectorAll('#results .card.inplan').length, ns=document.querySelectorAll('#results .stgrp:not(.noplan)').length;
+      hn.innerHTML=n+(n===1?' stop':' stops')+' in '+ns+(ns===1?' state':' states')+' on your plan, out of '+hn.dataset.all+' on your route'; }
+    else hn.innerHTML=hn.dataset.full; }
+}
+function fpPick(v){ if(v==='plan'&&!(window.FP_PLANK&&FP_PLANK.length)){ openFuelPlan(); return; } FP_VIEW=v; fpApplyView(); window.scrollTo(0,0); }
+function fpView(){ if(FP_VIEW==='all'&&!(window.FP_PLANK&&FP_PLANK.length)){ openFuelPlan(); return; } FP_VIEW=FP_VIEW==='plan'?'all':'plan'; fpApplyView(); window.scrollTo(0,0); }
+function fpPreview(){
+  try{ if(!fpOn()) return; var t=getTruck()||TRUCK_DEF, keep=FP_NOWG;
+    FP_NOWG=(t.lastnow>=0&&t.lastnow!=='')?+t.lastnow:Math.round((+t.tank||200)*.25);
+    window.FP_SILENT=true; fpOpenReal(); }catch(e){} window.FP_SILENT=false;
+}
+(function(){ var r=document.getElementById('results'); if(!r) return;
+  new MutationObserver(function(){ if(!document.getElementById('fpbtn')) return; FP_VIEW='all'; window.FP_PLANK=null; window.FP_SAVE=null;
+    clearTimeout(window.FP_PVT); window.FP_PVT=setTimeout(function(){ fpPreview(); fpApplyView(); try{ if(document.body.classList.contains('on-results')) fpsRemind(); }catch(e){} },400); }).observe(r,{childList:true});
+})();
+</script>
+
+<style>
+#fcday{position:fixed;inset:0;overflow-y:auto;background:rgba(5,12,24,.72);z-index:9000;display:none;align-items:center;justify-content:center;padding:18px}
+#fcday.show{display:flex}
+#fcday .bx{max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px 18px 14px;color:#e8eef6}
+#fcday .tt{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb4ce;text-align:center;margin-bottom:8px}
+#fcday .big{font-size:22px;font-weight:800;text-align:center;line-height:1.3;margin:4px 0 10px}
+#fcday .tip{font-size:17px;text-align:center;line-height:1.4;margin-bottom:10px}
+#fcday .fine{font-size:12px;color:#9fb4ce;text-align:center;margin-bottom:12px}
+#fcday label{display:flex;gap:10px;align-items:center;justify-content:center;font-size:15px;margin-bottom:12px}
+#fcday label input{width:22px;height:22px}
+#fcday button{width:100%;min-height:48px;border-radius:10px;border:0;background:#f26a21;color:#fff;font-size:18px;font-weight:700}
+</style>
+<div id="fcday"><div class="bx">
+  <div class="tt">Tomorrow's diesel prediction</div>
+  <div class="fine" style="margin-bottom:10px">Tomorrow's price prediction comes in each afternoon between 1 and 4 p.m. Eastern.</div>
+  <div class="big" id="fcdbig"></div>
+  <div class="tip" id="fcdtip"></div>
+  <div style="text-align:center;margin-bottom:10px"><a href="#" id="fcdhowl" onclick="var h=document.getElementById('fcdhow');h.style.display=h.style.display==='block'?'none':'block';if(h.style.display==='block')setTimeout(function(){h.scrollIntoView({block:'nearest',behavior:'smooth'})},50);return false;" style="color:#f2b36b;font-size:15px;font-weight:700">How does this work?</a></div>
+  <div id="fcdhow" style="display:none;background:#1d3a5e;border-radius:10px;padding:12px;font-size:15px;line-height:1.45;margin-bottom:10px">
+    <b>It all starts with crude oil.</b>
+    <ol style="margin:8px 0 8px 20px;padding:0">
+      <li>Crude oil prices move on the market.</li>
+      <li>Refineries turn crude into diesel and sell it at fuel terminals at a wholesale price called the <b>rack price</b>. It changes every day.</li>
+      <li>Truck stops buy at the rack price, and their pump prices follow it, usually the next day.</li>
+    </ol>
+    <b>How is the price predicted?</b><br>It's not simple math. Every afternoon our system weighs several things together:<ul style="margin:6px 0 6px 20px;padding:0"><li>Daily wholesale rack moves at fuel terminals across the country</li><li>Next-day price changes from hundreds of truck stops</li><li>Recent price trends, day to day</li><li>Many years of price history</li></ul>Run through thousands of calculations, they show where pump prices are most likely headed tomorrow.<br><br><b>How often are we right?</b><br>We're right about 8 times out of 10, and even more often when prices make a big move.<br><br><b>How does this help you?</b><br>It gives you a window into tomorrow. You'll know whether to fill up tonight before prices change at midnight, or wait and buy tomorrow. It isn't right every time, but about 8 times out of 10 it is.
+  </div>
+  <div class="fine">This is a prediction based on past trends, not a guarantee.</div>
+  <label><input type="checkbox" id="fcdx"> Don't show this again today</label>
+  <button type="button" onclick="fcDayClose()">OK</button>
+</div></div>
+<script>
+/* Daily prediction pop-up (Bob, Oct 25): replaces the home-screen line. Shows when the new prediction is in,
+   on every app open and every page change, until he checks the box. Comes back fresh with each new prediction. */
+var FCD_ON=false;
+function fcDayText(f){
+  var c=+f.cents, a=Math.abs(c), up=c>0;
+  var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0);
+  var diff=to?Math.round((to-t)/864e5):1, when=diff===1?'tomorrow':('on '+fpsDayName(to));
+  if(a<0.5) return {big:'Diesel prices are expected to stay about the same '+when+'.', tip:'No need to change how you buy.'};
+  var mixed=false; var rng='The range will be about '+Math.round(a)+' cents a gallon.';
+  if(f.low!=null&&f.high!=null){ var lo=+f.low, hi=+f.high;
+    if((lo<0&&hi<0)||(lo>0&&hi>0)){ var p=[Math.abs(lo),Math.abs(hi)].sort(function(x,y){return x-y;});
+      var l=Math.max(1,Math.round(p[0])), h=Math.round(p[1]); if(l<h) rng='The range will vary between '+l+' and '+h+' cents a gallon.'; else rng='The range will be about '+h+' cents a gallon.'; } 
+    else { var dn=Math.round(Math.abs(Math.min(lo,hi))), upc=Math.round(Math.max(lo,hi));
+      if(dn>=1&&upc>=1) mixed=true; if(dn>=1&&upc>=1) rng='Prices could drop as much as <span style="color:#3ab54a">\u25BC '+dn+' cents</span> or rise as much as <span style="color:#e74c3c">\u25B2 '+upc+' cents</span>.'; } }
+  return up ? {big:'<span style="color:#e74c3c">\u25B2</span> Diesel prices are expected to go <span style="color:#e74c3c">up</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Fill up today if you can.'}
+            : {big:'<span style="color:#3ab54a">\u25BC</span> Diesel prices are expected to go <span style="color:#3ab54a">down</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Buy just enough today and fill up after it drops.'};
+}
+function fcOnHome(){
+  if(/\bon-[\w-]+/.test(document.body.className)) return false;
+  var sp=document.getElementById('setpop'); if(sp&&sp.style.display==='flex') return false;
+  return true;
+}
+function fcDayBlocked(){
+  if(!fcOnHome()) return true;
+  try{ var ids=['splash','fpslock']; for(var i=0;i<ids.length;i++){ var e=document.getElementById(ids[i]); if(e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none') return true; } }catch(e){}
+  try{ if(typeof FPS_TIPCUR!=='undefined'&&FPS_TIPCUR) return true; }catch(e){}
+  return false;
+}
+function fcDayCheck(){
+  try{
+    if(FCD_ON) return;
+    var f=(typeof FC!=='undefined'&&FC)||(typeof FCL!=='undefined'&&FCL); if(!f||!f.to) return;
+    var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0); if(!to||to<=t) return;
+    if(localStorage.getItem('fps_fcday_off')===String(f.to)) return;
+    if(fcDayBlocked()){ if(fcOnHome()) setTimeout(fcDayCheck,1500); return; }
+    var x=fcDayText(f);
+    document.getElementById('fcdbig').innerHTML=x.big; document.getElementById('fcdtip').textContent=x.tip;
+    document.getElementById('fcdx').checked=false;
+    document.getElementById('fcday').classList.add('show'); FCD_ON=true;
+  }catch(e){}
+}
+function fcDayOpen(){
+  try{
+    var f=(typeof FC!=='undefined'&&FC)||(typeof FCL!=='undefined'&&FCL);
+    var to=f&&f.to?fpsParseDate(f.to):null, t=new Date(); t.setHours(0,0,0,0);
+    var x = (f&&to&&to>t) ? fcDayText(f)
+      : {big:'Tomorrow\u2019s prediction isn\u2019t in yet.', tip:'It comes in between 1 and 4 p.m. Eastern. Check back then.'};
+    document.getElementById('fcdbig').innerHTML=x.big; document.getElementById('fcdtip').textContent=x.tip;
+    document.getElementById('fcdx').checked=false;
+    document.getElementById('fcday').classList.add('show'); FCD_ON=true;
+  }catch(e){}
+}
+function fcDayClose(){
+  try{ var f=(typeof FC!=='undefined'&&FC)||FCL; if(document.getElementById('fcdx').checked&&f&&f.to) localStorage.setItem('fps_fcday_off',String(f.to)); }catch(e){}
+  document.getElementById('fcday').classList.remove('show'); setTimeout(function(){ FCD_ON=false; },300);
+}
+(function(){
+  var last=document.body.className, tm=null;
+  new MutationObserver(function(){
+    var cur=document.body.className.replace(/\b(has-[\w-]+|fp-only)\b/g,'').trim();
+    if(cur!==last){ last=cur; clearTimeout(tm); tm=setTimeout(fcDayCheck,500); }
+  }).observe(document.body,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) setTimeout(fcDayCheck,800); });
+  setInterval(fcDayCheck,60000);
 })();
 </script>
 </body>
