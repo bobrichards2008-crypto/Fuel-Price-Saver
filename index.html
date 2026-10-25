@@ -32,6 +32,9 @@
   #results #fpbtn,#fpbtn.fpbig{display:flex!important;flex-direction:row!important;align-items:center;justify-content:center;width:100%;height:52px;margin:6px 0 12px;border-radius:12px;background:#3ab54a;border:1.5px solid #3ab54a;color:#fff!important;font-size:19px!important;font-weight:700;cursor:pointer;white-space:nowrap}
   #fpbtn.fpoff{opacity:1;background:#2b4a70!important;border-color:#2b4a70!important;color:#cfdbe9!important}
   #routetools>button{flex:1 1 0;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;justify-content:center;white-space:nowrap;min-width:0;height:48px!important;padding:0 8px!important;font-size:18px!important;font-weight:700}
+  #predbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+  #routetools>button{flex:0 0 calc(50% - 4px)!important;max-width:calc(50% - 4px)}
+  #routetools.norev{justify-content:flex-end} #routetools.norev #revbtn{display:none!important}
   #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
   #revbtn svg{flex:0 0 auto}
   #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
@@ -878,7 +881,7 @@
     </div>
   </div>
   <div id="stops"></div>
-  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
+  <div id="routetools" class="norev"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button><button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow's prediction</button></div>
   <button type="button" id="backres" onclick="openResults();window.scrollTo(0,0)" style="display:none;width:100%;height:48px;margin:0 0 10px;border-radius:12px;background:#17304f;border:1.5px solid #f26a21;color:#fff;font-size:17px;font-weight:700;cursor:pointer">Back to my fuel stops &rarr;</button>
   <div id="mainbtns">
   <div class="btnrow" id="pinbar">
@@ -1238,7 +1241,7 @@ function relabel(){
     setMoveIcon(r,i,n);
     const mb=r.querySelector('.mvbtn'); if(mb) mb.style.display=n===1?'none':'';
   });
-  const rt=document.getElementById('routetools'); if(rt) rt.style.display=n>=2?'':'none';
+  const rt=document.getElementById('routetools'); if(rt){ rt.style.display=''; rt.classList.toggle('norev',n<2); }
 }
 // ---- "Use my location": a real value that rides in its box, offered once ----
 const PIN_SVG='<svg viewBox="0 0 16 20" width="15" height="19" aria-hidden="true"><path d="M8 19c-4-5-6.5-8-6.5-11.5a6.5 6.5 0 0 1 13 0C14.5 11 12 14 8 19z" fill="#f26a21"/><circle cx="8" cy="7.5" r="2.4" fill="#13273f"/></svg>';
@@ -1649,6 +1652,12 @@ function seenFresh(){
   if(FRESH) showPop(FRESH.who+' prices arrived '+fpsClock(FRESH.when),'FRESH PRICES');
 }
 loadLiveData();
+/* Re-pull prices when the app comes back after sitting in the background (10+ min), and every 15 min while open,
+   so a prediction that lands at 2 shows even if the app was opened at noon and left running (Bob, Oct 25). */
+var FPS_LASTLOAD=Date.now();
+function fpsReload(){ if(Date.now()-FPS_LASTLOAD<10*60*1000) return; FPS_LASTLOAD=Date.now(); loadLiveData(); }
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) fpsReload(); });
+setInterval(function(){ if(!document.hidden) fpsReload(); },15*60*1000);
 function hav(la1,lo1,la2,lo2){
   const R=3958.8, p1=la1*Math.PI/180, p2=la2*Math.PI/180;
   const dp=(la2-la1)*Math.PI/180, dl=(lo2-lo1)*Math.PI/180;
@@ -2122,7 +2131,7 @@ async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h,w,l
     if(!a) throw e0;
   }
   if(!opt.toll) return wrap(a);
-  const lim=opt.max||20, okSt=opt.tollok||[];
+  const lim=(pts&&pts.length>2)?1e9:(opt.max||20), okSt=opt.tollok||[];   /* Bob, Oct 25: a stop you add in between beats the extra-miles limit; tolls always avoided */
   const b=await one(pts,"&avoid=tollRoads").catch(()=>null);
   const pick=()=>{ if(b&&(b.dist-a.dist)/1609.34<=lim) return wrap(b);
     a.tollKept=b?Math.round((b.dist-a.dist)/1609.34):-1; return wrap(a); };
@@ -2783,7 +2792,7 @@ function enterScreen(){ history.pushState({app:1}, ''); }
 const CHANGELOG = [
   { date:'2026-10-25', items:[
     'Version 1.3.25',
-    'New: when tomorrow\u2019s diesel prediction comes in each afternoon, a pop-up tells you in plain words, like Diesel prices are anticipated to go up tomorrow, the range will vary between 2 and 6 cents a gallon. It shows when you open the app or go to another page, until you check Don\u2019t show this again today. A How does this work? link explains how the prediction is made, starting with crude oil. A new one comes each day. The prediction line at the top of the home screen is gone',
+    'New: when tomorrow\u2019s diesel prediction comes in each afternoon, a pop-up tells you in plain words, like Diesel prices are expected to go up tomorrow, the range will vary between 2 and 6 cents a gallon. It shows only on the home screen, when you open the app or come back to the home screen, until you check Don\u2019t show this again today. If the app was left open from before the prediction came in, it now picks it up when you come back to it. A Tomorrow\u2019s prediction button next to Reverse route on the home screen opens it again anytime. Avoid tolls: if you add a stop in between, like Elmira, the app now always avoids tolls on that trip, no matter how many extra miles. With no stops in between, the extra-miles limit works like before. The prediction card now scrolls, so nothing gets cut off on smaller phones. A How does this work? link explains how the prediction is made, starting with crude oil. A new one comes each day. The prediction line at the top of the home screen is gone',
     'Changed: the Optimizer picks and My picks button you are on now lights up orange, so it doesn\u2019t look like the green Fuel stop optimizer button',
     'Fixed: Fuel stop optimizer no longer sends you to stop after stop for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
     'Fixed: the cheapest plan was adding up more fuel than your trip needs, so it could show a higher total than buying in each state. It now buys only what you need',
@@ -6809,9 +6818,9 @@ function fpPreview(){
 </script>
 
 <style>
-#fcday{position:fixed;inset:0;background:rgba(5,12,24,.72);z-index:9000;display:none;align-items:center;justify-content:center;padding:18px}
+#fcday{position:fixed;inset:0;overflow-y:auto;background:rgba(5,12,24,.72);z-index:9000;display:none;align-items:center;justify-content:center;padding:18px}
 #fcday.show{display:flex}
-#fcday .bx{background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px 18px 14px;color:#e8eef6}
+#fcday .bx{max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px 18px 14px;color:#e8eef6}
 #fcday .tt{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb4ce;text-align:center;margin-bottom:8px}
 #fcday .big{font-size:22px;font-weight:800;text-align:center;line-height:1.3;margin:4px 0 10px}
 #fcday .tip{font-size:17px;text-align:center;line-height:1.4;margin-bottom:10px}
@@ -6825,7 +6834,7 @@ function fpPreview(){
   <div class="fine" style="margin-bottom:10px">Tomorrow's price prediction comes in each afternoon between 1 and 4 p.m. Eastern.</div>
   <div class="big" id="fcdbig"></div>
   <div class="tip" id="fcdtip"></div>
-  <div style="text-align:center;margin-bottom:10px"><a href="#" id="fcdhowl" onclick="var h=document.getElementById('fcdhow');h.style.display=h.style.display==='block'?'none':'block';return false;" style="color:#f2b36b;font-size:15px;font-weight:700">How does this work?</a></div>
+  <div style="text-align:center;margin-bottom:10px"><a href="#" id="fcdhowl" onclick="var h=document.getElementById('fcdhow');h.style.display=h.style.display==='block'?'none':'block';if(h.style.display==='block')setTimeout(function(){h.scrollIntoView({block:'nearest',behavior:'smooth'})},50);return false;" style="color:#f2b36b;font-size:15px;font-weight:700">How does this work?</a></div>
   <div id="fcdhow" style="display:none;background:#1d3a5e;border-radius:10px;padding:12px;font-size:15px;line-height:1.45;margin-bottom:10px">
     <b>It all starts with crude oil.</b>
     <ol style="margin:8px 0 8px 20px;padding:0">
@@ -6847,17 +6856,23 @@ function fcDayText(f){
   var c=+f.cents, a=Math.abs(c), up=c>0;
   var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0);
   var diff=to?Math.round((to-t)/864e5):1, when=diff===1?'tomorrow':('on '+fpsDayName(to));
-  if(a<0.5) return {big:'Diesel prices are anticipated to stay about the same '+when+'.', tip:'No need to change how you buy.'};
+  if(a<0.5) return {big:'Diesel prices are expected to stay about the same '+when+'.', tip:'No need to change how you buy.'};
   var mixed=false; var rng='The range will be about '+Math.round(a)+' cents a gallon.';
   if(f.low!=null&&f.high!=null){ var lo=+f.low, hi=+f.high;
     if((lo<0&&hi<0)||(lo>0&&hi>0)){ var p=[Math.abs(lo),Math.abs(hi)].sort(function(x,y){return x-y;});
       var l=Math.max(1,Math.round(p[0])), h=Math.round(p[1]); if(l<h) rng='The range will vary between '+l+' and '+h+' cents a gallon.'; else rng='The range will be about '+h+' cents a gallon.'; } 
     else { var dn=Math.round(Math.abs(Math.min(lo,hi))), upc=Math.round(Math.max(lo,hi));
-      if(dn>=1&&upc>=1) mixed=true; if(dn>=1&&upc>=1) rng='The range could be anywhere from <span style="color:#3ab54a">\u25BC '+dn+' cents down</span> to <span style="color:#e74c3c">\u25B2 '+upc+' cents up</span>.'; } }
-  return up ? {big:'<span style="color:#e74c3c">\u25B2</span> Diesel prices are anticipated to go <span style="color:#e74c3c">up</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Fill up today if you can.'}
-            : {big:'<span style="color:#3ab54a">\u25BC</span> Diesel prices are anticipated to go <span style="color:#3ab54a">down</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Buy just enough today and fill up after it drops.'};
+      if(dn>=1&&upc>=1) mixed=true; if(dn>=1&&upc>=1) rng='Prices could drop as much as <span style="color:#3ab54a">\u25BC '+dn+' cents</span> or rise as much as <span style="color:#e74c3c">\u25B2 '+upc+' cents</span>.'; } }
+  return up ? {big:'<span style="color:#e74c3c">\u25B2</span> Diesel prices are expected to go <span style="color:#e74c3c">up</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Fill up today if you can.'}
+            : {big:'<span style="color:#3ab54a">\u25BC</span> Diesel prices are expected to go <span style="color:#3ab54a">down</span> '+(a>=0.5?' about '+Math.round(a)+' cents':'')+' '+when+'.<div style="font-size:18px;font-weight:600;margin-top:8px">'+rng+'</div>', tip:mixed?'It could go either way, so buy like you normally would.':'Buy just enough today and fill up after it drops.'};
+}
+function fcOnHome(){
+  if(/\bon-[\w-]+/.test(document.body.className)) return false;
+  var sp=document.getElementById('setpop'); if(sp&&sp.style.display==='flex') return false;
+  return true;
 }
 function fcDayBlocked(){
+  if(!fcOnHome()) return true;
   try{ var ids=['splash','fpslock']; for(var i=0;i<ids.length;i++){ var e=document.getElementById(ids[i]); if(e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none') return true; } }catch(e){}
   try{ if(typeof FPS_TIPCUR!=='undefined'&&FPS_TIPCUR) return true; }catch(e){}
   return false;
@@ -6868,8 +6883,19 @@ function fcDayCheck(){
     var f=(typeof FC!=='undefined'&&FC)||(typeof FCL!=='undefined'&&FCL); if(!f||!f.to) return;
     var to=fpsParseDate(f.to), t=new Date(); t.setHours(0,0,0,0); if(!to||to<=t) return;
     if(localStorage.getItem('fps_fcday_off')===String(f.to)) return;
-    if(fcDayBlocked()){ setTimeout(fcDayCheck,1500); return; }
+    if(fcDayBlocked()){ if(fcOnHome()) setTimeout(fcDayCheck,1500); return; }
     var x=fcDayText(f);
+    document.getElementById('fcdbig').innerHTML=x.big; document.getElementById('fcdtip').textContent=x.tip;
+    document.getElementById('fcdx').checked=false;
+    document.getElementById('fcday').classList.add('show'); FCD_ON=true;
+  }catch(e){}
+}
+function fcDayOpen(){
+  try{
+    var f=(typeof FC!=='undefined'&&FC)||(typeof FCL!=='undefined'&&FCL);
+    var to=f&&f.to?fpsParseDate(f.to):null, t=new Date(); t.setHours(0,0,0,0);
+    var x = (f&&to&&to>t) ? fcDayText(f)
+      : {big:'Tomorrow\u2019s prediction isn\u2019t in yet.', tip:'It comes in between 1 and 4 p.m. Eastern. Check back then.'};
     document.getElementById('fcdbig').innerHTML=x.big; document.getElementById('fcdtip').textContent=x.tip;
     document.getElementById('fcdx').checked=false;
     document.getElementById('fcday').classList.add('show'); FCD_ON=true;
