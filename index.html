@@ -2761,6 +2761,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-24', items:[
+    'Version 1.3.24',
+    'If you have 3/4 of a tank or more, the Fuel plan reminds you to check again after you burn some fuel, since prices may change. When you tap Fuel plan it now asks how many gallons you have. Type it in, or tap 1/8, 1/4, 1/2, 3/4 or Full to fill it in. The first time it also asks your tank size and miles per gallon and saves them to Your truck',
+    'Always check the route against your truck atlas and the signs'
+  ]},
+  { date:'2026-10-25', items:[
     'Version 1.3.23',
     'New tip when you tap Find fuel tells you about the Fuel plan and Route buttons. Check the box to stop seeing it',
     'Always check the route against your truck atlas and the signs'
@@ -6312,6 +6317,7 @@ function cityPickerDone(){
  <div class="fpin">
   <div class="fphead"><button type="button" class="fpback" onclick="history.back()">Back</button><h2 id="fph2">Fuel plan</h2><span id="fptoll" role="button" onclick="fpClose();openTruck()" style="cursor:pointer;display:none;margin-left:auto;background:#f26a21;color:#fff;font-size:12px;font-weight:800;border-radius:8px;padding:4px 8px;line-height:1.2;text-align:center">Avoid tolls is on</span><button type="button" class="fpback" style="margin-left:8px" onclick="fpRoute()">Route</button></div>
   <div id="fprt" onclick="if(event.target===this)this.classList.remove('show')"><div class="fprtin"><div class="fphead"><h2>Your route</h2><button type="button" class="fpback" style="margin-left:auto" onclick="document.getElementById('fprt').classList.remove('show')">Close</button></div><div id="fprtbody"></div></div></div>
+  <div id="fpfull" style="display:none;background:#f26a21;color:#fff;border-radius:10px;padding:10px 12px;margin:8px 0;font-size:16px;font-weight:600">You have most of a tank. Prices may change by the time you need fuel. Check the plan again after you've burned some fuel.</div>
   <div class="fptrip" id="fptrip"></div>
   <div class="fpset">
     <div><label for="fplvl">Fuel in your tank now</label><select id="fplvl" onchange="fpCalc()"></select></div>
@@ -6439,11 +6445,41 @@ function fpCost(h){ var p=+h.pre; return (isFinite(p)&&p>0)?p:+h.disc; }   /* re
 function fpPump(h){ return +h.disc; }
 function fpOn(){ var g=document.getElementById('gmaps'); return !!(g && !g.classList.contains('off') && !NEAR_R && window.ROUTE_LINE && LASTHITS.length && ROUTE_TOTAL); }
 function fpSync(){ var b=document.getElementById('fpbtn'); if(b) b.classList.toggle('fpoff',!fpOn()); }
+var FP_NOWG=null;
 function openFuelPlan(){
   if(!fpOn()){ showPop('Tap Find fuel first','FUEL PLAN'); return; }
+  var t=getTruck()||TRUCK_DEF, first=!t.fpset;
+  document.getElementById('fqfirst').style.display=first?'block':'none';
+  document.getElementById('fqtank').value=first?'':(t.tank||'');
+  document.getElementById('fqmpg').value=first?'':(t.mpg||'');
+  document.getElementById('fqnow').value=''; document.getElementById('fqerr').textContent='';
+  document.getElementById('fqpop').classList.add('show');
+  setTimeout(function(){ try{ document.getElementById(first?'fqtank':'fqnow').focus(); }catch(e){} },100);
+}
+function fqGo(){
+  var t=getTruck()||Object.assign({},TRUCK_DEF), first=!t.fpset, e=document.getElementById('fqerr');
+  var g=parseFloat(document.getElementById('fqnow').value);
+  if(first){
+    var tk=parseFloat(document.getElementById('fqtank').value), m=parseFloat(document.getElementById('fqmpg').value);
+    if(!(tk>=20&&tk<=400)){ e.textContent='Enter your tank size in gallons (both tanks together).'; return; }
+    if(!(m>=2&&m<=15)){ e.textContent='Enter your miles per gallon, like 5.8.'; return; }
+    t.tank=tk; t.mpg=m;
+  }
+  var tank=+t.tank||200;
+  if(!(g>=0&&g<=tank)){ e.textContent='Enter how many gallons you have now (0 to '+tank+').'; return; }
+  t.fpset=true; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(x){} try{ truckSum(); }catch(x){}
+  FP_NOWG=g; document.getElementById('fqpop').classList.remove('show'); fpOpenReal();
+}
+function fqFr(f){
+  var t=getTruck()||TRUCK_DEF, tk=parseFloat(document.getElementById('fqtank').value)||(+t.tank||200);
+  document.getElementById('fqnow').value=Math.round(tk*f); document.getElementById('fqerr').textContent='';
+}
+function fqClose(){ document.getElementById('fqpop').classList.remove('show'); }
+function fpOpenReal(){
   var t=getTruck()||TRUCK_DEF, sel=document.getElementById('fplvl');
   if(!sel.options.length) NF_LVLS.forEach(function(v){ var o=document.createElement('option'); o.value=v[0]; o.textContent=v[1]; sel.appendChild(o); });
   sel.value=String(NF_LVL);
+  { var og=sel.querySelector('option[value="g"]'); if(FP_NOWG!=null){ if(!og){ og=document.createElement('option'); og.value='g'; sel.insertBefore(og,sel.firstChild); } og.textContent=FP_NOWG+' gallons'; sel.value='g'; } else if(og) og.remove(); }
   document.getElementById('fpmpg').value=t.mpg||'';
   document.getElementById('fpend').value=(t.endg>=0&&t.endg!=='')?t.endg:50;
   var ins=[].slice.call(document.querySelectorAll('#stops input')).map(function(i){ return i.value.trim(); }).filter(Boolean);
@@ -6471,8 +6507,9 @@ function fpCalc(){
   var t=getTruck()||TRUCK_DEF, out=document.getElementById('fpout');
   NF_LVL=parseFloat(document.getElementById('fplvl').value)||0.25;
   var mi=parseFloat(document.getElementById('fpmpg').value), mpg=(mi>=2&&mi<=15)?mi:6.5;
-  var tank=+t.tank||200, res=Math.min(+t.res||0,tank-1), cap=tank-res, start=Math.max(0,tank*NF_LVL-res);
+  var tank=+t.tank||200, res=Math.min(+t.res||0,tank-1), cap=tank-res, start=Math.max(0,((FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?Math.min(FP_NOWG,tank):tank*NF_LVL)-res);
   var ev=parseFloat(document.getElementById('fpend').value), endTot=(ev>=0&&ev<=tank)?ev:50, endX=Math.max(0,Math.min(cap,endTot-res));   /* gallons above reserve to arrive with */
+  { var nowG=(FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?FP_NOWG:tank*NF_LVL; document.getElementById('fpfull').style.display=(nowG>=tank*0.75)?'block':'none'; }
   var skip=(typeof nfSkip==='function')?nfSkip():[], total=ROUTE_TOTAL;
   document.getElementById('fpnote').textContent='Tank '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'+(mi>=2?'':' (typical, enter yours)')
     +', arriving with '+Math.round(Math.max(endTot,res))+' gal'+(skip.length?'. Never buying in '+skip.join(', '):'')+'. Change these in Your truck.';
@@ -6594,5 +6631,25 @@ document.getElementById('fpstipx').checked=false;document.getElementById('fpstip
 function fpsTipClose(){try{if(document.getElementById('fpstipx').checked&&FPS_TIPCUR)localStorage.setItem('fps_tipoff_'+FPS_TIPCUR,'1');}catch(e){}
 FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 </script>
+<style>
+#fqpop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:8990;padding:18px}
+#fqpop.show{display:flex}
+#fqpop .tb{background:#17304f;border:2px solid #f26a21;border-radius:14px;max-width:420px;width:100%;padding:18px;color:#e8eef6;font-size:17px}
+#fqpop .tt{color:#f26a21;font-weight:700;font-size:19px;margin-bottom:10px}
+#fqpop label{display:block;margin:10px 0 4px;color:#9fb4ce;font-size:16px}
+#fqpop input{width:100%;box-sizing:border-box;padding:11px;font-size:19px;border-radius:9px;border:1px solid #4f7bb0;background:#1d3a5e;color:#e8eef6}
+#fqpop .row{display:flex;gap:10px;margin-top:16px}
+#fqpop button{flex:1;padding:12px;border:0;border-radius:10px;font-size:18px;font-weight:700}
+#fqfr button{flex:1;padding:10px 0;border:1px solid #4f7bb0;border-radius:9px;background:#1d3a5e;color:#e8eef6;font-size:18px;font-weight:700}
+#fqerr{color:#e25a4f;font-size:15px;min-height:18px;margin-top:8px}
+</style>
+<div id="fqpop" role="dialog" aria-modal="true"><div class="tb"><div class="tt">Fuel plan</div>
+<div id="fqfirst"><div style="color:#9fb4ce;font-size:15px">First time only. These save to Your truck.</div>
+<label for="fqtank">Tank size (gallons, both tanks)</label><input id="fqtank" type="number" inputmode="decimal">
+<label for="fqmpg">Miles per gallon</label><input id="fqmpg" type="number" inputmode="decimal" step="0.1"></div>
+<label for="fqnow">How many gallons do you have now?</label>
+<div id="fqfr" style="display:flex;gap:6px;margin-bottom:8px"><button type="button" onclick="fqFr(.125)">&#8539;</button><button type="button" onclick="fqFr(.25)">&frac14;</button><button type="button" onclick="fqFr(.5)">&frac12;</button><button type="button" onclick="fqFr(.75)">&frac34;</button><button type="button" onclick="fqFr(1)">Full</button></div><input id="fqnow" type="number" inputmode="decimal">
+<div id="fqerr"></div>
+<div class="row"><button style="background:#2b4a70;color:#e8eef6" onclick="fqClose()">Cancel</button><button style="background:#f26a21;color:#fff" onclick="fqGo()">Go</button></div></div></div>
 </body>
 </html>
