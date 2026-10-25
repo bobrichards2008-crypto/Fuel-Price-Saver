@@ -2784,6 +2784,7 @@ const CHANGELOG = [
   { date:'2026-10-25', items:[
     'Version 1.3.25',
     'Fixed: Fuel stop optimizer no longer sends you to stop after stop for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
+    'Fixed: the cheapest plan was adding up more fuel than your trip needs, so it could show a higher total than buying in each state. It now buys only what you need',
     'New: every time you tap Find fuel, a short note explains how Fuel stop optimizer does your fuel planning for you, so you don\u2019t have to sit with a calculator when you are busy or tired. Check Don\u2019t show this tip again and it stops showing. If you go two weeks without using it, a short friendly reminder shows once, with a button to read about it again. A second note about your route shows when you open the plan',
     'Fixed: when you switch to Optimizer picks, the count at the top now shows just your plan stops, like 4 stops in 3 states on your plan, out of 47 on your route',
     'New: Fuel plan is now called Fuel stop optimizer. After you tap Find fuel, it is the big green $ button at the top of your list of stops, and it shows about how much you can save. It is no longer on the home screen',
@@ -6609,30 +6610,29 @@ function fpCalc(){
   var buys=[], f=start, pos=0, short=false;
   var U=5, C=Math.floor(cap/U), n=stns.length, INF=1e15;
   var stopCost=function(h){ return fpCost(h)*1 + 15; };
-  var dp=[], par=[];
-  if(n){
-    var a0=Math.floor((start - stns[0].rmi/mpg)/U+1e-9);
-    if(start - stns[0].rmi/mpg < 0) a0=-1;
-    for(var i=0;i<n;i++){ dp.push(new Array(C+1).fill(INF)); par.push(new Array(C+1).fill(null)); }
-    if(a0>=0) dp[0][Math.min(a0,C)]=0;
-    var bestEnd=INF, endPar=null, dEnd=(total-stns[n-1].rmi)/mpg;
-    for(var i=0;i<n;i++){
-      var pr=fpCost(stns[i]), sc=stopCost(stns[i]), dN=(i<n-1)?(stns[i+1].rmi-stns[i].rmi)/mpg:0;
-      for(var av=0;av<=C;av++){ var c0=dp[i][av]; if(c0>=INF) continue;
-        for(var k=av;k<=C;k++){
-          var c=c0+(k>av?(k-av)*U*pr+sc:0);
-          if(i<n-1){ var arr=k*U-dN; if(arr<0) continue; var nx=Math.floor(arr/U+1e-9);
-            if(c<dp[i+1][nx]){ dp[i+1][nx]=c; par[i+1][nx]={a:av,k:k}; } }
-          else { if(k*U-dEnd>=endX-0.01 && c<bestEnd){ bestEnd=c; endPar={a:av,k:k}; } }
-        }
+  /* jump straight from one buy stop to the next, so fuel is only rounded once per stop, never at every stop passed */
+  var dp=[], par=[], bestEnd=INF, endPar=null;
+  for(var i=0;i<n;i++){ dp.push(new Array(C+1).fill(INF)); par.push(new Array(C+1).fill(null)); }
+  if(start-total/mpg>=endX-0.01){ bestEnd=0; endPar='none'; }
+  for(var j=0;j<n;j++){ var arr=start-stns[j].rmi/mpg; if(arr<0) break; var nx=Math.min(C,Math.floor(arr/U+1e-9)); if(0<dp[j][nx]){ dp[j][nx]=0; par[j][nx]=null; } }
+  for(var i=0;i<n;i++){
+    var pr=fpCost(stns[i]), sc=stopCost(stns[i]), dE=(total-stns[i].rmi)/mpg;
+    for(var av=0;av<=C;av++){ var c0=dp[i][av]; if(c0>=INF) continue;
+      for(var k=av+1;k<=C;k++){
+        var c=c0+(k-av)*U*pr+sc;
+        if(k*U-dE>=endX-0.01 && c<bestEnd){ bestEnd=c; endPar={i:i,a:av,k:k}; }
+        for(var j=i+1;j<n;j++){ var ar=k*U-(stns[j].rmi-stns[i].rmi)/mpg; if(ar<0) break;
+          var nx=Math.floor(ar/U+1e-9); if(c<dp[j][nx]){ dp[j][nx]=c; par[j][nx]={i:i,a:av,k:k}; } }
       }
     }
-    if(endPar){
-      var plan=[], cur=endPar;
-      for(var i=n-1;i>=0;i--){ plan[i]=cur; if(i>0) cur=par[i][cur.a]; }
-      plan.forEach(function(p,i){ if(p.k>p.a) buys.push({s:stns[i],g:(p.k-p.a)*U,lvl:p.k*U}); });
-      f=plan[n-1].k*U; pos=stns[n-1].rmi;
-    } else short=true;
+  }
+  if(endPar){
+    var tg=[]; var cur=(endPar==='none')?null:endPar;
+    while(cur){ tg.unshift({i:cur.i,k:cur.k}); cur=par[cur.i][cur.a]; }
+    /* now buy with exact fuel: fill to each target level */
+    f=start; pos=0;
+    tg.forEach(function(t){ var st=stns[t.i]; f-=(st.rmi-pos)/mpg; pos=st.rmi; if(f<0) f=0;
+      var g=Math.max(0,Math.ceil(Math.min(t.k*U,cap)-f)); if(g>0){ f+=g; buys.push({s:st,g:g,lvl:f}); } });
   } else short=true;
   f-=(total-pos)/mpg; if(f< -0.5) short=true; else if(f<endX-1) warn.push('You\u2019ll get there with less than '+Math.round(endTot)+' gal. There isn\u2019t a stop late enough on the route to top off.');
   if(!stns.length) short=true;
