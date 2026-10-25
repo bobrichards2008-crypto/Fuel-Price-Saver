@@ -2131,10 +2131,31 @@ async function ttRoute(pts,opt){            /* pts: [[lon,lat],...]  opt: {h,w,l
     if(!a) throw e0;
   }
   if(!opt.toll) return wrap(a);
-  const lim=(pts&&pts.length>2)?1e9:(opt.max||20), okSt=opt.tollok||[];   /* Bob, Oct 25: a stop you add in between beats the extra-miles limit; tolls always avoided */
+  const lim=opt.max||20, okSt=opt.tollok||[];   /* Bob, Oct 25 (1.3.27): with in-between stops, tolls are decided one leg at a time (see pick) */
   const b=await one(pts,"&avoid=tollRoads").catch(()=>null);
-  const pick=()=>{ if(b&&(b.dist-a.dist)/1609.34<=lim) return wrap(b);
+  const pickWhole=()=>{ if(b&&(b.dist-a.dist)/1609.34<=lim) return wrap(b);
     a.tollKept=b?Math.round((b.dist-a.dist)/1609.34):-1; return wrap(a); };
+  /* each leg gets its own toll check: skip tolls on that leg if it adds no more than the limit, else that leg keeps its toll road */
+  const pick=async()=>{
+    if(pts.length<3) return pickWhole();
+    try{
+      const L=await Promise.all(pts.slice(0,-1).map(async(p,k)=>{
+        const P2=[p,pts[k+1]];
+        const ak=await raw(P2,"",true), bk=await raw(P2,"&avoid=tollRoads",true).catch(()=>null);
+        const ex=bk?(bk.dist-ak.dist)/1609.34:-1;
+        return (bk&&ex<=lim)?{r:bk,kept:0}:{r:ak,kept:ak.toll.length?(bk?Math.round(ex):-1):0};
+      }));
+      const h={co:[],dist:0,dur:0,legs:[],ins:[],toll:[],names:true};
+      let kept=0;
+      L.forEach(x=>{ const po=h.co.length, mo=h.dist, r=x.r;
+        r.co.forEach(c=>h.co.push(c)); r.ins.forEach(n=>h.ins.push({o:n.o+mo,r:n.r}));
+        r.toll.forEach(t=>h.toll.push([t[0]+po,t[1]+po]));
+        h.legs.push({distance:r.dist,duration:r.dur}); h.dist+=r.dist; h.dur+=r.dur;
+        if(x.kept>kept) kept=x.kept; });
+      if(kept) h.tollKept=kept;
+      return wrap(h);
+    }catch(e){ return pickWhole(); }
+  };
   if(!okSt.length || !a.names || !a.toll.length) return pick();
   /* which state each toll stretch is in */
   const cum=[0]; for(let i=1;i<a.co.length;i++) cum.push(cum[i-1]+hvMi(a.co[i-1][1],a.co[i-1][0],a.co[i][1],a.co[i][0]));
@@ -2790,6 +2811,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-25', items:[
+    'Version 1.3.27',
+    'Avoid tolls fixed for trips with stops in between: each leg now decides on its own. If skipping tolls on that leg adds no more than your extra-miles limit, it skips them; if not, that leg keeps the toll road instead of sending you far out of the way (this fixes fuel stops showing up hundreds of miles off your route). Fuel planning still covers the whole trip. Routes are a guide only; always check your own route.'
+  ]},
   { date:'2026-10-25', items:[
     'Version 1.3.26',
     'Fuel stop optimizer tip reworded: it now opens with Good news! Your fuel stops are now automatically planned for maximum savings at the touch of a button, and Time is money is now Your time is valuable'
