@@ -2313,10 +2313,10 @@ function render(hits){
   const first=st=> Math.min(...groups[st].map(i=>where(hits[i])));
   order.sort((x,y)=>first(x)-first(y));
   const NAMES={}; for(const k in STATES) NAMES[STATES[k]]=k;
-  let h='<div id="reshead"><p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
+  let h='<div id="reshead"><p class="hint" id="reshint" data-all="'+hits.length+'">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
     +'</p>';
-  if(!NEAR_R) h+='<div id="fprow"><button type="button" id="fpbtn" class="fpbig" onclick="openFuelPlan()" aria-label="Fuel stop optimizer"><b style="font-size:24px;margin-right:8px">$</b><span class="fpl"><span>Fuel stop optimizer</span><small id="fpsave">Tap to see what you\'ll save</small></span></button><button type="button" id="fpview" onclick="fpView()" aria-label="Switch between optimized stops and picking your own"><span class="sg" id="sgo">Optimizer picks</span><span class="sg on" id="sga">My picks</span></button></div>';
+  if(!NEAR_R) h+='<div id="fprow"><button type="button" id="fpbtn" class="fpbig" onclick="openFuelPlan()" aria-label="Fuel stop optimizer"><b style="font-size:24px;margin-right:8px">$</b><span class="fpl"><span>Fuel stop optimizer</span><small id="fpsave">Tap to see what you\'ll save</small></span></button><div id="fpview"><button type="button" class="sg" id="sgo" onclick="fpPick(\'plan\')">Optimizer picks</button><button type="button" class="sg on" id="sga" onclick="fpPick(\'all\')">My picks</button></div></div>';
   h+='</div>';
   if(false){   // 1.0.8: best-price box at the top removed
     const b0=hits[0], bc0=brandClass(b0.b);
@@ -2783,9 +2783,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
 const CHANGELOG = [
   { date:'2026-10-25', items:[
     'Version 1.3.25',
+    'Fixed: Fuel stop optimizer no longer sends you to stop after stop for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
+    'New: every time you tap Find fuel, a short note explains how Fuel stop optimizer does your fuel planning for you, so you don\u2019t have to sit with a calculator when you are busy or tired. Check Don\u2019t show this tip again and it stops showing. If you go two weeks without using it, a short friendly reminder shows once, with a button to read about it again. A second note about your route shows when you open the plan',
+    'Fixed: when you switch to Optimizer picks, the count at the top now shows just your plan stops, like 4 stops in 3 states on your plan, out of 47 on your route',
     'New: Fuel plan is now called Fuel stop optimizer. After you tap Find fuel, it is the big green $ button at the top of your list of stops, and it shows about how much you can save. It is no longer on the home screen',
     'New: the top of your list of stops stays put while you scroll, so the Fuel stop optimizer button is always there',
-    'New: after you look at the plan and tap Back, your list shows only the optimized stops. The Optimizer picks | My picks switch next to Fuel stop optimizer shows which list you are on, lit in green. Tap it to switch',
+    'New: after you look at the plan and tap Back, your list shows only the optimized stops. Next to Fuel stop optimizer are two buttons, Optimizer picks and My picks. Tap the one you want. The one you are on is lit in green',
     'The Fuel stop optimizer tip now shows the first time you open it',
     'Removed: the Next fuel button on stop cards. Fuel stop optimizer does that job for the whole trip',
     'Changed: the top of the Fuel stop optimizer screen now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel stop optimizer again',
@@ -6486,7 +6489,6 @@ function fpOn(){ var g=document.getElementById('gmaps'); return !!(g && !g.class
 function fpSync(){ var b=document.getElementById('fpbtn'); if(b) b.classList.toggle('fpoff',!fpOn()); }
 var FP_NOWG=null;
 function openFuelPlan(){
-  try{ fpsTip('fuelplan'); }catch(e){}
   if(!fpOn()){ showPop('Tap Find fuel first','FUEL STOP OPTIMIZER'); return; }
   var t=getTruck()||TRUCK_DEF, first=!t.fpset;
   document.getElementById('fqfirst').style.display=first?'block':'none';
@@ -6497,7 +6499,8 @@ function openFuelPlan(){
   document.getElementById('fqpop').classList.add('show');
   document.getElementById('fqpop').scrollTop=0;
 }
-function fqGo(){
+function fqGo(){ try{ localStorage.setItem('fps_fsopt_last',String(Date.now())); }catch(e){} setTimeout(function(){ try{ fpsTip('fsroute'); }catch(e){} },600);
+
   var t=getTruck()||Object.assign({},TRUCK_DEF), first=!t.fpset, e=document.getElementById('fqerr');
   var g=parseFloat(document.getElementById('fqnow').value);
   if(first){
@@ -6601,22 +6604,36 @@ function fpCalc(){
   }
 
   /* ---- Option 2: cheapest plan (fuel tax taken out), carrying fuel through the pricey states ---- */
+  /* Cheapest plan with a real cost for every stop: about a gallon burned getting off and on, plus the time on your clock.
+     A stop has to save more than that, so it won't hop stop to stop buying 10 gallons. */
   var buys=[], f=start, pos=0, short=false;
-  for(var i=0;i<stns.length;i++){
-    var s=stns[i]; f-=(s.rmi-pos)/mpg; pos=s.rmi;
-    if(f< -0.5){ short=true; f=0; }
-    var j=-1; for(var q=i+1;q<stns.length;q++){ if((stns[q].rmi-s.rmi)/mpg>cap) break; if(fpCost(stns[q])<=fpCost(s)-0.05){ j=q; break; } }   /* only chase a stop at least 5 cents cheaper */
-    var want;
-    if(j>=0) want=(stns[j].rmi-s.rmi)/mpg;
-    else { var toEnd=(total-s.rmi)/mpg+endX; want=toEnd<=cap?toEnd:cap; }
-    var g=Math.min(Math.ceil(Math.max(0,want-f)), Math.floor(cap-f));
-    if(g>0){ f+=g; buys.push({s:s,g:g,lvl:f}); }
-  }
-  // nobody stops for a few gallons: fold a small buy into the stop before it when the tank has room
-  for(var z=buys.length-1;z>0;z--){
-    var A=buys[z-1], B=buys[z];
-    if(B.g<20 && A.lvl+B.g<=cap+0.01){ A.g+=B.g; A.lvl+=B.g; buys.splice(z,1); }
-  }
+  var U=5, C=Math.floor(cap/U), n=stns.length, INF=1e15;
+  var stopCost=function(h){ return fpCost(h)*1 + 15; };
+  var dp=[], par=[];
+  if(n){
+    var a0=Math.floor((start - stns[0].rmi/mpg)/U+1e-9);
+    if(start - stns[0].rmi/mpg < 0) a0=-1;
+    for(var i=0;i<n;i++){ dp.push(new Array(C+1).fill(INF)); par.push(new Array(C+1).fill(null)); }
+    if(a0>=0) dp[0][Math.min(a0,C)]=0;
+    var bestEnd=INF, endPar=null, dEnd=(total-stns[n-1].rmi)/mpg;
+    for(var i=0;i<n;i++){
+      var pr=fpCost(stns[i]), sc=stopCost(stns[i]), dN=(i<n-1)?(stns[i+1].rmi-stns[i].rmi)/mpg:0;
+      for(var av=0;av<=C;av++){ var c0=dp[i][av]; if(c0>=INF) continue;
+        for(var k=av;k<=C;k++){
+          var c=c0+(k>av?(k-av)*U*pr+sc:0);
+          if(i<n-1){ var arr=k*U-dN; if(arr<0) continue; var nx=Math.floor(arr/U+1e-9);
+            if(c<dp[i+1][nx]){ dp[i+1][nx]=c; par[i+1][nx]={a:av,k:k}; } }
+          else { if(k*U-dEnd>=endX-0.01 && c<bestEnd){ bestEnd=c; endPar={a:av,k:k}; } }
+        }
+      }
+    }
+    if(endPar){
+      var plan=[], cur=endPar;
+      for(var i=n-1;i>=0;i--){ plan[i]=cur; if(i>0) cur=par[i][cur.a]; }
+      plan.forEach(function(p,i){ if(p.k>p.a) buys.push({s:stns[i],g:(p.k-p.a)*U,lvl:p.k*U}); });
+      f=plan[n-1].k*U; pos=stns[n-1].rmi;
+    } else short=true;
+  } else short=true;
   f-=(total-pos)/mpg; if(f< -0.5) short=true; else if(f<endX-1) warn.push('You\u2019ll get there with less than '+Math.round(endTot)+' gal. There isn\u2019t a stop late enough on the route to top off.');
   if(!stns.length) short=true;
   var p2=runs.map(function(){ return {g:0,stops:[]}; });
@@ -6678,11 +6695,19 @@ function fpCalc(){
 <div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
 <label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
 <script>
-var FPS_TIPS={fuelplan:{t:'Fuel stop optimizer',b:'It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the plan, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
+var FPS_TIPS={fsopt:{t:'Fuel stop optimizer',b:'<b>Good news!</b> Fuel stop optimizer takes a load off your shoulders. It does all your fuel planning for you.<br><br>It fills you up where fuel is cheap and buys light where it\'s high, so you only carry enough to reach the next cheaper stop.<br><br><b>Time is money.</b> When you\'ve got to go, or you\'re just plain tired, you don\'t have time to sit with a calculator weighing every stop against your tank and mileage. Why would you, when one tap does it for you? One less thing to stress about.<br><br>Tap the green <b>$ Fuel stop optimizer</b> button at the top of your stops.'},
+  fsremind:{t:'Friendly reminder',b:'Don\'t forget: tap the green <b>$ Fuel stop optimizer</b> to see where to buy and how much. It could save you real money on this trip.<br><br><button type="button" onclick="fpsTipClose();setTimeout(function(){fpsTipForce(\'fsopt\')},50)" style="width:100%;min-height:46px;border-radius:10px;border:1.5px solid #3ab54a;background:#17304f;color:#fff;font-size:16px;font-weight:700">Read about Fuel stop optimizer again</button>'},
+  fsroute:{t:'Your route',b:'On the plan, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
 var FPS_TIPCUR=null;
 function fpsTip(id){try{var k=FPS_TIPS[id];if(!k||localStorage.getItem('fps_tipoff_'+id)==='1'||FPS_TIPCUR)return;
 FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;
 document.getElementById('fpstipx').checked=false;document.getElementById('fpstip').classList.add('show');}catch(e){}}
+function fpsTipForce(id){try{var k=FPS_TIPS[id];if(!k||FPS_TIPCUR)return;FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;document.getElementById('fpstipx').checked=false;document.getElementById('fpstip').classList.add('show');}catch(e){}}
+function fpsRemind(){try{var now=Date.now(),D=864e5;
+  if(localStorage.getItem('fps_tipoff_fsopt')!=='1'){ fpsTip('fsopt'); return; }
+  var last=+localStorage.getItem('fps_fsopt_last')||0; if(!last){ localStorage.setItem('fps_fsopt_last',String(now)); return; }
+  if(now-last>=14*D){ localStorage.setItem('fps_fsopt_last',String(now)); fpsTipForce('fsremind'); }
+}catch(e){}}
 function fpsTipClose(){try{if(document.getElementById('fpstipx').checked&&FPS_TIPCUR)localStorage.setItem('fps_tipoff_'+FPS_TIPCUR,'1');}catch(e){}
 FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 </script>
@@ -6742,8 +6767,8 @@ FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 #fpbtn .fpl small{font-size:14px;font-weight:600;color:#eafbe9}
 #fpview{flex:0 0 40%;min-height:58px;border-radius:12px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer;padding:4px}
 #fpview{display:flex;padding:3px;gap:3px;align-items:stretch}
-#fpview .sg{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;border-radius:9px;font-size:14px;color:#9fb4ce}
-#fpview .sg.on{background:#3ab54a;color:#fff}
+#fpview .sg{border:0;background:#2b4a70;opacity:.75;font-weight:700;cursor:pointer;min-height:48px;flex:1;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;border-radius:9px;font-size:14px;color:#9fb4ce}
+#fpview .sg.on{background:#3ab54a!important;color:#fff;opacity:1}
 body.fp-only #results .card:not(.inplan){display:none}
 body.fp-only #results .stgrp.noplan{display:none}
 #fpchoose{display:none;position:fixed;left:0;right:0;bottom:0;z-index:9600;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid #2b4a70}
@@ -6763,7 +6788,12 @@ function fpApplyView(){
   document.querySelectorAll('#results .stgrp').forEach(function(g){ var has=!!g.querySelector('.card.inplan'); g.classList.toggle('noplan',!has);
     if(on&&has&&!g.classList.contains('open')){ g.classList.add('open'); var b=g.querySelector('button.sthead'); if(b) b.setAttribute('aria-expanded','true'); } });
   document.body.classList.toggle('fp-only',!!on); fpBtnSync();
+  var hn=document.getElementById('reshint'); if(hn){ if(!hn.dataset.full) hn.dataset.full=hn.innerHTML;
+    if(on){ var n=document.querySelectorAll('#results .card.inplan').length, ns=document.querySelectorAll('#results .stgrp:not(.noplan)').length;
+      hn.innerHTML=n+(n===1?' stop':' stops')+' in '+ns+(ns===1?' state':' states')+' on your plan, out of '+hn.dataset.all+' on your route'; }
+    else hn.innerHTML=hn.dataset.full; }
 }
+function fpPick(v){ if(v==='plan'&&!(window.FP_PLANK&&FP_PLANK.length)){ openFuelPlan(); return; } FP_VIEW=v; fpApplyView(); window.scrollTo(0,0); }
 function fpView(){ if(FP_VIEW==='all'&&!(window.FP_PLANK&&FP_PLANK.length)){ openFuelPlan(); return; } FP_VIEW=FP_VIEW==='plan'?'all':'plan'; fpApplyView(); window.scrollTo(0,0); }
 function fpPreview(){
   try{ if(!fpOn()) return; var t=getTruck()||TRUCK_DEF, keep=FP_NOWG;
@@ -6772,7 +6802,7 @@ function fpPreview(){
 }
 (function(){ var r=document.getElementById('results'); if(!r) return;
   new MutationObserver(function(){ if(!document.getElementById('fpbtn')) return; FP_VIEW='all'; window.FP_PLANK=null; window.FP_SAVE=null;
-    clearTimeout(window.FP_PVT); window.FP_PVT=setTimeout(function(){ fpPreview(); fpApplyView(); },400); }).observe(r,{childList:true});
+    clearTimeout(window.FP_PVT); window.FP_PVT=setTimeout(function(){ fpPreview(); fpApplyView(); try{ if(document.body.classList.contains('on-results')) fpsRemind(); }catch(e){} },400); }).observe(r,{childList:true});
 })();
 </script>
 </body>
