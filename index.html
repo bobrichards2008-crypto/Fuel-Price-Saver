@@ -28,7 +28,9 @@
   .suggest .useloc{display:flex;align-items:center;gap:9px;color:#f26a21;font-weight:700}
   .suggest .useloc svg{flex:0 0 auto}
   .suggest.up{top:auto!important;bottom:100%;margin-bottom:3px;overflow-y:auto;box-shadow:0 -6px 18px rgba(0,0,0,.45)}
-  #routetools{display:flex;justify-content:flex-end;margin:0 0 4px}
+  #routetools{display:flex;justify-content:space-between;gap:8px;margin:0 0 4px}
+  #fpbtn{display:flex;align-items:center;height:40px;padding:0 14px;border-radius:10px;background:#2fa85a;border:1.5px solid #2fa85a;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+  #fpbtn.fpoff{opacity:.45}
   #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
   #revbtn svg{flex:0 0 auto}
   #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
@@ -189,6 +191,10 @@
 
   .card{background:#13273f;border:1px solid #27466b;border-radius:12px;padding:12px;margin-bottom:10px}
   .card.top{border:2px solid var(--orange);box-shadow:0 0 12px rgba(242,106,33,.4)}
+  .sthead .legtop .legmi{color:#9fb4ce;font-weight:600}
+  .card.top.seen{animation:topPulse 2.6s ease-in-out 3}
+  @keyframes topPulse{0%,100%{box-shadow:0 0 8px rgba(242,106,33,.3)}50%{box-shadow:0 0 16px 3px rgba(242,106,33,.65)}}
+  @media (prefers-reduced-motion:reduce){.card.top{animation:none}}
   .cardhead{font-size:15px;margin-bottom:8px}
   .off{float:right;color:#9fb4ce;font-size:13px}
   .prices{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;color:#cfe0f2;margin-bottom:10px}
@@ -281,11 +287,15 @@
   .cardhead .headroads .roads{margin:0;flex-wrap:nowrap}
   .priceline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .priceline .seebtn{margin-left:auto}
+  .priceline.cardbot{justify-content:flex-end;margin-top:10px}
   .priceline .pdate{margin-top:0;margin-left:auto}
   .priceline .seebtn,.priceline .maplink{box-sizing:border-box;min-width:76px;justify-content:center;padding:6px 14px;font-size:13px;line-height:1.2;display:inline-flex;align-items:center;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8;border-radius:6px;font-weight:bold;text-decoration:none}
   .priceline .maplink::before,.priceline a.maplink::before{display:none !important;content:none !important}
   .priceline .onep{flex:0 0 auto;color:var(--orange);font-weight:bold;font-size:20px}
-  .priceline .onep .plabel{color:#3ab54a;font-weight:normal;font-size:12px}
+  .priceline .onep .plabel{color:#9fb4ce;font-weight:normal;font-size:12px}
+  .priceline .onep .pval{color:#3ab54a}
+  .priceline.pricerow{align-items:center;margin-top:18px;flex-wrap:nowrap}
+  .priceline.pricerow .cardbtns{margin-left:auto;display:flex;gap:8px;flex:none}
   .cardbtns{display:inline-flex;gap:8px;flex:none}
   .seebtn,.gobtn{padding:7px 14px;font-size:14px;font-weight:bold;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block}
   .seebtn{background:none;border:1px solid #4a7fb5;color:#9fc0e8}
@@ -662,6 +672,14 @@
       '<button onclick="fpsReqBack()" style="display:block;width:100%;margin:12px 0 0;padding:12px;font-size:16px;font-weight:700;border:1px solid #4f7bb0;border-radius:12px;background:transparent;color:#c9d6e6">Back</button>',
       false);
     if(cover){ cover.style.alignItems='flex-start'; cover.style.overflowY='auto'; }
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem('fps_rqform')||'{}')||{}; }catch(e){}
+    ['rqname','rqemail','rqphone','rqco'].forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      if(saved[id]) el.value=saved[id];
+      el.addEventListener('input',function(){
+        try{ var o=JSON.parse(localStorage.getItem('fps_rqform')||'{}')||{}; o[id]=el.value; localStorage.setItem('fps_rqform',JSON.stringify(o)); }catch(e){}
+      });
+    });
   };
   window.fpsReqBack=function(){ if(cover){ cover.style.alignItems='center'; } deny(); };
   window.fpsReqSend=function(){
@@ -676,6 +694,7 @@
       '&dev='+encodeURIComponent(dev)+'&tried='+encodeURIComponent(code);
     fetch(u,{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
       if(j&&j.ok){
+        try{ localStorage.removeItem('fps_rqform'); }catch(e){}
         if(cover){ cover.style.alignItems='center'; }
         show('Request sent','<div style="font-size:46px;color:#3ab54a;margin-bottom:6px">✓</div>You\'ll get an email with your own link as soon as you\'re approved.<br><br>Check your spam folder if you don\'t see it.',false);
       } else { err.textContent=(j&&j.msg)||'Something went wrong. Try again.'; b.disabled=false; b.textContent='Send request'; }
@@ -858,7 +877,7 @@
     </div>
   </div>
   <div id="stops"></div>
-  <div id="routetools" style="display:none"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
+  <div id="routetools" style="display:none"><button type="button" id="fpbtn" class="fpoff" onclick="openFuelPlan()" aria-label="Fuel optimizer"><b style="font-size:18px;margin-right:4px">$</b>Fuel optimizer</button><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
   <div id="mainbtns">
   <div class="btnrow" id="pinbar">
     <button class="go" onclick="addStop()">+ Add stop</button>
@@ -873,7 +892,7 @@
     <a id="gmaps" class="bluebtn off" target="_blank" rel="noopener" onclick="return gmapsTap()" aria-label="Map" title="Map"><svg viewBox="0 0 40 40" width="48" height="48"><path d="M6 11 l9-3 l10 3 l9-3 v21 l-9 3 l-10-3 l-9 3 z" fill="none" stroke="#9fc0e8" stroke-width="2.2" stroke-linejoin="round"/>
 <path d="M15 8 v21 M25 11 v21" stroke="#9fc0e8" stroke-width="1.6"/>
 <path d="M20 26 c-4-5-6-7.5-6-10.5 a6 6 0 0 1 12 0 c0 3-2 5.5-6 10.5z" fill="#f26a21" stroke="#0c1a30" stroke-width="1.2"/><circle cx="20" cy="15.5" r="2.2" fill="#0c1a30"/></svg></a>
-    <button type="button" id="fpbtn" class="bluebtn fpoff" onclick="openFuelPlan()" aria-label="Fuel plan" title="Fuel plan"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="6" y="4" width="20" height="24" rx="3" fill="none" stroke="#9fc0e8" stroke-width="2.2"/><path d="M10 11h12M10 16h12M10 21h7" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round"/></svg>Fuel plan</button>
+    
     <button class="bluebtn" style="color:#ff2a2a;font-weight:800;border-color:#d11f1f" onclick="askClear()">Clear</button>
   </div>
   <div id="nearpop" class="popwrap" style="display:none" onclick="if(event.target===this)closeNear()">
@@ -1408,10 +1427,10 @@ function fpsRowsFrom(data){
   // accepts the counter's {fields:[...], stations:[[...]]} shape
   const f = data.fields || ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product"];
   const ix = n => f.indexOf(n);
-  const [B,C,S,LA,LO,R,D,T,P,PR] =
-    ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product"].map(ix);
+  const [B,C,S,LA,LO,R,D,T,P,PR,DF] =
+    ["brand","city","state","lat","lon","retail","discounted","ifta","pretax","product","def"].map(ix);
   return (data.stations||[]).map(s =>
-    [s[B],s[C],s[S],s[LA],s[LO],s[R],s[D],s[T],s[P],s[PR]]);
+    [s[B],s[C],s[S],s[LA],s[LO],s[R],s[D],s[T],s[P],s[PR],DF>=0?s[DF]:null]);
 }
 
 function fpsStat(t,c){ const el=document.getElementById("datastat"); if(el){ el.textContent=t; el.style.color=c; } }
@@ -1530,8 +1549,8 @@ let NEAR_R=null, NEAR_AT='you';
   };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
-let RANKBY='pre';
-try{ RANKBY=localStorage.getItem('fps_rankby')||'pre'; }catch(e){}
+let RANKBY='disc';
+try{ RANKBY=localStorage.getItem('fps_rankby')||'disc'; }catch(e){}
 function rankVal(h){ return RANKBY==='disc' ? h.disc : h.pre; }
 function rankWord(){ return RANKBY==='disc' ? 'Discounted price' : 'Pre-tax price'; }
 function openSettings(){ try{buildAmenPick();}catch(e){}
@@ -1668,7 +1687,7 @@ function getHere(){
       e=>fail(new Error(e.code===1
         ? 'Location is turned off for this app. Allow location, or type a start city'
         : 'Couldn\'t get your location. Type a start city')),
-      {enableHighAccuracy:false, timeout:15000, maximumAge:300000});
+      {enableHighAccuracy:true, timeout:20000, maximumAge:0});
   });
 }
 async function geocode(place){
@@ -1905,7 +1924,7 @@ async function fuelNear(radius){
     const la0=here[1], lo0=here[0], hits=[];
     for(const s of STATIONS){
       const d=miBetween(la0,lo0,s[3],s[4]);
-      if(d<=radius) hits.push({b:s[0],c:s[1],st:s[2],la:s[3],lo:s[4],ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],off:0,away:Math.round(d*10)/10});
+      if(d<=radius) hits.push({b:s[0],c:s[1],st:s[2],la:s[3],lo:s[4],ret:s[5],disc:s[6],ifta:s[7],pre:s[8],prod:s[9],def:s[10],off:0,away:Math.round(d*10)/10});
     }
     hits.sort((a,b)=>rankVal(a)-rankVal(b));
     LASTHITS=hits; NEAR_R=radius; ROUTE_LEGS=null; ROUTE_MI=null;
@@ -1970,7 +1989,7 @@ let ROUTE_CUM=[], ROUTE_TOTAL=0, NF_I=null, NF_LVL=0.25, NF_REC=0;
 const NF_LVLS=[[0.125,'1/8 tank'],[0.25,'1/4 tank'],[0.375,'3/8 tank'],[0.5,'1/2 tank'],[0.625,'5/8 tank'],[0.75,'3/4 tank'],[0.875,'7/8 tank'],[1,'Full']];
 function hvMi(a,b,c,d){ const r=Math.PI/180, x=Math.sin((c-a)*r/2), y=Math.sin((d-b)*r/2);
   return 7917.6*Math.asin(Math.sqrt(x*x+Math.cos(a*r)*Math.cos(c*r)*y*y)); }
-function nfCardBtn(i){
+function nfCardBtn(i){ return '';
   if(NEAR_R||!ROUTE_TOTAL||nfSkip().indexOf(LASTHITS[i].st)>=0) return '';
   return '<div class="nfrow"><span class="nfbtn" role="button" tabindex="0" onclick="event.stopPropagation();openNf('+i+')">'
     +'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17a8 8 0 0 1 16 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M12 17l4-6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>Next fuel</span></div>';
@@ -2295,7 +2314,7 @@ function render(hits){
   let h='<p class="hint">'+hits.length+' stops in '+nStates+(nStates===1?' state':' states')
     +(NEAR_R?' within '+NEAR_R+' miles of '+NEAR_AT+', nearest state first':(ROUTE_MI?', '+ROUTE_MI.toLocaleString('en-US')+' miles':'')+', in route order')
     +'</p>';
-  if(hits.length>1){
+  if(false){   // 1.0.8: best-price box at the top removed
     const b0=hits[0], bc0=brandClass(b0.b);
     const TROPHY='<svg class="trophy" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.3A6 6 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A6 6 0 0 1 7.3 12H7a4 4 0 0 1-4-4V5h3V3zm0 4H5v1a2 2 0 0 0 1 1.7V7zm12 0v2.7A2 2 0 0 0 19 8V7h-1z"/></svg>';
     h+='<div class="bestpin" id="bestflag" onclick="enterScreen();openDetail(0)">'
@@ -2312,8 +2331,7 @@ function render(hits){
     const first=gleg[key]!==curLeg; curLeg=gleg[key];
     if(!first) return ['','',''];
     const L=LEGS[gleg[key]]||{};
-    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'</span>',
-      '<small class="lgi">Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</small>'];
+    return [' hasleg','<span class="legtop">'+esc(L.from||'')+' \u2013 '+esc(L.to||'')+'<span class="legmi"> \u00b7 Leg '+(gleg[key]+1)+' of '+LEGS.length+(L.mi?' \u00b7 '+L.mi+' mi':'')+'</span></span>',''];
   };
   order.forEach(key=>{
     const idx=groups[key], st=gst[key];
@@ -2336,10 +2354,10 @@ function render(hits){
       +(i===0&&hits.length>1?'<span class="besttag">Cheapest overall</span>':'')
       +'<span class="wx wait" data-i="'+i+'" onclick="openWx('+i+')"><span class="ico">&#8943;</span><span class="temp"></span></span>'
       +'</div>'
-      +'<div class="priceline">'
-      +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> $'+fmt(dOn?s.disc:s.pre)+'</span>'
-      +'<button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
-      +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a>'
+      +'<div class="priceline pricerow">'
+      +'<span class="onep"><span class="plabel">'+(dOn?'Discounted price':'Pre-tax price')+'</span> <span class="pval">$'+fmt(dOn?s.disc:s.pre)+'</span></span>'
+      +'<span class="cardbtns"><button class="seebtn" onclick="enterScreen();openDetail('+i+')">Details</button>'
+      +'<a class="gobtn maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+s.la+','+s.lo+'&travelmode=driving">Map</a></span>'
       +'</div>'
       +nfCardBtn(i)
       +(s.away!=null?'<div style="font-size:12px;margin-top:4px;color:#9fc0e8">'+s.away+' mi away (straight line)</div>':'')
@@ -2578,9 +2596,8 @@ function openDetail(i){
     +(save!=null?'<div class="row save"><span>Savings per gallon</span><span class="v">$'+fmt(save)+'</span></div>':'')
     +'<div class="row"><span>'+s.st+' IFTA tax</span><span class="v">$'+fmt(s.ifta)+'</span></div>'
     +'<div class="row pre"><span>Pre-tax cost</span><span class="v">$'+fmt(s.pre)+'</span></div>'
+    +((typeof s.def==='number'&&s.def>0)?'<div class="row"><span>DEF price</span><span class="v">$'+fmt(s.def)+'</span></div>':'')
     +'</div>'
-    +priceDateHTML(s.b)
-    +(/love/i.test(s.b)?'<p class="dnote">Love\'s sends next-day prices in the afternoon (about 1:30\u20133 PM). Love\'s doesn\'t publish the exact time the new price takes over at the pump.</p>':'')
     +((s.prod&&s.prod!=='ULSD')?'<p class="dnote">This store sells '+esc(s.prod)+'.</p>':'')
     +'<a class="drive" target="_blank" rel="noopener" href="'+maps+'">Map</a>'
     +'</div>';
@@ -2760,7 +2777,17 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
-  { date:'2026-10-24', items:[
+  { date:'2026-10-25', items:[
+    'Version 1.3.25',
+    'New: Fuel plan is now called Fuel optimizer. It is the green $ button next to Reverse route',
+    'Removed: the Next fuel button on stop cards. Fuel optimizer does that job for the whole trip',
+    'The tip now tells you how to add towns as stops to make the route go your way',
+    'Changed: the top of the Fuel optimizer screen now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel optimizer again',
+    'New: when you open Fuel optimizer it also asks how much fuel you want in your tank when you arrive. Tap Just my reserve, or pick a quarter, half, three-quarters or full',
+    'Changed: stop cards now match the main app. Leg and miles sit on the line with the cities, and the cheapest stop glows a few times when you scroll to it',
+    'Always check the route against your truck atlas and the signs'
+  ]},
+  { date:'2026-10-25', items:[
     'Version 1.3.24',
     'If you have 3/4 of a tank or more, the Fuel plan reminds you to check again after you burn some fuel, since prices may change. When you tap Fuel plan it now asks how many gallons you have. Type it in, or tap 1/8, 1/4, 1/2, 3/4 or Full to fill it in. The first time it also asks your tank size and miles per gallon and saves them to Your truck',
     'Always check the route against your truck atlas and the signs'
@@ -5629,6 +5656,8 @@ async function vsLookup(d){
     var wrap=document.createElement('div'); wrap.className='ac';
     input.parentNode.insertBefore(wrap,input); wrap.appendChild(input);
     var list=document.createElement('div'); list.className='aclist'; wrap.appendChild(list);
+
+
     var hi=-1;
     function fill(items){
       list.innerHTML='';
@@ -6320,9 +6349,10 @@ function cityPickerDone(){
   <div id="fpfull" style="display:none;background:#f26a21;color:#fff;border-radius:10px;padding:10px 12px;margin:8px 0;font-size:16px;font-weight:600">You have most of a tank. Prices may change by the time you need fuel. Check the plan again after you've burned some fuel.</div>
   <div class="fptrip" id="fptrip"></div>
   <div class="fpset">
-    <div><label for="fplvl">Fuel in your tank now</label><select id="fplvl" onchange="fpCalc()"></select></div>
-    <div><label for="fpmpg">Your fuel mileage</label><input id="fpmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="fpMpg()"></div>
-    <div style="grid-column:1/-1"><label for="fpend">Fuel in your tank when you get there (gallons)</label><input id="fpend" type="number" inputmode="numeric" min="0" max="300" step="5" placeholder="50" onchange="fpEnd()"></div>
+    <div style="display:none"><label for="fplvl">Fuel in your tank now</label><select id="fplvl" onchange="fpCalc()"></select></div>
+    <div style="display:none"><label for="fpmpg">Your fuel mileage</label><input id="fpmpg" type="number" inputmode="decimal" min="2" max="15" step="0.1" placeholder="6.5" onchange="fpMpg()"></div>
+    <div style="display:none"><label for="fpend">Fuel in your tank when you get there (gallons)</label><input id="fpend" type="number" inputmode="numeric" min="0" max="300" step="5" placeholder="50" onchange="fpEnd()"></div>
+    <div id="fprep" style="grid-column:1/-1;color:#cfdbe9;font-size:16px;line-height:1.4"></div>
     <div class="fpnote" id="fpnote"></div>
   </div>
   <div id="fpout"></div>
@@ -6447,12 +6477,13 @@ function fpOn(){ var g=document.getElementById('gmaps'); return !!(g && !g.class
 function fpSync(){ var b=document.getElementById('fpbtn'); if(b) b.classList.toggle('fpoff',!fpOn()); }
 var FP_NOWG=null;
 function openFuelPlan(){
-  if(!fpOn()){ showPop('Tap Find fuel first','FUEL PLAN'); return; }
+  if(!fpOn()){ showPop('Tap Find fuel first','FUEL OPTIMIZER'); return; }
   var t=getTruck()||TRUCK_DEF, first=!t.fpset;
   document.getElementById('fqfirst').style.display=first?'block':'none';
   document.getElementById('fqtank').value=first?'':(t.tank||'');
   document.getElementById('fqmpg').value=first?'':(t.mpg||'');
   document.getElementById('fqnow').value=''; document.getElementById('fqerr').textContent='';
+  document.getElementById('fqend').value=(t.endg>=0&&t.endg!=='')?t.endg:(+t.res||25);
   document.getElementById('fqpop').classList.add('show');
   setTimeout(function(){ try{ document.getElementById(first?'fqtank':'fqnow').focus(); }catch(e){} },100);
 }
@@ -6467,12 +6498,19 @@ function fqGo(){
   }
   var tank=+t.tank||200;
   if(!(g>=0&&g<=tank)){ e.textContent='Enter how many gallons you have now (0 to '+tank+').'; return; }
+  var eg=parseFloat(document.getElementById('fqend').value);
+  if(!(eg>=0&&eg<=tank)){ e.textContent='Enter how many gallons you want when you arrive (0 to '+tank+').'; return; }
+  t.endg=Math.max(eg,+t.res||0);
   t.fpset=true; try{ localStorage.setItem('fps_truck',JSON.stringify(t)); }catch(x){} try{ truckSum(); }catch(x){}
   FP_NOWG=g; document.getElementById('fqpop').classList.remove('show'); fpOpenReal();
 }
 function fqFr(f){
   var t=getTruck()||TRUCK_DEF, tk=parseFloat(document.getElementById('fqtank').value)||(+t.tank||200);
   document.getElementById('fqnow').value=Math.round(tk*f); document.getElementById('fqerr').textContent='';
+}
+function fqEnd(f){
+  var t=getTruck()||TRUCK_DEF, tk=parseFloat(document.getElementById('fqtank').value)||(+t.tank||200);
+  document.getElementById('fqend').value=f?Math.round(tk*f):(+t.res||25); document.getElementById('fqerr').textContent='';
 }
 function fqClose(){ document.getElementById('fqpop').classList.remove('show'); }
 function fpOpenReal(){
@@ -6511,6 +6549,9 @@ function fpCalc(){
   var ev=parseFloat(document.getElementById('fpend').value), endTot=(ev>=0&&ev<=tank)?ev:50, endX=Math.max(0,Math.min(cap,endTot-res));   /* gallons above reserve to arrive with */
   { var nowG=(FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?FP_NOWG:tank*NF_LVL; document.getElementById('fpfull').style.display=(nowG>=tank*0.75)?'block':'none'; }
   var skip=(typeof nfSkip==='function')?nfSkip():[], total=ROUTE_TOTAL;
+  { var nowR=(FP_NOWG!=null&&document.getElementById('fplvl').value==='g')?FP_NOWG:Math.round(tank*NF_LVL);
+    var B=function(v){ return '<b style="color:#fff;font-size:18px">'+v+'</b>'; };
+    document.getElementById('fprep').innerHTML='You have '+B(Math.round(nowR)+' gal')+' now, get '+B(mpg+' mpg')+', and arrive with '+B(Math.round(Math.max(endTot,res))+' gal')+'.'; }
   document.getElementById('fpnote').textContent='Tank '+tank+' gal, keeping '+res+' gal reserve, at '+mpg+' mpg'+(mi>=2?'':' (typical, enter yours)')
     +', arriving with '+Math.round(Math.max(endTot,res))+' gal'+(skip.length?'. Never buying in '+skip.join(', '):'')+'. Change these in Your truck.';
   var runs=fpStateRuns(); if(!runs.length){ out.innerHTML='<div class="fpwarn">Couldn\u2019t work out the states on this route. Tap Find fuel again.</div>'; return; }
@@ -6623,7 +6664,7 @@ function fpCalc(){
 <div id="fpstip" role="dialog" aria-modal="true"><div class="tb"><div class="tt" id="fpstipt"></div><div id="fpstipb"></div>
 <label><input type="checkbox" id="fpstipx"> Don't show this tip again</label><button onclick="fpsTipClose()">OK</button></div></div>
 <script>
-var FPS_TIPS={fuelplan:{t:'New: Fuel plan',b:'After your fuel results come up, go back to the home screen and tap <b>Fuel plan</b>. It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the Fuel plan screen, tap <b>Route</b> to see your highways and miles in each state.'}};
+var FPS_TIPS={fuelplan:{t:'New: Fuel optimizer',b:'After your fuel results come up, go back to the home screen and tap the green <b>$ Fuel optimizer</b> button. It tells you where to stop and how many gallons to buy at each stop, so you get where you\'re going for the least money. On the Fuel optimizer screen, tap <b>Route</b> to see your highways and miles in each state.<br><br>The app picks a route for you, and it may not be the way you\'d run. To make it go your way, add towns along your route as stops, like Little Rock, AR.'}};
 var FPS_TIPCUR=null;
 function fpsTip(id){try{var k=FPS_TIPS[id];if(!k||localStorage.getItem('fps_tipoff_'+id)==='1'||FPS_TIPCUR)return;
 FPS_TIPCUR=id;document.getElementById('fpstipt').textContent=k.t;document.getElementById('fpstipb').innerHTML=k.b;
@@ -6640,7 +6681,7 @@ FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 #fqpop input{width:100%;box-sizing:border-box;padding:11px;font-size:19px;border-radius:9px;border:1px solid #4f7bb0;background:#1d3a5e;color:#e8eef6}
 #fqpop .row{display:flex;gap:10px;margin-top:16px}
 #fqpop button{flex:1;padding:12px;border:0;border-radius:10px;font-size:18px;font-weight:700}
-#fqfr button{flex:1;padding:10px 0;border:1px solid #4f7bb0;border-radius:9px;background:#1d3a5e;color:#e8eef6;font-size:18px;font-weight:700}
+#fqfr button,#fqer button{flex:1;padding:10px 0;border:1px solid #4f7bb0;border-radius:9px;background:#1d3a5e;color:#e8eef6;font-size:18px;font-weight:700}
 #fqerr{color:#e25a4f;font-size:15px;min-height:18px;margin-top:8px}
 </style>
 <div id="fqpop" role="dialog" aria-modal="true"><div class="tb"><div class="tt">Fuel plan</div>
@@ -6649,7 +6690,22 @@ FPS_TIPCUR=null;document.getElementById('fpstip').classList.remove('show');}
 <label for="fqmpg">Miles per gallon</label><input id="fqmpg" type="number" inputmode="decimal" step="0.1"></div>
 <label for="fqnow">How many gallons do you have now?</label>
 <div id="fqfr" style="display:flex;gap:6px;margin-bottom:8px"><button type="button" onclick="fqFr(.125)">&#8539;</button><button type="button" onclick="fqFr(.25)">&frac14;</button><button type="button" onclick="fqFr(.5)">&frac12;</button><button type="button" onclick="fqFr(.75)">&frac34;</button><button type="button" onclick="fqFr(1)">Full</button></div><input id="fqnow" type="number" inputmode="decimal">
+<label for="fqend">How much fuel do you want in your tank when you arrive?</label>
+<div style="color:#9fb4ce;font-size:14px;margin:-2px 0 6px">Not every delivery has a fuel stop next door.</div>
+<div id="fqer" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap"><button type="button" onclick="fqEnd(0)" style="flex:2;font-size:15px">Just my reserve</button><button type="button" onclick="fqEnd(.25)">&frac14;</button><button type="button" onclick="fqEnd(.5)">&frac12;</button><button type="button" onclick="fqEnd(.75)">&frac34;</button><button type="button" onclick="fqEnd(1)">Full</button></div><input id="fqend" type="number" inputmode="decimal">
 <div id="fqerr"></div>
 <div class="row"><button style="background:#2b4a70;color:#e8eef6" onclick="fqClose()">Cancel</button><button style="background:#f26a21;color:#fff" onclick="fqGo()">Go</button></div></div></div>
+<script>
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}
+  });},{threshold:0.6});
+  function watch(){var c=document.querySelector('#results .card.top:not(.seen)');if(c)io.observe(c);}
+  var r=document.getElementById('results');
+  if(r) new MutationObserver(watch).observe(r,{childList:true,subtree:true});
+  // a collapsed state opening counts too: observer fires once the card is visible
+})();
+</script>
 </body>
 </html>
