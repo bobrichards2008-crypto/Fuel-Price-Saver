@@ -2761,6 +2761,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-24', items:[
+    'Version 1.3.22',
+    'The toll tag on the Fuel plan screen now always shows. Orange means Avoid tolls is on, grey means it is off. Tap it to change it in Your truck',
+    'Always check the route against your truck atlas and the signs'
+  ]},
+  { date:'2026-10-25', items:[
     'Version 1.3.21',
     'The Fuel plan screen now shows Avoid tolls is on at the top when that setting is turned on. Tap it to open Your truck and change it',
     'Always check the route against your truck atlas and the signs'
@@ -6439,7 +6444,8 @@ function openFuelPlan(){
   var ins=[].slice.call(document.querySelectorAll('#stops input')).map(function(i){ return i.value.trim(); }).filter(Boolean);
   document.getElementById('fptrip').textContent=(ins.length>1?ins[0]+' to '+ins[ins.length-1]+', ':'')+Math.round(ROUTE_TOTAL).toLocaleString('en-US')+' miles';
   FP_TAB='cheap';
-  { var tg=document.getElementById('fptoll'), rb=tg.nextElementSibling; tg.style.display=t.toll?'inline-block':'none'; rb.style.marginLeft=t.toll?'8px':'auto'; }
+  { var tg=document.getElementById('fptoll'), rb=tg.nextElementSibling; tg.style.display='inline-block'; rb.style.marginLeft='8px';
+    tg.textContent=t.toll?'Avoid tolls is on':'Avoid tolls is off'; tg.style.background=t.toll?'#f26a21':'#2b4a70'; tg.style.color=t.toll?'#fff':'#cfdbe9'; }
   document.getElementById('fppop').classList.add('show'); window.scrollTo(0,0); document.getElementById('fppop').scrollTop=0;
   try{ enterScreen(); }catch(e){}
   fpCalc();
