@@ -48,6 +48,10 @@
   #tktip.show{display:block}
   #tktip:before{content:'';position:absolute;top:-8px;left:50%;margin-left:-8px;border:8px solid transparent;border-top:0;border-bottom-color:#f26a21}
   #tktip button{position:absolute;top:4px;right:4px;width:30px;height:30px;border:0;background:none;color:#fff;font-size:20px;font-weight:700}
+  /* Bob, Oct 26: title on top, Prices are live right under it */
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header h1{order:1!important}
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header #datastat{order:2!important;margin:2px 0 0!important}
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header #fptick{order:3!important}
   #tkpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #tkpop.show{display:block}
   #tkpop .tkin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
@@ -2886,6 +2890,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-26', items:[
+    'Version 1.3.35',
+    '**Fuel Price Saver title is back on top**, with Prices are live right under it'
+  ]},
   { date:'2026-10-26', items:[
     'Version 1.3.34',
     '**What\u2019s new is easier to scan.** The first words of each item are now in bold, so you can skim down and find what you are looking for'
