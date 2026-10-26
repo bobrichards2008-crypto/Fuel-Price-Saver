@@ -56,10 +56,10 @@
   #fptick,#fptick *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-tap-highlight-color:transparent}
   /* Bob, Oct 26: every Back button is orange so drivers use it instead of the phone arrow */
   button.obk,#tkpop .tkhd button,.trbar button.back,button.cpback,button.fpback,#backbar .bbtn:not(.bbtop){background:#f26a21!important;border-color:#f26a21!important;color:#fff!important;font-weight:700!important}
-  /* Bob, Oct 26: thin orange line above the ticker */
-  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header #fptick{border-top:1px solid #f26a21!important}
   /* Bob, Oct 26: home screen header and ticker stay put while you scroll your stops */
   body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header{position:sticky!important;top:0!important;z-index:50}
+  /* Bob, Oct 26: no prediction button at all while tomorrow's prediction isn't ready */
+  #predbtn.fcwait{display:none!important}
   #tkpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #tkpop.show{display:block}
   #tkpop .tkin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
@@ -2904,6 +2904,14 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-26', items:[
+    'Version 1.0.21',
+    '**The tomorrow\u2019s fuel price prediction button now only shows when the prediction is ready.** From midnight until the new prediction comes in each afternoon, the button is hidden instead of grayed out'
+  ]},
+  { date:'2026-10-26', items:[
+    'Version 1.0.20',
+    '**The orange line above the price ticker is gone.** The ticker is back to its plain look'
+  ]},
   { date:'2026-10-26', items:[
     'Version 1.0.19',
     '**The top of the home screen now stays put** while you scroll your stops, so the title, Prices are live and the price ticker are always there'
