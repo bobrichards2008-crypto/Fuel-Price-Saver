@@ -2905,6 +2905,10 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-26', items:[
+    'Version 1.0.22',
+    '**Behind the scenes: taps on the price ticker and on tomorrow\u2019s fuel price are now counted** to help improve the app. Nothing changes on your screen'
+  ]},
+  { date:'2026-10-26', items:[
     'Version 1.0.21',
     '**The tomorrow\u2019s fuel price prediction button now only shows when the prediction is ready.** From midnight until the new prediction comes in each afternoon, the button is hidden instead of grayed out'
   ]},
@@ -6137,6 +6141,9 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
   function wrap(n,b){ var f=window[n]; if(typeof f!=='function') return; window[n]=function(){ add(b); return f.apply(this,arguments); }; }
   wrap('openWx','weather'); wrap('openDetail','details'); wrap('openServices','services');
   wrap('wxDay','wx2hr'); wrap('wxHourly','wxhourly'); wrap('askNear','near');
+  wrap('tkOpen','ticker'); /* Bob, Oct 26: count ticker state taps */
+  /* Bob, Oct 26: count tomorrow's fuel price taps */
+  document.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('#predbtn')) add('predict'); },true);
   document.addEventListener('click',function(e){
     var fb=e.target&&e.target.closest&&e.target.closest('button.go[onclick^="findFuel"]'); if(fb){ add('find'); return; }
     var a=e.target&&e.target.closest&&e.target.closest('a.wxradar,a.maplink,a.drive'); if(!a) return;
