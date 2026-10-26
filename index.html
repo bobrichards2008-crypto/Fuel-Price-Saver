@@ -36,7 +36,34 @@
   #routetools>button{flex:0 0 calc(50% - 4px)!important;max-width:calc(50% - 4px)}
   #routetools.norev{justify-content:flex-end} #routetools.norev #revbtn{display:none!important}
   #routetools{flex-wrap:wrap} #routetools>button{flex:0 0 100%!important;max-width:100%!important}
-  #routetools>#predbtn{font-size:18px!important;height:60px!important} #predbtn.fcwait{opacity:.45;filter:grayscale(1)}
+  #routetools.norev{display:none!important}
+  #fptick{display:none}
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header #fptick{display:block;order:3;align-self:stretch;margin:10px -16px -12px;background:#0a1626;border-top:1px solid #2b4a70;overflow:hidden;white-space:nowrap;position:relative}
+  #fptick .tkmove{display:inline-flex;animation:fpsTk 60s linear infinite;will-change:transform}
+  #fptick.hold .tkmove{animation-play-state:paused}
+  @keyframes fpsTk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  #fptick .tki{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:15px;border-right:1px solid #1d3a5c;background:none;border-top:0;border-bottom:0;border-left:0;color:#fff;cursor:pointer;font-family:inherit}
+  #fptick .tks{color:#f26a21;font-weight:800}
+  #tktip{display:none;position:relative;margin:10px 0 0;background:#f26a21;color:#fff;border-radius:10px;padding:10px 38px 10px 12px;font-size:15px;font-weight:600;line-height:1.35;text-align:left}
+  #tktip.show{display:block}
+  #tktip:before{content:'';position:absolute;top:-8px;left:50%;margin-left:-8px;border:8px solid transparent;border-top:0;border-bottom-color:#f26a21}
+  #tktip button{position:absolute;top:4px;right:4px;width:30px;height:30px;border:0;background:none;color:#fff;font-size:20px;font-weight:700}
+  #tkpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #tkpop.show{display:block}
+  #tkpop .tkin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
+  #tkpop .tkhd{display:flex;align-items:center;gap:12px;position:sticky;top:0;background:#0c1a30;padding:4px 0 10px;z-index:2}
+  #tkpop .tkhd button{height:44px;padding:0 16px;border-radius:10px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:16px;font-weight:700}
+  #tkpop h2{margin:0;font-size:21px}
+  #tkpop .tksub{color:#9fb4ce;font-size:13.5px;margin:0 0 10px}
+  #tkpop .tkr{display:flex;gap:10px;align-items:flex-start;padding:11px 2px;border-bottom:1px solid #1d3a5e;font-size:16px}
+  #tkpop .tkn{color:#9fb4ce;min-width:26px;text-align:right}
+  #tkpop .tkp{margin-left:auto;text-align:right;font-weight:800;white-space:nowrap}
+  #tkpop .tkp small{display:block;font-weight:400;font-size:12.5px;color:#9fb4ce}
+  /* Bob, Oct 26: Fuel Price Saver title back up top, in line with the FPS badge and the gear */
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header{padding-top:10px!important;padding-bottom:12px!important;display:flex;flex-direction:column;align-items:center}
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header h1{margin-top:0!important;padding:0 64px!important;line-height:32px}
+  body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header #datastat{order:1;margin:0 0 7px!important;width:auto!important} body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header h1{order:2;align-self:stretch}
+  #predbtn{display:flex!important;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;height:60px!important;margin:0 0 12px;padding:0 8px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:18px!important;font-weight:700;white-space:nowrap;cursor:pointer} #predbtn.fcwait{opacity:.45;filter:grayscale(1)}
   #revbtn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
   #revbtn svg{flex:0 0 auto}
   #planbtn .pbt{display:block;font-size:20px;font-weight:bold;line-height:1.2}
@@ -788,7 +815,9 @@
   <button class="go" style="padding:10px" onclick="hidePop()">Got it</button>
 </div>
 
-<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><div id="fcline" onclick="openFc()" role="button"></div><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div></header>
+<header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><div id="fcline" onclick="openFc()" role="button"></div><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div><div id="fptick" aria-label="State average diesel prices"><div class="tkmove" id="tkmove"></div></div><div id="tktip" role="note">Tap any state on the price ticker to see every stop there, cheapest first. Touch it to pause.<button type="button" aria-label="Close" onclick="tkTipHide(0)">&times;</button></div></header>
+<div id="tkpop" role="dialog" aria-modal="true"><div class="tkin"><div class="tkhd"><button type="button" onclick="tkClose()">Back</button><h2 id="tkh"></h2></div><div class="tksub" id="tksub"></div><div id="tkbody"></div></div></div>
+
 <div class="wrap">
   
   <div id="routehint" style="font-size:18px;font-weight:bold;color:#eaf0f7;text-align:center;margin:2px 0 14px;line-height:1.35">Plan your fuel stops below.</div>
@@ -883,7 +912,7 @@
     </div>
   </div>
   <div id="stops"></div>
-  <div id="routetools" class="norev"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button><button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow’s fuel price prediction</button></div>
+  <div id="routetools" class="norev"><button id="revbtn" type="button" onclick="reverseRoute()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 20V5M8 5l-4 4M8 5l4 4M16 4v15M16 19l-4-4M16 19l4-4" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reverse route</button></div>
   <button type="button" id="backres" onclick="openResults();window.scrollTo(0,0)" style="display:none;width:100%;height:48px;margin:0 0 10px;border-radius:12px;background:#17304f;border:1.5px solid #f26a21;color:#fff;font-size:17px;font-weight:700;cursor:pointer">Back to my fuel stops &rarr;</button>
   <div id="mainbtns">
   <div class="btnrow" id="pinbar">
@@ -924,6 +953,7 @@
     </div>
   </div>
   <div id="planrow" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 12px"><button id="planbtn" onclick="openPlan()" style="grid-column:span 2;margin:0;width:auto"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button><button class="bluebtn" id="optbtn" onclick="optimizeStops()" style="min-height:72px;margin:0;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer">Optimize</button></div>
+  <button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow’s fuel price prediction</button>
   <button id="toolsbtn" onclick="openTools()"><svg viewBox="0 0 40 32" width="40" height="32" aria-hidden="true"><path d="M14 9V5.5A2.5 2.5 0 0 1 16.5 3h7A2.5 2.5 0 0 1 26 5.5V9" fill="none" stroke="#f26a21" stroke-width="2.6"/><rect x="3" y="9" width="34" height="20" rx="3" fill="#f26a21"/><rect x="3" y="16" width="34" height="2.4" fill="#10233f"/><rect x="16.5" y="14" width="7" height="6.5" rx="1.4" fill="#10233f"/><rect x="18.3" y="15.6" width="3.4" height="3.2" rx=".6" fill="#f26a21"/></svg><span>Tools</span></button>
   </div>
   <div id="opthint"></div>
@@ -1440,6 +1470,49 @@ function fpsRowsFrom(data){
 }
 
 function fpsStat(t,c){ const el=document.getElementById("datastat"); if(el){ el.textContent=t; el.style.color=c; } }
+
+/* ---- STATE-AVERAGE TICKER (Bob, Oct 26): discounted price averaged by state, scrolls under the header.
+   Tap a state to see every stop there, cheapest first. ---- */
+function fpsTicker(){
+  try{
+    var el=document.getElementById('tkmove'); if(!el||typeof STATIONS==='undefined'||!STATIONS) return;
+    var g={};
+    STATIONS.forEach(function(r){ var st=String(r[2]||'').toUpperCase().trim(), d=+r[6];
+      if(!st||st==='ON'||st.length!==2||!(d>0)) return; (g[st]=g[st]||[]).push(d); });
+    var ks=Object.keys(g).sort(); if(!ks.length){ el.innerHTML=''; return; }
+    var one=ks.map(function(k){ var a=g[k], v=a.reduce(function(x,y){return x+y;},0)/a.length;
+      return '<button type="button" class="tki" onclick="tkOpen(\''+k+'\')"><span class="tks">'+k+'</span>$'+v.toFixed(3)+'</button>'; }).join('');
+    el.innerHTML=one+one;
+    el.style.animationDuration=Math.max(30,ks.length*3)+'s';
+  }catch(e){}
+}
+/* ticker tip: shows on the home screen until the user taps a state once (Bob, Oct 26) */
+function tkTipHide(done){ var t=document.getElementById('tktip'); if(t) t.classList.remove('show'); if(done){ try{ localStorage.setItem('fps_tktip_done','1'); }catch(e){} } }
+function tkTipSync(){ try{ var t=document.getElementById('tktip'), k=document.getElementById('fptick');
+  if(!t||!k) return; var on=localStorage.getItem('fps_tktip_done')!=='1' && k.offsetParent!==null && document.getElementById('tkmove').innerHTML!=='';
+  t.classList.toggle('show',on); }catch(e){} }
+setTimeout(tkTipSync,1200); setInterval(tkTipSync,3000);
+function tkOpen(st){
+  tkTipHide(1);
+  try{
+    var L=STATIONS.filter(function(r){ return String(r[2]||'').toUpperCase().trim()===st && +r[6]>0; })
+      .sort(function(a,b){ return (+a[6])-(+b[6]); });
+    var avg=L.reduce(function(x,r){return x+(+r[6]);},0)/Math.max(1,L.length);
+    document.getElementById('tkh').textContent=st+' diesel, cheapest first';
+    document.getElementById('tksub').textContent=L.length+' stop'+(L.length===1?'':'s')+' \u00B7 average discounted price $'+avg.toFixed(3);
+    document.getElementById('tkbody').innerHTML=L.map(function(r,i){
+      return '<div class="tkr"><span class="tkn">'+(i+1)+'.</span><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(st)+'</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+(+r[5]>0?'<small>Pump $'+(+r[5]).toFixed(3)+'</small>':'')+'</span></div>'; }).join('');
+    var p=document.getElementById('tkpop'); p.scrollTop=0; p.classList.add('show');
+  }catch(e){}
+}
+function tkClose(){ document.getElementById('tkpop').classList.remove('show'); }
+(function(){
+  var t=document.getElementById('fptick');
+  if(t){ t.addEventListener('touchstart',function(){ t.classList.add('hold'); },{passive:true});
+    t.addEventListener('touchend',function(){ setTimeout(function(){ t.classList.remove('hold'); },1500); });
+    t.addEventListener('mouseenter',function(){ t.classList.add('hold'); }); t.addEventListener('mouseleave',function(){ t.classList.remove('hold'); }); }
+  setTimeout(fpsTicker,300);
+})();
 function loadLiveData(){
   try{
     const url = FPS_DATA_URL + "?key=" + encodeURIComponent(FPS_KEY);
@@ -1457,6 +1530,7 @@ function loadLiveData(){
           checkFresh();
           if(data.forecast){ showForecast(data.forecast); setTimeout(function(){ try{ fcDayCheck(); }catch(e){} },2500); }
           fpsStat("\u25CF Prices are live", "#3ab54a");
+          try{ fpsTicker(); }catch(e){}
         }
       })
       .catch(()=>{ fpsStat("\u25CF Connection lost", "#e74c3c"); });
@@ -2813,249 +2887,266 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-26', items:[
+    'Version 1.3.34',
+    '**What\u2019s new is easier to scan.** The first words of each item are now in bold, so you can skim down and find what you are looking for'
+  ]},
+  { date:'2026-10-26', items:[
+    'Version 1.3.33',
+    '**New: an orange tip under the price ticker shows how to use it**. It keeps showing until you tap a state on the ticker, then it is gone for good. Tap the X to hide it for now'
+  ]},
+  { date:'2026-10-26', items:[
+    'Version 1.3.32',
+    '**New: a ticker under the title scrolls each state\u2019s average discounted diesel price**. Tap a state to see every stop there, cheapest first. Touch the ticker to pause it',
+    '**Prices are live now sits at the top**, with Fuel Price Saver right under it, lined up with the gear'
+  ]},
+  { date:'2026-10-26', items:[
+    'Version 1.3.31',
+    '**Home screen buttons rearranged so the fuel buttons stay together**: Fuel near me, Map and Clear now sit right under your stops, with Plan your load stops and Optimize under them. Tomorrow\u2019s fuel price prediction moved down, just above Tools'
+  ]},
+  { date:'2026-10-26', items:[
     'Version 1.3.30',
-    'The prediction button is now full width and reads Tomorrow\u2019s fuel price prediction. It is grayed out from midnight until the new prediction comes in each afternoon, then lights up. Reverse route, when you have 2 or more stops, gets its own full row above it'
+    '**The prediction button is now full width** and reads Tomorrow\u2019s fuel price prediction. It is grayed out from midnight until the new prediction comes in each afternoon, then lights up. Reverse route, when you have 2 or more stops, gets its own full row above it'
   ]},
   { date:'2026-10-26', items:[
     'Version 1.3.29',
-    'The Optimize button moved down next to Plan your load stops, right under Clear, since it puts your load stops in the best order. The bottom bar now has just Add stop and Find fuel'
+    '**The Optimize button moved down next to Plan your load stops**, right under Clear, since it puts your load stops in the best order. The bottom bar now has just Add stop and Find fuel'
   ]},
   { date:'2026-10-26', items:[
     'Version 1.3.28',
-    'Fuel plan: when you scroll down, the Cheapest plan and Buy in each state buttons now stay locked at the top, with the State, Miles, Gallons and Cost headings right under them, so you always know which column is which'
+    '**Fuel plan**: when you scroll down, the Cheapest plan and Buy in each state buttons now stay locked at the top, with the State, Miles, Gallons and Cost headings right under them, so you always know which column is which'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.27',
-    'Avoid tolls fixed for trips with stops in between: each leg now decides on its own. If skipping tolls on that leg adds no more than your extra-miles limit, it skips them; if not, that leg keeps the toll road instead of sending you far out of the way (this fixes fuel stops showing up hundreds of miles off your route). Fuel planning still covers the whole trip. Routes are a guide only; always check your own route.'
+    '**Avoid tolls fixed for trips with stops in between**: each leg now decides on its own. If skipping tolls on that leg adds no more than your extra-miles limit, it skips them; if not, that leg keeps the toll road instead of sending you far out of the way (this fixes fuel stops showing up hundreds of miles off your route). Fuel planning still covers the whole trip. Routes are a guide only; always check your own route.'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.26',
-    'Fuel stop optimizer tip reworded: it now opens with Good news! Your fuel stops are now automatically planned for maximum savings at the touch of a button, and Time is money is now Your time is valuable'
+    '**Fuel stop optimizer tip reworded**: it now opens with Good news! Your fuel stops are now automatically planned for maximum savings at the touch of a button, and Time is money is now Your time is valuable'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.25',
-    'New: when tomorrow\u2019s diesel prediction comes in each afternoon, a pop-up tells you in plain words, like Diesel prices are expected to go up tomorrow, the range will vary between 2 and 6 cents a gallon. It shows only on the home screen, when you open the app or come back to the home screen, until you check Don\u2019t show this again today. If the app was left open from before the prediction came in, it now picks it up when you come back to it. A Tomorrow\u2019s prediction button next to Reverse route on the home screen opens it again anytime. Avoid tolls: if you add a stop in between, like Elmira, the app now always avoids tolls on that trip, no matter how many extra miles. With no stops in between, the extra-miles limit works like before. The prediction card now scrolls, so nothing gets cut off on smaller phones. A How does this work? link explains how the prediction is made, starting with crude oil. A new one comes each day. The prediction line at the top of the home screen is gone',
-    'Changed: the Optimizer picks and My picks button you are on now lights up orange, so it doesn\u2019t look like the green Fuel stop optimizer button',
-    'Fixed: Fuel stop optimizer no longer sends you to stop after stop for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
-    'Fixed: the cheapest plan was adding up more fuel than your trip needs, so it could show a higher total than buying in each state. It now buys only what you need',
-    'New: every time you tap Find fuel, a short note explains how Fuel stop optimizer does your fuel planning for you, so you don\u2019t have to sit with a calculator when you are busy or tired. Check Don\u2019t show this tip again and it stops showing. If you go two weeks without using it, a short friendly reminder shows once, with a button to read about it again. A second note about your route shows when you open the plan',
-    'Fixed: when you switch to Optimizer picks, the count at the top now shows just your plan stops, like 4 stops in 3 states on your plan, out of 47 on your route',
-    'New: Fuel plan is now called Fuel stop optimizer. After you tap Find fuel, it is the big green $ button at the top of your list of stops, and it shows about how much you can save. It is no longer on the home screen',
-    'New: the top of your list of stops stays put while you scroll, so the Fuel stop optimizer button is always there',
-    'New: after you look at the plan and tap Back, your list shows only the optimized stops. Next to Fuel stop optimizer are two buttons, Optimizer picks and My picks. Tap the one you want. The one you are on is lit in orange',
-    'The Fuel stop optimizer tip now shows the first time you open it',
-    'Removed: the Next fuel button on stop cards. Fuel stop optimizer does that job for the whole trip',
-    'Changed: the top of the Fuel stop optimizer screen now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel stop optimizer again',
-    'Changed: the Fuel stop optimizer button is grey until you tap Find fuel, then turns bright green so you know it is ready',
-    'New: after you look up fuel, a Back to my fuel stops button shows on the home screen, so you can go back to your list without looking it up again. It goes away if you change your stops',
-    'Fixed: the keyboard no longer pops up and covers the Fuel plan window. Tap a box when you want to type, and the window scrolls',
-    'New: when you open Fuel stop optimizer it also asks how much fuel you want in your tank when you arrive. Tap Just my reserve, or pick a quarter, half, three-quarters or full',
-    'Changed: stop cards now match the main app. Leg and miles sit on the line with the cities, and the cheapest stop glows a few times when you scroll to it',
+    '**New: when tomorrow\u2019s diesel prediction comes in each afternoon**, a pop-up tells you in plain words, like Diesel prices are expected to go up tomorrow, the range will vary between 2 and 6 cents a gallon. It shows only on the home screen, when you open the app or come back to the home screen, until you check Don\u2019t show this again today. If the app was left open from before the prediction came in, it now picks it up when you come back to it. A Tomorrow\u2019s prediction button next to Reverse route on the home screen opens it again anytime. Avoid tolls: if you add a stop in between, like Elmira, the app now always avoids tolls on that trip, no matter how many extra miles. With no stops in between, the extra-miles limit works like before. The prediction card now scrolls, so nothing gets cut off on smaller phones. A How does this work? link explains how the prediction is made, starting with crude oil. A new one comes each day. The prediction line at the top of the home screen is gone',
+    '**Changed: the Optimizer picks and My picks** button you are on now lights up orange, so it doesn\u2019t look like the green Fuel stop optimizer button',
+    '**Fixed: Fuel stop optimizer no longer sends you to stop after stop** for 10 or 11 gallons. Every stop now counts what it costs you, about a gallon getting off and on plus your time, so it only picks a stop when the savings are worth it',
+    '**Fixed: the cheapest plan was adding up more fuel than your trip needs**, so it could show a higher total than buying in each state. It now buys only what you need',
+    '**New: every time you tap Find fuel**, a short note explains how Fuel stop optimizer does your fuel planning for you, so you don\u2019t have to sit with a calculator when you are busy or tired. Check Don\u2019t show this tip again and it stops showing. If you go two weeks without using it, a short friendly reminder shows once, with a button to read about it again. A second note about your route shows when you open the plan',
+    '**Fixed: when you switch to Optimizer picks**, the count at the top now shows just your plan stops, like 4 stops in 3 states on your plan, out of 47 on your route',
+    '**New: Fuel plan is now called Fuel stop optimizer**. After you tap Find fuel, it is the big green $ button at the top of your list of stops, and it shows about how much you can save. It is no longer on the home screen',
+    '**New: the top of your list of stops stays put while you scroll**, so the Fuel stop optimizer button is always there',
+    '**New: after you look at the plan and tap Back**, your list shows only the optimized stops. Next to Fuel stop optimizer are two buttons, Optimizer picks and My picks. Tap the one you want. The one you are on is lit in orange',
+    '**The Fuel stop optimizer tip now shows the first time** you open it',
+    '**Removed: the Next fuel button on stop cards**. Fuel stop optimizer does that job for the whole trip',
+    '**Changed: the top of the Fuel stop optimizer screen** now shows one short line with your fuel now, fuel mileage and fuel when you arrive. To change them, tap Fuel stop optimizer again',
+    '**Changed: the Fuel stop optimizer button is grey until you tap Find fuel**, then turns bright green so you know it is ready',
+    '**New: after you look up fuel**, a Back to my fuel stops button shows on the home screen, so you can go back to your list without looking it up again. It goes away if you change your stops',
+    '**Fixed: the keyboard no longer pops up and covers the Fuel plan window**. Tap a box when you want to type, and the window scrolls',
+    '**New: when you open Fuel stop optimizer** it also asks how much fuel you want in your tank when you arrive. Tap Just my reserve, or pick a quarter, half, three-quarters or full',
+    '**Changed: stop cards now match the main app**. Leg and miles sit on the line with the cities, and the cheapest stop glows a few times when you scroll to it',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.24',
-    'If you have 3/4 of a tank or more, the Fuel plan reminds you to check again after you burn some fuel, since prices may change. When you tap Fuel plan it now asks how many gallons you have. Type it in, or tap 1/8, 1/4, 1/2, 3/4 or Full to fill it in. The first time it also asks your tank size and miles per gallon and saves them to Your truck',
+    '**If you have 3/4 of a tank or more**, the Fuel plan reminds you to check again after you burn some fuel, since prices may change. When you tap Fuel plan it now asks how many gallons you have. Type it in, or tap 1/8, 1/4, 1/2, 3/4 or Full to fill it in. The first time it also asks your tank size and miles per gallon and saves them to Your truck',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.23',
-    'New tip when you tap Find fuel tells you about the Fuel plan and Route buttons. Check the box to stop seeing it',
+    '**New tip when you tap Find** fuel tells you about the Fuel plan and Route buttons. Check the box to stop seeing it',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.22',
-    'The toll tag on the Fuel plan screen now always shows. Orange means Avoid tolls is on, grey means it is off. Tap it to change it in Your truck',
+    '**The toll tag on the Fuel plan screen now always shows**. Orange means Avoid tolls is on, grey means it is off. Tap it to change it in Your truck',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.21',
-    'The Fuel plan screen now shows Avoid tolls is on at the top when that setting is turned on. Tap it to open Your truck and change it',
+    '**The Fuel plan screen now shows** Avoid tolls is on at the top when that setting is turned on. Tap it to open Your truck and change it',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-25', items:[
     'Version 1.3.20',
-    'Routes no longer use your truck length. The map data had wrong length limits on some roads, like US 35, which sent trucks miles out of the way. Height and weight are still used',
-    'Removed the orange dot from 1.3.19. It is no longer needed',
+    '**Routes no longer use your truck length**. The map data had wrong length limits on some roads, like US 35, which sent trucks miles out of the way. Height and weight are still used',
+    '**Removed the orange dot from 1**.3.19. It is no longer needed',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.19',
-    'New: if your truck length is keeping you off a much shorter route, an orange dot shows on the Fuel plan and Route buttons. The Route screen tells you how many miles you would save and gives you a Use this route button. The map data is sometimes wrong about length limits, so check your atlas',
+    '**New: if your truck length is keeping you off a much shorter route**, an orange dot shows on the Fuel plan and Route buttons. The Route screen tells you how many miles you would save and gives you a Use this route button. The map data is sometimes wrong about length limits, so check your atlas',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.18',
-    'Every Find fuel now starts fresh, like closing and reopening the app, so an old route can\u2019t carry over',
-    'The Route screen now shows where each of your stops landed. A stop in orange may be in the wrong place. Type the town with its state, like Jackson, OH',
+    '**Every Find fuel now starts fresh**, like closing and reopening the app, so an old route can\u2019t carry over',
+    '**The Route screen now shows where each of your stops landed**. A stop in orange may be in the wrong place. Type the town with its state, like Jackson, OH',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.17',
-    'Fixed: a stop in the middle of a town, like Point Pleasant, could stop the truck route from loading. The app now moves that stop to the nearest main road and tells you on the Route screen',
-    'Fixed: tapping the Settings gear sometimes opened the Prediction Meter instead',
+    '**Fixed: a stop in the middle of a town**, like Point Pleasant, could stop the truck route from loading. The app now moves that stop to the nearest main road and tells you on the Route screen',
+    '**Fixed: tapping the Settings gear sometimes opened** the Prediction Meter instead',
     'Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.16',
-    'Fixed: adding a town as a stop to force your route could lose the road names on the Route screen. The app now tries again, and the Route screen tells you if the truck route didn\u2019t load',
-    'New in Your truck: when Avoid toll roads is on, you can list states where toll roads are fine, like WV. The route keeps those turnpikes and goes around the others. WV is filled in to start',
-    'New in Your truck: pick Fastest or Shortest route. Shortest can take more two-lane roads and towns',
+    '**Fixed: adding a town as a stop** to force your route could lose the road names on the Route screen. The app now tries again, and the Route screen tells you if the truck route didn\u2019t load',
+    '**New in Your truck: when Avoid toll roads is on**, you can list states where toll roads are fine, like WV. The route keeps those turnpikes and goes around the others. WV is filled in to start',
+    '**New in Your truck: pick Fastest or Shortest route**. Shortest can take more two-lane roads and towns',
     'No routing setting replaces knowing the road. Always check the route against your truck atlas and the signs'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.15',
-    'New: Route button at the top of the Fuel plan. It shows which highways your route takes in each state, how many miles on each, and any toll road miles',
+    '**New: Route button at the top of the Fuel plan**. It shows which highways your route takes in each state, how many miles on each, and any toll road miles',
     'If the route isn\u2019t going your way, add a town on your road as a stop and run it again',
-    'Buy in each state no longer has you stopping for a few gallons. Anything under 20 gallons is bought at the stop before, when the tank has room',
+    '**Buy in each state no longer has you stopping for a few gallons**. Anything under 20 gallons is bought at the stop before, when the tank has room',
     'Road names and miles are estimates and can be off a mile or two near state lines'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.14',
-    'New: Fuel plan asks how much fuel you want in your tank when you get there, 50 gallons to start. Your reserve is for emergencies, so the plan no longer has you rolling in on it',
-    'The cheapest plan only sends you to another stop if it is at least 5 cents cheaper, so you make fewer stops',
-    'The green box at the top now shows the total for both plans, so you can compare without scrolling',
+    '**New: Fuel plan asks how much fuel you want in your tank when you get there**, 50 gallons to start. Your reserve is for emergencies, so the plan no longer has you rolling in on it',
+    '**The cheapest plan only sends you** to another stop if it is at least 5 cents cheaper, so you make fewer stops',
+    '**The green box at the top now shows the total for both plans**, so you can compare without scrolling',
     'Prices can change before you get there. Always check the pump price and watch your own gauge'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.13',
-    'Fuel plan now explains that you may owe more on your IFTA return with the cheapest plan, but you still come out ahead because you pay less at the pump',
+    '**Fuel plan now explains that you** may owe more on your IFTA return with the cheapest plan, but you still come out ahead because you pay less at the pump',
     'This is an estimate only. What you really owe on IFTA depends on your actual miles, fuel mileage and the tax rates for the quarter'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.12',
-    'Fuel plan now adds the Kentucky and Virginia surcharge on the fuel you burn in those states, so the cost on those rows and the total are closer to what you really pay',
+    '**Fuel plan now adds the Kentucky** and Virginia surcharge on the fuel you burn in those states, so the cost on those rows and the total are closer to what you really pay',
     'The surcharge is the same on both plans, so it doesn\'t change which one is cheaper. Rates can change each quarter'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.11',
-    'New: Fuel plan button on the main screen. After you tap Find fuel, it shows every state on your run with the miles, gallons and cost',
-    'It compares two ways to buy: buying in each state, or the cheapest plan that carries cheap fuel through the pricey states. It names the stop to buy at and shows how much the cheapest plan saves you',
-    'Pick how much fuel is in your tank now and it plans from there, using the tank size, reserve and fuel mileage from Your truck',
+    '**New: Fuel plan button on the main screen**. After you tap Find fuel, it shows every state on your run with the miles, gallons and cost',
+    '**It compares two ways to buy**: buying in each state, or the cheapest plan that carries cheap fuel through the pricey states. It names the stop to buy at and shows how much the cheapest plan saves you',
+    '**Pick how much fuel is in your tank now and it plans from there**, using the tank size, reserve and fuel mileage from Your truck',
     'Prices can change before you get there. Always check the pump price and watch your own gauge'
   ]},
   { date:'2026-10-24', items:[
     'Version 1.3.10',
-    'New: tapping a city box opens its own full screen to type in. The box stays at the top, the cities show right under it, and the keyboard can\'t cover them',
-    'Tip: type the state first, then the city, like NC Char, to get a short list. A zip code works too',
-    'New: Add stop, Find fuel and Optimize now stay pinned at the bottom of the screen, so they never scroll away on a long trip'
+    '**New: tapping a city box opens its own full screen to type in**. The box stays at the top, the cities show right under it, and the keyboard can\'t cover them',
+    '**Tip: type the state first**, then the city, like NC Char, to get a short list. A zip code works too',
+    '**New: Add stop**, Find fuel and Optimize now stay pinned at the bottom of the screen, so they never scroll away on a long trip'
   ]},
   { date:'2026-10-21', items:[
     'Version 1.3.9',
-    'Behind the scenes: counts how often the Find fuel button is used, to help improve the app'
+    '**Behind the scenes**: counts how often the Find fuel button is used, to help improve the app'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.8',
-    'Fixed: trips with stops in between now list fuel stops leg by leg, in the order you drive them. Each leg is labeled with its cities, like Jacksonville, FL \u2013 Charlotte, NC, and a state you pass through twice shows up under each leg',
-    'New: the top of your results now shows the total miles for the trip',
-    'Removed the Expand all button. Tap the arrow on any state to open it'
+    '**Fixed: trips with stops in between now list fuel stops leg by leg**, in the order you drive them. Each leg is labeled with its cities, like Jacksonville, FL \u2013 Charlotte, NC, and a state you pass through twice shows up under each leg',
+    '**New: the top of your results now** shows the total miles for the trip',
+    '**Removed the Expand all button**. Tap the arrow on any state to open it'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.7',
-    'Changed: tomorrow\'s diesel forecast now says no movement instead of flat'
+    '**Changed: tomorrow\'s diesel forecast now says no** movement instead of flat'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.6',
-    'New: when you swipe down to refresh, the app comes right back to the page you were on, like Vehicle Specs, your results, or a stop\'s details, instead of starting over on the main page',
-    'New: a refresh skips the opening screen, so it\'s faster'
+    '**New: when you swipe down to refresh**, the app comes right back to the page you were on, like Vehicle Specs, your results, or a stop\'s details, instead of starting over on the main page',
+    '**New: a refresh skips the opening screen**, so it\'s faster'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.5',
-    'New: city lists now open upward above the box, so they don\'t get hidden behind other things',
-    'New: type the state first to see only that state\'s cities. Example: type AL M to get Mobile, AL and Montgomery, AL'
+    '**New: city lists now open upward above the box**, so they don\'t get hidden behind other things',
+    '**New: type the state first to see only that state\'s cities**. Example: type AL M to get Mobile, AL and Montgomery, AL'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.4',
-    'Fixed: the car photo buttons now show just pictures of the vehicle, without sale prices and dealer listings mixed in',
-    'Fixed: car photos now open inside the app with an X to close, instead of jumping out to the browser'
+    '**Fixed: the car photo buttons now show just pictures of the vehicle**, without sale prices and dealer listings mixed in',
+    '**Fixed: car photos now open inside the app with an X to close**, instead of jumping out to the browser'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.3',
-    'Fixed: on iPhones, the home screen icon no longer says access not granted. The icon and Safari now count as the same phone'
+    '**Fixed: on iPhones**, the home screen icon no longer says access not granted. The icon and Safari now count as the same phone'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.2',
-    'Fixed: the version number on the opening screen now always matches the latest version'
+    '**Fixed: the version number on the opening** screen now always matches the latest version'
   ]},
   { date:'2026-10-20', items:[
     'Version 1.3.1',
-    'The home screen icon for this test version now says Staging, so it is easy to tell apart'
+    '**The home screen icon for this test version now says Staging**, so it is easy to tell apart'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.3',
-    'Behind the scenes: the app now counts which buttons get used, so we know what to improve. Nothing changes in how the app works'
+    '**Behind the scenes**: the app now counts which buttons get used, so we know what to improve. Nothing changes in how the app works'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.2.5',
-    'Fixed: the app keeps checking for your Fuel log for a few more seconds when it opens'
+    '**Fixed: the app keeps checking for your** Fuel log for a few more seconds when it opens'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.2.4',
-    'Fixed: the Fuel log now turns on when it is switched on for you, even if the first check comes back incomplete'
+    '**Fixed: the Fuel log now turns on when it is switched on for you**, even if the first check comes back incomplete'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.2.3',
-    'Behind-the-scenes check added for the Fuel log switch. Nothing changes in how the app works'
+    '**Behind-the-scenes check added for the Fuel log switch**. Nothing changes in how the app works'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.2.2',
-    'Fixed: turning on the Fuel log for a user now shows up in the app. The app checks again if it can\'t get through the first time, and again each time you come back to it'
+    '**Fixed: turning on the Fuel log for a user now shows up in the app**. The app checks again if it can\'t get through the first time, and again each time you come back to it'
   ]},
   { date:'2026-10-19', items:[
     'Version 1.2.1',
-    'Behind-the-scenes check added for the Fuel log switch. Nothing changes in how the app works'
+    '**Behind-the-scenes check added for the Fuel log switch**. Nothing changes in how the app works'
   ]},
   { date:'2026-10-17', items:[
     'Version 1.2',
-    'New Next fuel button on every stop on your route. Tap it to see how much fuel to buy there to reach the cheapest fuel you can make',
-    'Pick how much fuel is in your tanks and the gauge shows it. The app works out your range and the gallons to buy, keeping your reserve',
-    'Shows the next cheaper fuel ahead, the cheapest you can reach on one tank, and the cheapest on the rest of your route',
-    'Your truck now has your fuel tank size, the reserve you like to keep (25 gallons to start), and states you never buy fuel in',
-    'New Fuel log (add-on): log a fuel buy right from the stop. Bring in the card price with one tap, fill in any two of price, gallons or total, and it figures the third',
-    'Fuel log shows your fuel mileage and fuel cost a mile, figured from full fill-up to full fill-up with your odometer',
-    'New IFTA report (add-on): pick a quarter to see gallons bought by state, type in your miles by state, and copy the numbers for your filing. The app does not file for you',
-    'Fuel log and IFTA report are add-ons and may not be turned on for your account',
+    '**New Next fuel button on every stop on your route**. Tap it to see how much fuel to buy there to reach the cheapest fuel you can make',
+    '**Pick how much fuel is in your tanks and the gauge shows it**. The app works out your range and the gallons to buy, keeping your reserve',
+    '**Shows the next cheaper fuel ahead**, the cheapest you can reach on one tank, and the cheapest on the rest of your route',
+    '**Your truck now has your fuel tank size**, the reserve you like to keep (25 gallons to start), and states you never buy fuel in',
+    '**New Fuel log (add-on)**: log a fuel buy right from the stop. Bring in the card price with one tap, fill in any two of price, gallons or total, and it figures the third',
+    '**Fuel log shows your fuel mileage and fuel cost a mile**, figured from full fill-up to full fill-up with your odometer',
+    '**New IFTA report (add-on)**: pick a quarter to see gallons bought by state, type in your miles by state, and copy the numbers for your filing. The app does not file for you',
+    '**Fuel log and IFTA report are** add-ons and may not be turned on for your account',
     'Please note: gallons, miles and fuel mileage are estimates. Prices can change before you get there. Always watch your own gauge and check your own records'
   ]},
   { date:'2026-10-17', items:[
     'Version 1.1',
-    'New feature brings more precise, accurate routing for trucks: routes now look for low bridges, weight limits, restricted roads and so forth',
-    'New Your truck page in Settings: enter your height, weight, length and number of axles, and routes are planned for your truck',
-    'The first time you find fuel, Your truck opens with a standard tractor-trailer already filled in. Change what\u2019s different and tap Save',
-    'You can add your fuel mileage on the Your truck page',
-    'New Avoid toll roads choice, with a limit on how many extra miles you\u2019re willing to go around a toll',
-    'The version number now shows on the opening screen',
+    '**New feature brings more precise**, accurate routing for trucks: routes now look for low bridges, weight limits, restricted roads and so forth',
+    '**New Your truck page in Settings**: enter your height, weight, length and number of axles, and routes are planned for your truck',
+    '**The first time you find fuel**, Your truck opens with a standard tractor-trailer already filled in. Change what\u2019s different and tap Save',
+    '**You can add your fuel mileage** on the Your truck page',
+    '**New Avoid toll roads choice**, with a limit on how many extra miles you\u2019re willing to go around a toll',
+    '**The version number now shows on** the opening screen',
     'Please note: there is no guarantee every restriction is caught. Always check the road and the signs for yourself'
   ]},
   { date:'2026-10-10', items:[
-    'Fuel near me can now look anywhere: leave the box blank to use where you are, or type a city to check stops around it',
-    'Fuel near me now offers 50, 75 and 100 mile circles',
-    'Fuel near me box shows the orange pin and suggests cities as you type',
-    'New Tools button: Vehicle specifications looks up the size and weight of each car on your load and totals it'
+    '**Fuel near me can now look anywhere**: leave the box blank to use where you are, or type a city to check stops around it',
+    '**Fuel near me now offers 50**, 75 and 100 mile circles',
+    '**Fuel near me box shows the** orange pin and suggests cities as you type',
+    '**New Tools button**: Vehicle specifications looks up the size and weight of each car on your load and totals it'
   ]},
   { date:'2026-10-08', items:[
-    'Friendlier locked-out screen: explains the app runs on private links, and that your link comes by email',
-    'Locked-out screen now has a Request access button that opens a sign-up form',
-    'Request access form now opens right inside the app instead of jumping to a Google page',
-    'Each person\u2019s link now works on their own phone only'
+    '**Friendlier locked-out screen**: explains the app runs on private links, and that your link comes by email',
+    '**Locked-out screen now has a Request** access button that opens a sign-up form',
+    '**Request access form now opens right** inside the app instead of jumping to a Google page',
+    '**Each person\u2019s link now works on** their own phone only'
   ]},
   { date:'2026-10-07', items:[
-    'The \u201cWhat\u2019s new\u201d tag reads on one line again',
-    'Fixed: picking a city like \u201cSt. Louis, MO\u201d after typing \u201cSain\u201d keeps the full name',
-    'The \u201cWhat\u2019s new\u201d tag is centered between the FPS box and the title, halfway down the header',
-    'The Expand all button on your fuel stops now sits on the right, next to the round arrow button',
-    'The \u201cWhat\u2019s new\u201d tag moved over next to the FPS box',
-    'Tapping the \u201cWhat\u2019s new\u201d tag now opens Settings and goes straight into this list',
-    'Fresh start: from here on, every change to the app is listed on this page',
-    'The \u201cWhat\u2019s new\u201d tag is back on the home screen. Tap it to see this list',
-    'You start with one \u201cDestination\u201d box. Pick a city and a \u201cStart city\u201d box appears above it',
-    '\u201cUse my location\u201d is now the first choice in the city list, with an orange pin',
-    'Your location stays \u201cYour location\u201d wherever you move it. It no longer turns into \u201cStop 1\u201d',
-    'New Reverse route button flips your whole trip with one tap',
-    'Picking a city from the list keeps the whole name, like \u201cLos Angeles, CA,\u201d not just \u201cLos\u201d',
-    'If you leave the start blank, Find fuel fills in \u201cYour location\u201d so you can see where it\u2019s starting from',
-    'Load planner button now reads \u201cPlan your load stops,\u201d with \u201c(no fuel report produced)\u201d inside it',
-    'The truck loading animation is gone. The orange progress bar is back'
+    '**The \u201cWhat\u2019s new\u201d tag reads on** one line again',
+    '**Fixed: picking a city like \u201cSt**. Louis, MO\u201d after typing \u201cSain\u201d keeps the full name',
+    '**The \u201cWhat\u2019s new\u201d tag is centered** between the FPS box and the title, halfway down the header',
+    '**The Expand all button on your fuel stops now sits on the right**, next to the round arrow button',
+    '**The \u201cWhat\u2019s new\u201d tag moved over** next to the FPS box',
+    '**Tapping the \u201cWhat\u2019s new\u201d tag now** opens Settings and goes straight into this list',
+    '**Fresh start**: from here on, every change to the app is listed on this page',
+    '**The \u201cWhat\u2019s new\u201d tag is back on the home screen**. Tap it to see this list',
+    '**You start with one \u201cDestination\u201d box**. Pick a city and a \u201cStart city\u201d box appears above it',
+    '**\u201cUse my location\u201d is now the first choice in the city list**, with an orange pin',
+    '**Your location stays \u201cYour location\u201d wherever you move it**. It no longer turns into \u201cStop 1\u201d',
+    '**New Reverse route button flips your** whole trip with one tap',
+    '**Picking a city from the list keeps the whole name**, like \u201cLos Angeles, CA,\u201d not just \u201cLos\u201d',
+    '**If you leave the start blank**, Find fuel fills in \u201cYour location\u201d so you can see where it\u2019s starting from',
+    '**Load planner button now reads \u201cPlan your load stops**,\u201d with \u201c(no fuel report produced)\u201d inside it',
+    '**The truck loading animation is gone**. The orange progress bar is back'
   ]}
 ];
 const APP_VER = (()=>{ const t=JSON.stringify(CHANGELOG); let h=0; for(let k=0;k<t.length;k++) h=(h*31+t.charCodeAt(k))|0;
@@ -3100,7 +3191,7 @@ function openNews(){
   let h='<div class="newswrap"><h2>What\'s new</h2><div class="sub">Changes to Fuel Price Saver, newest first</div>';
   CHANGELOG.forEach(r=>{
     h+='<div class="rel"><div class="rdate">'+newsDate(r.date)+'</div><ul>'
-      +r.items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>';
+      +r.items.map(x=>'<li>'+esc(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</li>').join('')+'</ul></div>';
   });
   document.getElementById('news').innerHTML=h+'</div>';
   enterScreen();
