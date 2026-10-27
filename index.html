@@ -2962,6 +2962,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-27', items:[
+    'Version 1.0.26',
+    '**Find services ahead now lists only the interstates within 10 miles of you.** It checks real map data instead of the truck stop list, so if you are sitting near I-70, I-70 shows up. The closest one is picked for you',
+    'If the map check cannot be reached, it falls back to interstates at truck stops within 10 miles. Location must be turned on. Fuel prices change every day, so savings are an estimate, not a guarantee'
+  ]},
+  { date:'2026-10-27', items:[
     'Version 1.0.25',
     '**Find services ahead no longer asks what state you are in.** It uses your phone\u2019s location instead. First pick how far ahead to look: 50, 100, 200, 300 or 500 miles. The app then picks the interstate you\u2019re on, and you can change it if it guessed wrong. Then pick which way you\u2019re heading and the service you need',
     '**Services ahead now crosses state lines.** If the next RV dump is in the next state, you\u2019ll see it',
@@ -7112,23 +7117,43 @@ function saOpen(){
 function saLocate(){
   var L=document.getElementById('saloc');
   L.innerHTML=SA_ME?'':'Finding where you are\u2026';
-  try{ navigator.geolocation.getCurrentPosition(function(p){ SA_ME={la:p.coords.latitude, lo:p.coords.longitude}; L.innerHTML=''; saFillI(); saShow(); },
+  try{ navigator.geolocation.getCurrentPosition(function(p){ SA_ME={la:p.coords.latitude, lo:p.coords.longitude}; L.innerHTML=''; if(document.getElementById('sast').value) saFillI(); saShow(); },
     function(){ if(!SA_ME){ L.innerHTML='Turn on location so the app knows where you are. <button type="button" onclick="saLocate()" style="margin-left:6px;height:34px;padding:0 12px;border-radius:8px;border:1.5px solid #6fa8e0;background:#17304f;color:#e8eef6;font-weight:700">Try again</button>'; } },
     {timeout:15000,maximumAge:120000,enableHighAccuracy:true}); }catch(e){}
 }
+/* v1.0.26: interstates within 10 miles of you, from real map data (OpenStreetMap) */
+var SA_NEAR=null, SA_NEARAT=null;
+function saNear(cb){
+  var m=SA_ME; if(!m){ cb(null); return; }
+  if(SA_NEAR&&SA_NEARAT&&hav(SA_NEARAT.la,SA_NEARAT.lo,m.la,m.lo)<1){ cb(SA_NEAR); return; }
+  var q='[out:json][timeout:20];way(around:16093,'+m.la+','+m.lo+')["highway"~"^motorway$|^trunk$"]["ref"];out tags center;';
+  var done=false, t=setTimeout(function(){ if(!done){ done=true; cb(null); } },20000);
+  fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+   .then(function(r){ return r.json(); }).then(function(j){ if(done) return; done=true; clearTimeout(t);
+     var c={}; (j.elements||[]).forEach(function(e){ var ref=(e.tags&&e.tags.ref)||'', re=/\bI[\s-]?(\d{1,3})\b/g, x;
+       var d=e.center?hav(m.la,m.lo,e.center.lat,e.center.lon):10;
+       while((x=re.exec(ref))){ var k='I-'+(+x[1]); if(c[k]==null||d<c[k]) c[k]=d; } });
+     SA_NEAR=c; SA_NEARAT={la:m.la,lo:m.lo}; cb(c); })
+   .catch(function(){ if(!done){ done=true; clearTimeout(t); cb(null); } });
+}
 function saFillI(){
-  var I=document.getElementById('sai'), keep=I.value, c={};
-  if(SA_ME){ SA_ALL.forEach(function(o){ var d=hav(SA_ME.la,SA_ME.lo,+o.r[3],+o.r[4]); if(d<=60) o.i.forEach(function(k){ if(c[k]==null||d<c[k]) c[k]=d; }); }); }
-  if(!Object.keys(c).length) SA_ALL.forEach(function(o){ o.i.forEach(function(k){ if(c[k]==null) c[k]=1e9; }); });
-  var ks=Object.keys(c).sort(function(a,b){ return c[a]-c[b] || (+a.slice(2))-(+b.slice(2)); });
-  I.innerHTML='<option value="">What interstate are you on?</option>'+ks.map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join('');
-  if(keep&&c[keep]!=null) I.value=keep; else if(SA_ME&&ks.length&&c[ks[0]]<1e9) I.value=ks[0];
-  if(document.getElementById('sast').value){ I.hidden=false; if(I.value&&!keep) saPick(2); }
+  var I=document.getElementById('sai');
+  I.innerHTML='<option value="">Looking for interstates near you\u2026</option>';
+  saNear(function(near){
+    var keep=I.value, c={};
+    if(near&&Object.keys(near).length){ c=near; }
+    else if(SA_ME){ SA_ALL.forEach(function(o){ var d=hav(SA_ME.la,SA_ME.lo,+o.r[3],+o.r[4]); if(d<=10) o.i.forEach(function(k){ if(c[k]==null||d<c[k]) c[k]=d; }); }); }
+    var ks=Object.keys(c).sort(function(a,b){ return c[a]-c[b] || (+a.slice(2))-(+b.slice(2)); });
+    I.innerHTML=ks.length?'<option value="">What interstate are you on?</option>'+ks.map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join('')
+      :'<option value="">No interstate within 10 miles of you</option>';
+    if(ks.length) I.value=ks[0];
+    if(document.getElementById('sast').value){ I.hidden=false; if(I.value) saPick(2); }
+  });
 }
 function saPick(n){
   var S=document.getElementById('sast'), I=document.getElementById('sai'), D=document.getElementById('sad'), V=document.getElementById('sas');
   if(n<1){ S.value=''; } if(n<2){ I.hidden=!S.value; if(n<1) I.value=''; } if(n<3){ D.value=''; D.hidden=!(S.value&&I.value); } if(n<4){ V.value=''; V.hidden=!D.value; }
-  if(n===1&&S.value){ saFillI(); if(I.value){ D.hidden=false; n=2; } }
+  if(n===1&&S.value){ saFillI(); }
   if(n===2&&I.value){ var odd=(+I.value.slice(2))%2===1;
     D.innerHTML='<option value="">Which way are you heading?</option>'+(odd?'<option value="N">North</option><option value="S">South</option>':'<option value="E">East</option><option value="W">West</option>'); }
   if(n===3&&D.value){ var c2={}; saList(true).forEach(function(o){ o.sv.forEach(function(k){ c2[k]=(c2[k]||0)+1; }); });
