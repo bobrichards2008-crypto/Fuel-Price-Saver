@@ -2962,6 +2962,12 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
   { date:'2026-10-27', items:[
+    'Version 1.0.25',
+    '**Find services ahead no longer asks what state you are in.** It uses your phone\u2019s location instead. First pick how far ahead to look: 50, 100, 200, 300 or 500 miles. The app then picks the interstate you\u2019re on, and you can change it if it guessed wrong. Then pick which way you\u2019re heading and the service you need',
+    '**Services ahead now crosses state lines.** If the next RV dump is in the next state, you\u2019ll see it',
+    'Location must be turned on. Miles are straight-line, so road miles will be a little more. Services come from the truck stops\u2019 own lists and may be incomplete. Fuel prices change every day, so savings are an estimate, not a guarantee'
+  ]},
+  { date:'2026-10-27', items:[
     'Version 1.0.24',
     '**Find services ahead now lists every interstate in the state you pick**, not just the ones with a Love\u2019s, TA or Petro on them. If there are no stops on that interstate in that state, it tells you so',
     'Interstate lists cover the main and loop interstates in each state and may not be complete. Fuel prices change every day, so savings are an estimate, not a guarantee'
@@ -7079,8 +7085,8 @@ function fcDayClose(){
 
 
 <div id="sapop" role="dialog" aria-modal="true"><div class="tkin"><div class="tkhd"><button type="button" onclick="history.back()">Back</button><h2>Find services ahead</h2></div>
-<select id="sast" onchange="saPick(1)"></select><select id="sai" onchange="saPick(2)" hidden></select><select id="sad" onchange="saPick(3)" hidden></select><select id="sas" onchange="saPick(4)" hidden></select>
-<div class="sasub" id="sasub"></div><div id="sabody"></div></div></div>
+<select id="sast" onchange="saPick(1)"><option value="">How far ahead do you want to look?</option><option value="50">50 miles</option><option value="100">100 miles</option><option value="200">200 miles</option><option value="300">300 miles</option><option value="500">500 miles</option></select><select id="sai" onchange="saPick(2)" hidden></select><select id="sad" onchange="saPick(3)" hidden></select><select id="sas" onchange="saPick(4)" hidden></select>
+<div class="sasub" id="saloc"></div><div class="sasub" id="sasub"></div><div id="sabody"></div></div></div>
 <script>
 /* v1.3.50: Find services ahead. State, then interstate, then direction, then service; each box shows after the one above is picked */
 var SA_ALL=[], SA_ME=null;
@@ -7096,21 +7102,33 @@ function saSvcs(s){
   (r.shop||[]).concat(r.extra||[]).forEach(add);
   return Object.keys(out);
 }
-var SA_INTS={"AL":[10,20,22,59,65,85],"AZ":[8,10,15,17,19,40],"AR":[30,40,49,55,57],"CA":[5,8,10,15,40,80,105,110,205,210,280,380,405,505,580,605,680,710,780,805,880,980],"CO":[25,70,76,225,270],"CT":[84,91,95,384,395,691],"DE":[95,295,495],"FL":[4,10,75,95,175,275,295,375,395],"GA":[16,20,59,75,85,95,185,285,475,516,520,575,675,985],"ID":[15,84,86,90,184],"IL":[24,39,41,55,57,64,70,72,74,80,88,90,94,155,172,180,190,255,270,290,294,355,474],"IN":[64,65,69,70,74,80,90,94,164,265,465,469],"IA":[29,35,74,80,129,235,280,380,480,680],"KS":[35,70,135,235,335,435,470,635],"KY":[24,64,65,69,71,75,165,169,264,265,275,471],"LA":[10,12,20,49,55,110,210,220,310,510,610],"ME":[95,195,295,395],"MD":[68,70,81,83,95,97,195,270,370,395,495,595,695,795,895],"MA":[84,90,91,93,95,190,195,290,291,295,391,395,495],"MI":[69,75,94,96,194,196,275,375,475,496,675,696],"MN":[35,90,94,494,535,694],"MS":[10,20,22,55,59,69,110,220,269],"MO":[29,35,44,49,55,57,64,70,72,155,170,229,255,270,435,470,635],"MT":[15,90,94,115,315],"NE":[76,80,129,180,480,680],"NV":[11,15,80,215,515,580],"NH":[89,93,95,293,393],"NJ":[76,78,80,95,195,280,287,295,676],"NM":[10,25,40],"NY":[81,84,86,87,88,90,95,190,278,287,290,390,490,495,587,684,787,890],"NC":[26,40,73,74,77,85,95,140,240,277,285,295,440,485,540,587,795,840,885],"ND":[29,94,194],"OH":[70,71,74,75,76,77,80,90,270,271,275,280,475,480,490,670,675,680],"OK":[35,40,44,235,240,244,444],"OR":[5,84,105,205,405],"PA":[76,78,79,80,81,83,84,86,90,95,99,176,180,276,279,283,376,476,676],"RI":[95,195,295],"SC":[20,26,77,85,95,126,185,385,526],"SD":[29,90,190,229],"TN":[24,26,40,55,65,69,75,81,140,155,240,269,440,640],"TX":[2,10,14,20,27,30,35,37,40,44,45,69,345,410,610,635,820],"UT":[15,70,80,84,215],"VT":[89,91,93,189],"VA":[64,66,73,74,77,81,85,95,195,264,295,395,495,564,664],"WA":[5,82,90,182,205,405,705],"WV":[64,68,70,77,79,81,470],"WI":[39,41,43,90,94,794,894],"WY":[25,80,90,180],"DC":[66,295,395,695]};
 function saOpen(){
   SA_ALL=STATIONS.filter(function(r){ return +r[6]>0; }).map(function(r){ var st=String(r[2]||'').toUpperCase().trim();
-    var s={b:r[0],c:r[1],st:st,la:+r[3],lo:+r[4]}; return {r:r, st:st, i:tkRoadsOf(r,st), sv:saSvcs(s)}; });
-  var sts={}; SA_ALL.forEach(function(o){ if(o.st.length===2&&o.st!=='ON'&&o.i.length) sts[o.st]=1; }); Object.keys(SA_INTS).forEach(function(k){ sts[k]=1; });
-  document.getElementById('sast').innerHTML='<option value="">What state are you in?</option>'+Object.keys(sts).sort().map(function(k){ return '<option>'+k+'</option>'; }).join('');
-  saPick(0);
-  try{ navigator.geolocation.getCurrentPosition(function(p){ SA_ME={la:p.coords.latitude, lo:p.coords.longitude}; saShow(); },function(){},{timeout:10000,maximumAge:120000}); }catch(e){}
+    var s={b:r[0],c:r[1],st:st,la:+r[3],lo:+r[4]}; return {r:r, st:st, i:tkRoadsOf(r,st), sv:saSvcs(s)}; }).filter(function(o){ return o.st!=='ON'&&o.i.length; });
+  saPick(0); saLocate();
   var p=document.getElementById('sapop'); p.scrollTop=0; if(!p.classList.contains('show')) enterScreen(); p.classList.add('show');
+}
+/* v1.0.25: no state box. The phone's location finds where you are and which interstate you're on */
+function saLocate(){
+  var L=document.getElementById('saloc');
+  L.innerHTML=SA_ME?'':'Finding where you are\u2026';
+  try{ navigator.geolocation.getCurrentPosition(function(p){ SA_ME={la:p.coords.latitude, lo:p.coords.longitude}; L.innerHTML=''; saFillI(); saShow(); },
+    function(){ if(!SA_ME){ L.innerHTML='Turn on location so the app knows where you are. <button type="button" onclick="saLocate()" style="margin-left:6px;height:34px;padding:0 12px;border-radius:8px;border:1.5px solid #6fa8e0;background:#17304f;color:#e8eef6;font-weight:700">Try again</button>'; } },
+    {timeout:15000,maximumAge:120000,enableHighAccuracy:true}); }catch(e){}
+}
+function saFillI(){
+  var I=document.getElementById('sai'), keep=I.value, c={};
+  if(SA_ME){ SA_ALL.forEach(function(o){ var d=hav(SA_ME.la,SA_ME.lo,+o.r[3],+o.r[4]); if(d<=60) o.i.forEach(function(k){ if(c[k]==null||d<c[k]) c[k]=d; }); }); }
+  if(!Object.keys(c).length) SA_ALL.forEach(function(o){ o.i.forEach(function(k){ if(c[k]==null) c[k]=1e9; }); });
+  var ks=Object.keys(c).sort(function(a,b){ return c[a]-c[b] || (+a.slice(2))-(+b.slice(2)); });
+  I.innerHTML='<option value="">What interstate are you on?</option>'+ks.map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join('');
+  if(keep&&c[keep]!=null) I.value=keep; else if(SA_ME&&ks.length&&c[ks[0]]<1e9) I.value=ks[0];
+  if(document.getElementById('sast').value){ I.hidden=false; if(I.value&&!keep) saPick(2); }
 }
 function saPick(n){
   var S=document.getElementById('sast'), I=document.getElementById('sai'), D=document.getElementById('sad'), V=document.getElementById('sas');
-  if(n<1){ S.value=''; } if(n<2){ I.value=''; I.hidden=!S.value; } if(n<3){ D.value=''; D.hidden=!I.value; } if(n<4){ V.value=''; V.hidden=!D.value; }
-  if(n===1&&S.value){ var c={}; SA_ALL.forEach(function(o){ if(o.st===S.value) o.i.forEach(function(k){ c[k]=(c[k]||0)+1; }); }); (SA_INTS[S.value]||[]).forEach(function(n){ var k='I-'+n; if(!c[k]) c[k]=0; });
-    I.innerHTML='<option value="">What interstate?</option>'+Object.keys(c).sort(function(a,b){return (+a.slice(2))-(+b.slice(2));}).map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join(''); }
+  if(n<1){ S.value=''; } if(n<2){ I.hidden=!S.value; if(n<1) I.value=''; } if(n<3){ D.value=''; D.hidden=!(S.value&&I.value); } if(n<4){ V.value=''; V.hidden=!D.value; }
+  if(n===1&&S.value){ saFillI(); if(I.value){ D.hidden=false; n=2; } }
   if(n===2&&I.value){ var odd=(+I.value.slice(2))%2===1;
     D.innerHTML='<option value="">Which way are you heading?</option>'+(odd?'<option value="N">North</option><option value="S">South</option>':'<option value="E">East</option><option value="W">West</option>'); }
   if(n===3&&D.value){ var c2={}; saList(true).forEach(function(o){ o.sv.forEach(function(k){ c2[k]=(c2[k]||0)+1; }); });
@@ -7118,22 +7136,23 @@ function saPick(n){
   saShow();
 }
 function saList(ignoreSvc){
-  var st=document.getElementById('sast').value, iv=document.getElementById('sai').value, d=document.getElementById('sad').value, sv=ignoreSvc?'':document.getElementById('sas').value;
-  var L=SA_ALL.filter(function(o){ return o.st===st && o.i.indexOf(iv)>=0 && (!sv||sv==='*'||o.sv.indexOf(sv)>=0); });
-  if(SA_ME&&d){ var m=SA_ME; L=L.filter(function(o){ var a=+o.r[3], b=+o.r[4]; return d==='N'?a>m.la-0.01:d==='S'?a<m.la+0.01:d==='E'?b>m.lo-0.01:b<m.lo+0.01; });
-    L.forEach(function(o){ o.mi=hav(m.la,m.lo,+o.r[3],+o.r[4]); }); L.sort(function(a,b){ return a.mi-b.mi; }); }
-  else if(d){ L.forEach(function(o){ o.mi=null; }); L.sort(function(a,b){ var x=d==='N'?(+a.r[3])-(+b.r[3]):d==='S'?(+b.r[3])-(+a.r[3]):d==='E'?(+a.r[4])-(+b.r[4]):(+b.r[4])-(+a.r[4]); return x; }); }
+  var far=+document.getElementById('sast').value||500, iv=document.getElementById('sai').value, d=document.getElementById('sad').value, sv=ignoreSvc?'':document.getElementById('sas').value, m=SA_ME;
+  if(!m||!iv||!d) return [];
+  var L=SA_ALL.filter(function(o){ if(o.i.indexOf(iv)<0) return false; if(sv&&sv!=='*'&&o.sv.indexOf(sv)<0) return false;
+    var a=+o.r[3], b=+o.r[4]; if(!(d==='N'?a>m.la-0.01:d==='S'?a<m.la+0.01:d==='E'?b>m.lo-0.01:b<m.lo+0.01)) return false;
+    o.mi=hav(m.la,m.lo,a,b); return o.mi<=far; });
+  L.sort(function(a,b){ return a.mi-b.mi; });
   return L;
 }
 function saShow(){
   var V=document.getElementById('sas'), sub=document.getElementById('sasub'), body=document.getElementById('sabody');
   if(!V.value){ body.innerHTML=''; sub.textContent=document.getElementById('sad').value?'Only services found at stops ahead of you on this interstate are listed.':''; return; }
-  var L=saList(false), iv=document.getElementById('sai').value, sv=V.value;
-  sub.textContent=L.length+' stop'+(L.length===1?'':'s')+' ahead on '+iv+(sv!=='*'?' with '+sv:'')+(SA_ME?', closest first':'. Turn on location to see only stops ahead of you');
-  body.innerHTML=L.length?L.map(function(o,i){ var r=o.r, inf=null; try{ inf=stopInfo({b:r[0],c:r[1],st:o.st,la:+r[3],lo:+r[4]}); }catch(e){}
-    return '<div class="tkr"><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(o.st)+(inf&&inf.exit?' \u00B7 '+esc(inf.exit):'')+(o.mi!=null?' \u00B7 about '+Math.round(o.mi)+' mi':'')+'</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+'</span>'
+  var L=saList(false), iv=document.getElementById('sai').value, sv=V.value, far=document.getElementById('sast').value;
+  sub.textContent=L.length+' stop'+(L.length===1?'':'s')+' in the next '+far+' miles on '+iv+(sv!=='*'?' with '+sv:'')+', closest first';
+  body.innerHTML=L.length?L.map(function(o){ var r=o.r, inf=null; try{ inf=stopInfo({b:r[0],c:r[1],st:o.st,la:+r[3],lo:+r[4]}); }catch(e){}
+    return '<div class="tkr"><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(o.st)+(inf&&inf.exit?' \u00B7 '+esc(inf.exit):'')+' \u00B7 about '+Math.round(o.mi)+' mi</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+'</span>'
       +'<a class="tkmap" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+(+r[3])+','+(+r[4])+'&travelmode=driving">Map</a></div>'; }).join('')
-    : '<div class="sasub">No stops ahead of you on '+esc(iv)+(sv!=='*'?' list '+esc(sv):'')+' in this state.</div>';
+    : '<div class="sasub">No stops in the next '+esc(far)+' miles on '+esc(iv)+(sv!=='*'?' list '+esc(sv):'')+'. Try a longer distance.</div>';
 }
 </script>
 </body>
