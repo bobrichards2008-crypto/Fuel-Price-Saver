@@ -60,6 +60,7 @@
   body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header{position:sticky!important;top:0!important;z-index:50}
   /* Bob, Oct 26: no prediction button at all while tomorrow's prediction isn't ready */
   #predbtn.fcwait{display:none!important}
+    .bbload{display:none} body.from-load .bbload{display:inline}
   #tkpop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #tkpop.show{display:block}
   #tkpop .tkin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
@@ -67,9 +68,23 @@
   #tkpop .tkhd button{height:44px;padding:0 16px;border-radius:10px;border:1.5px solid #4f7bb0;background:#17304f;color:#e8eef6;font-size:16px;font-weight:700}
   #tkpop h2{margin:0;font-size:21px}
   #tkpop .tksub{color:#9fb4ce;font-size:13.5px;margin:0 0 10px}
+  #tkif{width:100%;height:46px;margin:0 0 8px;padding:0 12px;border-radius:10px;border:1.5px solid #f26a21;background:#1d3a5e;color:#e8eef6;font-size:16px;font-weight:700}
+  #tkif[hidden]{display:none}
+  #tksv{width:100%;height:46px;margin:0 0 4px;padding:0 12px;border-radius:10px;border:1.5px solid #f26a21;background:#1d3a5e;color:#e8eef6;font-size:16px;font-weight:700}
+  #tksv[hidden],#tksvh[hidden]{display:none}
+  #tkpop #tkif,#tkpop #tksv,#tkpop #tksvh{display:none!important}
+  #sabtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;height:60px;margin:0 0 12px;padding:0 8px;border-radius:10px;background:#17304f;border:1.5px solid #4f7bb0;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+  #sapop{position:fixed;inset:0;z-index:9600;display:none;background:#0c1a30;color:#e8eef6;overflow-y:auto;-webkit-overflow-scrolling:touch}#sapop.show{display:block}
+  #sapop .tkin{max-width:560px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(30px + env(safe-area-inset-bottom))}
+  #sapop .tkhd{display:flex;align-items:center;gap:12px;padding:4px 0 10px}#sapop .tkhd button{height:44px;padding:0 16px;border-radius:10px;border:1.5px solid #f26a21;background:#f26a21;color:#fff;font-size:16px;font-weight:700}#sapop h2{margin:0;font-size:21px}
+  #sapop select{width:100%;height:50px;margin:0 0 10px;padding:0 12px;border-radius:10px;border:1.5px solid #f26a21;background:#1d3a5e;color:#e8eef6;font-size:17px;font-weight:700}#sapop select[hidden]{display:none}
+  #sapop .sasub{color:#9fb4ce;font-size:14px;margin:4px 0 10px}#sapop .tkr{display:flex;gap:10px;align-items:flex-start;padding:11px 2px;border-bottom:1px solid #1d3a5e;font-size:16px}#sapop .tkp{margin-left:auto;text-align:right;font-weight:800;white-space:nowrap}#sapop .tkp small{display:block;font-weight:400;font-size:12.5px;color:#9fb4ce}
+  #sapop .tkmap{flex:0 0 auto;align-self:center;height:40px;padding:0 14px;border-radius:9px;border:1.5px solid #6fa8e0;background:#17304f;color:#e8eef6;font-size:15px;font-weight:700;display:inline-flex;align-items:center;text-decoration:none}
+  #tksvh{color:#9fb4ce;font-size:13px;margin:0 2px 10px}
   #tkpop .tkr{display:flex;gap:10px;align-items:flex-start;padding:11px 2px;border-bottom:1px solid #1d3a5e;font-size:16px}
   #tkpop .tkn{color:#9fb4ce;min-width:26px;text-align:right}
   #tkpop .tkp{margin-left:auto;text-align:right;font-weight:800;white-space:nowrap}
+  #tkpop .tkmap{flex:0 0 auto;align-self:center;height:40px;padding:0 14px;border-radius:9px;border:1.5px solid #6fa8e0;background:#17304f;color:#e8eef6;font-size:15px;font-weight:700;display:inline-flex;align-items:center;text-decoration:none}
   #tkpop .tkp small{display:block;font-weight:400;font-size:12.5px;color:#9fb4ce}
   /* Bob, Oct 26: Fuel Price Saver title back up top, in line with the FPS badge and the gear */
   body:not(.on-results):not(.on-plan):not(.on-tools):not(.on-svc):not(.on-news):not(.on-detail):not(.on-trip):not(.on-vspec):not(.on-vspec2):not(.on-flog) header{padding-top:10px!important;padding-bottom:12px!important;display:flex;flex-direction:column;align-items:center}
@@ -164,19 +179,21 @@
   .trwrap{max-width:560px;margin:0 auto;padding:18px 16px 110px;color:#fff}
   .trwrap h2{margin:0;font-size:24px}
   .trsub{color:#9fb4ce;font-size:14px;margin:4px 0 16px}
-  .trhead,.trstop{display:grid;grid-template-columns:26px 1fr 44px 62px 66px;gap:6px;align-items:baseline}
+  .trhead,.trstop{display:grid;grid-template-columns:60px 1fr 40px 56px 62px;gap:6px;align-items:baseline}
   .trhead{font-size:12px;color:#9fb4ce;padding:0 2px 6px;border-bottom:2px solid var(--line)}
   .trhead span:nth-child(n+3),.trstop span:nth-child(n+3){text-align:right}
-  .trstop{padding:10px 2px 4px;font-size:15px}
+  .trstop{padding:12px 2px 4px;font-size:16px;align-items:center}
+  .trbadge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:800;border-radius:12px;padding:3px 8px;white-space:nowrap}
   .trstop .n{color:var(--orange);font-weight:bold}
-  .trstop .c{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .trstop .c{font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .trstop .t{color:#9fc0e8}
-  .trroads{margin:0 0 0 32px;padding:0 2px 10px;font-size:13px;color:#b9c8da;border-bottom:1px solid #1f3a5c}
-  .trroads b{color:#fff;font-weight:600}
+  .trroads{margin:0 0 0 66px;padding:0 2px 10px;font-size:12.5px;color:#8ea4bf;border-bottom:1px solid #1f3a5c}
+  .trroads b{color:#9fb4ce;font-weight:600}
   .trtotal{display:flex;justify-content:space-between;padding:12px 2px;font-weight:bold;font-size:16px;border-top:2px solid var(--line)}
   .trbar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#10233f;border-top:2px solid var(--line)}
   .trbar button{flex:1;height:50px;border-radius:10px;font-size:15px;font-weight:bold;background:#17304f;border:1.5px solid #4f7bb0;color:#9fc0e8}
   .trbar button.back{background:var(--orange);border:none;color:#fff}
+  .trbar button.trfuel{flex:1.6;background:#2fa85a;border:none;color:#fff;font-size:14px}
   .trmsg{color:#b9c8da;padding:20px 2px;font-size:15px}
   @media print{
     html,body{background:#fff !important;padding:0 !important}
@@ -828,7 +845,7 @@
 </div>
 
 <header><div class="fpsmono corner" aria-hidden="true">FPS</div><button class="gear" onclick="openSettings()" title="Settings">⚙</button></div><button class="newtag" type="button" onclick="tagTap()">What's new</button><div id="fcline" onclick="openFc()" role="button"></div><h1>Fuel Price Saver</h1><div id="datastat" style="font-size:12px;color:#9fb0c8;margin-top:4px">Checking for live prices&hellip;</div><div id="fptick" aria-label="State average diesel prices"><div class="tkmove" id="tkmove"></div></div><div id="tktip" role="note">Tap any state on the price ticker to see every stop there, cheapest first. Touch it to pause.<button type="button" aria-label="Close" onclick="tkTipHide(0)">&times;</button></div></header>
-<div id="tkpop" role="dialog" aria-modal="true"><div class="tkin"><div class="tkhd"><button type="button" onclick="history.back()">Back</button><h2 id="tkh"></h2></div><div class="tksub" id="tksub"></div><div id="tkbody"></div></div></div>
+<div id="tkpop" role="dialog" aria-modal="true"><div class="tkin"><div class="tkhd"><button type="button" onclick="history.back()">Back</button><h2 id="tkh"></h2></div><div class="tksub" id="tksub"></div><select id="tkif" onchange="tkPickI()" aria-label="Filter by interstate"></select><select id="tksv" onchange="tkFilter()" aria-label="Filter by services" hidden></select><div id="tksvh" hidden></div><div id="tkbody"></div></div></div>
 
 <div class="wrap">
   
@@ -966,6 +983,7 @@
   </div>
   <div id="planrow" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 12px"><button id="planbtn" onclick="openPlan()" style="grid-column:span 2;margin:0;width:auto"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button><button class="bluebtn" id="optbtn" onclick="optimizeStops()" style="min-height:72px;margin:0;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer">Optimize</button></div>
   <button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow’s fuel price prediction</button>
+  <button id="sabtn" type="button" onclick="saOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#f26a21" stroke-width="2.4"/><path d="M15.5 15.5L21 21" stroke="#f26a21" stroke-width="2.6" stroke-linecap="round"/></svg>Find services ahead</button>
   <button id="toolsbtn" onclick="openTools()"><svg viewBox="0 0 40 32" width="40" height="32" aria-hidden="true"><path d="M14 9V5.5A2.5 2.5 0 0 1 16.5 3h7A2.5 2.5 0 0 1 26 5.5V9" fill="none" stroke="#f26a21" stroke-width="2.6"/><rect x="3" y="9" width="34" height="20" rx="3" fill="#f26a21"/><rect x="3" y="16" width="34" height="2.4" fill="#10233f"/><rect x="16.5" y="14" width="7" height="6.5" rx="1.4" fill="#10233f"/><rect x="18.3" y="15.6" width="3.4" height="3.2" rx=".6" fill="#f26a21"/></svg><span>Tools</span></button>
   </div>
   <div id="opthint"></div>
@@ -974,7 +992,7 @@
 <div id="detail"></div>
 <div id="svc"></div>
 <div id="news"></div>
-<div id="backbar"><button class="bbtn bbtop" onclick="scrollResultsTop()">&uarr; Top</button><button class="bbtn" onclick="goBack()">&larr; Back</button></div>
+<div id="backbar"><button class="bbtn bbtop" onclick="scrollResultsTop()">&uarr; Top</button><button class="bbtn" onclick="goBack()">&larr; Back<span class="bbload"> to load</span></button></div>
 <div id="legpop" class="popwrap" style="display:none" onclick="if(event.target===this)this.style.display='none'"><div class="popbox"><div class="poptitle">Map full route</div><div class="poptext">Google Maps takes up to 10 stops at a time, so your route opens in legs. Drive one, then tap the next.</div><div id="leglist"></div><button class="addbtn" style="margin:8px 0 0" onclick="document.getElementById('legpop').style.display='none'">Close</button></div></div>
 
 <script>
@@ -1504,18 +1522,50 @@ function tkTipSync(){ try{ var t=document.getElementById('tktip'), k=document.ge
   if(!t||!k) return; var on=localStorage.getItem('fps_tktip_done')!=='1' && k.offsetParent!==null && document.getElementById('tkmove').innerHTML!=='';
   t.classList.toggle('show',on); }catch(e){} }
 setTimeout(tkTipSync,1200); setInterval(tkTipSync,3000);
+/* v1.3.45: interstate filter, built from the services lists (exit text) for Love's, TA and Petro */
+var TK_ST='', TK_ALL=[];
+function tkRoadsOf(r,st){
+  try{ var inf=stopInfo({b:r[0],c:r[1],st:st,la:+r[3],lo:+r[4]}); if(!inf||!inf.exit) return [];
+    return parseRoads(inf.exit).roads.filter(function(x){return x.k==='I';}).map(function(x){return 'I-'+x.n;}); }catch(e){ return []; }
+}
 function tkOpen(st){
   tkTipHide(1);
   try{
-    var L=STATIONS.filter(function(r){ return String(r[2]||'').toUpperCase().trim()===st && +r[6]>0; })
-      .sort(function(a,b){ return (+a[6])-(+b[6]); });
-    var avg=L.reduce(function(x,r){return x+(+r[6]);},0)/Math.max(1,L.length);
+    TK_ST=st;
+    TK_ALL=STATIONS.filter(function(r){ return String(r[2]||'').toUpperCase().trim()===st && +r[6]>0; })
+      .sort(function(a,b){ return (+a[6])-(+b[6]); }).map(function(r){ var inf=null; try{ inf=stopInfo({b:r[0],c:r[1],st:st,la:+r[3],lo:+r[4]}); }catch(e){} return {r:r, i:tkRoadsOf(r,st), inf:inf}; });
+    var cnt={}; TK_ALL.forEach(function(o){ o.i.forEach(function(k){ cnt[k]=(cnt[k]||0)+1; }); });
+    var ks=Object.keys(cnt).sort(function(a,b){ return (+a.slice(2))-(+b.slice(2)); });
+    var sel=document.getElementById('tkif');
+    sel.innerHTML='<option value="">Filter by interstate</option>'+ks.map(function(k){ return '<option value="'+k+'">'+k+' ('+cnt[k]+' stop'+(cnt[k]===1?'':'s')+')</option>'; }).join('');
+    sel.value=''; sel.hidden=!ks.length; tkSvcSync();
     document.getElementById('tkh').textContent=st+' diesel, cheapest first';
-    document.getElementById('tksub').textContent=L.length+' stop'+(L.length===1?'':'s')+' \u00B7 average discounted price $'+avg.toFixed(3);
-    document.getElementById('tkbody').innerHTML=L.map(function(r,i){
-      return '<div class="tkr"><span class="tkn">'+(i+1)+'.</span><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(st)+'</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+(+r[5]>0?'<small>Pump $'+(+r[5]).toFixed(3)+'</small>':'')+'</span></div>'; }).join('');
+    tkFilter();
     var p=document.getElementById('tkpop'); p.scrollTop=0; if(!p.classList.contains('show')) enterScreen(); p.classList.add('show');
   }catch(e){}
+}
+/* v1.3.46: services filter, shown only after an interstate is picked; lists only services found on that interstate */
+function tkSvcHas(o,k){ var d=AMEN_DEFS[k]; return !!(d&&o.inf&&d.get(o.inf)); }
+function tkSvcSync(){
+  var f=document.getElementById('tkif').value, sv=document.getElementById('tksv'), hn=document.getElementById('tksvh');
+  sv.value=''; sv.innerHTML='';
+  if(!f){ sv.hidden=true; hn.hidden=true; return; }
+  var L=TK_ALL.filter(function(o){ return o.i.indexOf(f)>=0; });
+  var ks=AMEN_ORDER.filter(function(k){ return L.some(function(o){ return tkSvcHas(o,k); }); });
+  sv.innerHTML='<option value="">Filter by services</option>'+ks.map(function(k){ var n=L.filter(function(o){ return tkSvcHas(o,k); }).length;
+    return '<option value="'+k+'">'+esc(AMEN_DEFS[k].label)+' ('+n+' stop'+(n===1?'':'s')+')</option>'; }).join('');
+  sv.hidden=!ks.length; hn.hidden=!ks.length;
+  hn.textContent='Only services found at stops on '+f+' are listed.';
+}
+function tkPickI(){ tkSvcSync(); tkFilter(); }
+function tkFilter(){
+  var st=TK_ST, f=document.getElementById('tkif').value, s=f?document.getElementById('tksv').value:'';
+  var L=TK_ALL.filter(function(o){ return (!f || o.i.indexOf(f)>=0) && (!s || tkSvcHas(o,s)); });
+  var avg=L.reduce(function(x,o){return x+(+o.r[6]);},0)/Math.max(1,L.length);
+  document.getElementById('tksub').textContent=L.length+' stop'+(L.length===1?'':'s')+(f?' on '+f:'')+(s?' with '+AMEN_DEFS[s].label:'')+' \u00B7 average discounted price $'+avg.toFixed(3);
+  document.getElementById('tkbody').innerHTML=L.map(function(o,i){ var r=o.r;
+    return '<div class="tkr"><span class="tkn">'+(i+1)+'.</span><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(st)+(o.i.length?' \u00B7 '+o.i.join(', '):'')+'</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+(+r[5]>0?'<small>Pump $'+(+r[5]).toFixed(3)+'</small>':'')+'</span>'+(+r[3]&&+r[4]?'<a class="tkmap" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+(+r[3])+','+(+r[4])+'&travelmode=driving">Map</a>':'')+'</div>'; }).join('');
+  document.getElementById('tkpop').scrollTop=0;
 }
 function tkClose(){ document.getElementById('tkpop').classList.remove('show'); }
 (function(){
@@ -1526,8 +1576,15 @@ function tkClose(){ document.getElementById('tkpop').classList.remove('show'); }
     t.addEventListener('touchstart',function(e){ tkT0=Date.now(); tkMoved=false; var p=e.touches&&e.touches[0]; if(p){ tkX=p.clientX; tkY=p.clientY; } },{passive:true,capture:true});
     t.addEventListener('touchmove',function(e){ var p=e.touches&&e.touches[0]; if(p&&(Math.abs(p.clientX-tkX)>10||Math.abs(p.clientY-tkY)>10)) tkMoved=true; },{passive:true,capture:true});
     t.addEventListener('click',function(e){ if(tkT0&&(tkMoved||Date.now()-tkT0>350)){ e.preventDefault(); e.stopPropagation(); } tkT0=0; },true);
-    t.addEventListener('touchstart',function(){ t.classList.add('hold'); },{passive:true});
-    t.addEventListener('touchend',function(){ setTimeout(function(){ t.classList.remove('hold'); },5000); });
+    /* v1.3.47: press and slide moves the ticker either way; on let-go it waits 5 seconds, then rolls on */
+    var tkHT=0, tkDX=null, tkAn=null, tkT=0, tkW=1;
+    t.addEventListener('touchstart',function(e){ clearTimeout(tkHT); t.classList.add('hold');
+      var p=e.touches&&e.touches[0], m=document.getElementById('tkmove'); tkDX=p?p.clientX:null;
+      try{ tkAn=m.getAnimations()[0]||null; tkT=tkAn?tkAn.currentTime:0; tkW=Math.max(1,m.scrollWidth/2); }catch(x){ tkAn=null; } },{passive:true});
+    t.addEventListener('touchmove',function(e){ var p=e.touches&&e.touches[0]; if(!p||tkDX===null||!tkAn) return;
+      var dur=tkAn.effect.getTiming().duration, dx=p.clientX-tkDX, v=tkT-dx/tkW*dur;
+      tkAn.currentTime=((v%dur)+dur)%dur; },{passive:true});
+    t.addEventListener('touchend',function(){ tkDX=null; clearTimeout(tkHT); tkHT=setTimeout(function(){ t.classList.remove('hold'); },5000); });
     t.addEventListener('mouseenter',function(){ t.classList.add('hold'); }); t.addEventListener('mouseleave',function(){ t.classList.remove('hold'); }); }
   setTimeout(fpsTicker,300);
 })();
@@ -2904,6 +2961,16 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-27', items:[
+    'Version 1.0.23',
+    '**New: Find services ahead button on the home page.** Pick your state, then your interstate, then which way you\u2019re heading, then the service you need, like an RV dump, parking or a truck shop. You see only the stops ahead of you, closest first, each with a Map button. Each box shows up after you fill in the one above it, and every service the truck stops list is included',
+    '**Slide the price ticker by hand.** Press on the ticker and slide your finger left or right to move it either way. When you let go, it stays put for 5 seconds, then starts rolling again. A quick tap on a state still opens that state\u2019s price list',
+    '**Map button on each stop in a state\u2019s price list.** Tap a state on the ticker, then tap Map on any stop to get Google Maps directions from where you are now',
+    '**New: Find fuel for this load.** On your trip summary, the green button sends all your load stops to the main screen and finds fuel along the route. Back to load takes you right back to your trip summary',
+    '**Add drop is now Add a stop,** and the boxes read Stop 1, Stop 2 and so on',
+    '**The trip summary is easier to read.** Each line has an orange Start or Stop badge, and the city names are bold',
+    'Stops ahead are worked out from your phone\u2019s location, so turn location on. Miles are straight-line. Services and interstates come from the truck stops\u2019 own lists and may be incomplete. Google Maps may not use a truck route, so check it against your truck atlas. Fuel prices change every day, so savings are an estimate, not a guarantee'
+  ]},
   { date:'2026-10-26', items:[
     'Version 1.0.22',
     '**Behind the scenes: taps on the price ticker and on tomorrow\u2019s fuel price are now counted** to help improve the app. Nothing changes on your screen'
@@ -3116,6 +3183,7 @@ function openNews(){
   if(seen!==APP_VER) document.body.classList.add('has-new');
 })();
 function stepBack(){
+  { var sap=document.getElementById('sapop'); if(sap&&sap.classList.contains('show')){ sap.classList.remove('show'); return true; } }
   { var tkp=document.getElementById('tkpop'); if(tkp&&tkp.classList.contains('show')){ tkp.classList.remove('show'); return true; } }
   if(window.CP_OPEN){ cityPickerDone(); return true; }
   { const fp=document.getElementById('fppop'); if(fp && fp.classList.contains('show')){ fpClose(); return true; } }
@@ -3152,6 +3220,7 @@ function stepBack(){
     document.body.classList.remove('on-detail');
     return true;
   }
+  if(document.body.classList.contains('on-results') && window.FROM_LOAD){ backToLoad(); return true; }
   if(document.body.classList.contains('on-results')){
     document.body.classList.remove('on-results');
     window.scrollTo(0,0);
@@ -3247,7 +3316,7 @@ function planRow(value){
 function planLabel(){
   const rows=[...planEl.children];
   rows.forEach((r,i)=>{
-    r.querySelector('input').placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : 'Drop '+i;
+    r.querySelector('input').placeholder = i===0 ? '\u{1F4CD} Your location (or type a start city)' : 'Stop '+i;
     setMoveIcon(r,i,rows.length);
   });
 }
@@ -3304,10 +3373,10 @@ function bestOrder(D){
 }
 async function planOptimize(){
   const raw=planVals();
-  if(raw.slice(1).filter(x=>x).length<2){ planMsg('Add at least two drops to optimize.'); return false; }
-  if(raw.slice(1).some(x=>!x)){ planMsg('Fill in every drop first, or tap the \u00d7 to remove the empty one.'); return false; }
+  if(raw.slice(1).filter(x=>x).length<2){ planMsg('Add at least two stops to optimize.'); return false; }
+  if(raw.slice(1).some(x=>!x)){ planMsg('Fill in every stop first, or tap the \u00d7 to remove the empty one.'); return false; }
   const fromHere=!raw[0], vals=raw.slice(); if(fromHere) vals[0]=HERE;
-  planMsg('Optimizing drop order...');
+  planMsg('Optimizing stop order...');
   try{
     const pts=[]; for(const c of vals) pts.push(await geocode(c));
     const coordStr=pts.map(p=>p[0]+','+p[1]).join(';');
@@ -3317,12 +3386,12 @@ async function planOptimize(){
     const nv=[raw[0]].concat(ord.map(k=>vals[k]));
     planFill(nv); planSave();
     let mi=0,prev=0; for(const k of ord){ mi+=j.distances[prev][k]; prev=k; }
-    planMsg('Drops put in the shortest order ('+Math.round(mi/1609).toLocaleString()+' miles). Tap Run route for the full report.');
+    planMsg('Stops put in the shortest order ('+Math.round(mi/1609).toLocaleString()+' miles). Tap Run route for the full report.');
     return true;
   }catch(e){ planMsg('Could not optimize right now ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.'); return false; }
 }
 async function planRun(){
-  if(planInputs().length<2){ planMsg('Enter a start and at least one drop.'); return; }
+  if(planInputs().length<2){ planMsg('Enter a start and at least one stop.'); return; }
   planMsg(''); runTrip();
 }
 async function runTrip(){
@@ -3349,7 +3418,7 @@ async function runTrip(){
       const [city,st]=splitPlace(nm);
       let leg='';
       if(k>0){ const mi=Math.round(legs[k-1].distance/1609); run+=mi; leg=mi.toLocaleString(); }
-      h+='<div class="trstop"><span class="n">'+(k+1)+'</span><span class="c">'+esc(city)+'</span><span>'+esc(st)+'</span><span>'+(k?leg:'Start')+'</span><span class="t">'+(k?run.toLocaleString():'0')+'</span></div>';
+      h+='<div class="trstop"><span class="n"><b class="trbadge">'+(k?'Stop '+k:'Start')+'</b></span><span class="c">'+esc(city)+'</span><span>'+esc(st)+'</span><span>'+(k?leg:'Start')+'</span><span class="t">'+(k?run.toLocaleString():'0')+'</span></div>';
       if(k<legs.length){ const rd=legRoads(legs[k]); h+='<div class="trroads">'+(rd||'Local roads')+'</div>'; }
     });
     h+='<div class="trtotal"><span>Total</span><span>'+run.toLocaleString()+' miles</span></div>';
@@ -3358,11 +3427,28 @@ async function runTrip(){
     body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Could not work out the route ('+esc(e.message)+'). The free map service can be busy. Try again in a minute.</div>';
   }
 }
+/* v1.3.45: hand the load's stops to the fuel screen and run it; Back returns to the load */
+window.FROM_LOAD=false;
+function tripFindFuel(){
+  const inputs=planInputs();
+  if(inputs.length<2){ planMsg('Enter a start and at least one stop.'); return; }
+  stopsEl.innerHTML=''; inputs.forEach(v=>stopsEl.appendChild(makeRow(v)));
+  relabel(); try{ saveRoute(); }catch(e){}
+  document.getElementById('trippop').classList.remove('show'); document.body.classList.remove('on-trip');
+  document.getElementById('planpop').classList.remove('show'); document.body.classList.remove('on-plan');
+  window.FROM_LOAD=true; document.body.classList.add('from-load');
+  findFuel();
+}
+function backToLoad(){
+  window.FROM_LOAD=false; document.body.classList.remove('from-load','on-results');
+  document.getElementById('planpop').classList.add('show'); document.body.classList.add('on-plan');
+  document.getElementById('trippop').classList.add('show'); document.body.classList.add('on-trip');
+}
 function closeTrip(){ if(document.getElementById('trippop').classList.contains('show')) history.back(); }
 async function tripOptimize(){
   const body=document.getElementById('tripbody');
-  if(planVals().slice(1).filter(x=>x).length<2){ body.insertAdjacentHTML('beforeend','<div class="trmsg">Optimize needs at least two drops.</div>'); return; }
-  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Optimizing drop order...</div>';
+  if(planVals().slice(1).filter(x=>x).length<2){ body.insertAdjacentHTML('beforeend','<div class="trmsg">Optimize needs at least two stops.</div>'); return; }
+  body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">Optimizing stop order...</div>';
   if(await planOptimize()) await runTrip();
   else body.innerHTML='<h2>Trip Summary</h2><div class="trmsg">'+document.getElementById('planmsg').textContent+'</div>';
 }
@@ -3397,10 +3483,10 @@ async function optimizeStops(){
 </script>
   <div id="planpop"><div class="plwrap">
     <h2>Plan your load</h2>
-    <div class="plsub">Enter your start and every drop, then tap Run route.</div>
+    <div class="plsub">Enter your start and every stop, then tap Run route.</div>
     <div id="planstops"></div>
     <div class="btnrow">
-      <button class="pladd" onclick="planAdd()">+ Add drop</button>
+      <button class="pladd" onclick="planAdd()">+ Add a stop</button>
       <button class="plgo" onclick="planRun()">Run route</button>
     </div>
     <div id="planmsg"></div>
@@ -3417,6 +3503,7 @@ async function optimizeStops(){
   <div id="trippop"><div class="trwrap" id="tripbody"></div>
     <div class="trbar">
       <button onclick="tripOptimize()">Optimize</button>
+      <button class="trfuel" onclick="tripFindFuel()">Find fuel for this load</button>
       <button onclick="window.print()">Print</button>
       <button class="back" onclick="closeTrip()">Back</button>
     </div>
@@ -6983,6 +7070,65 @@ function fcDayClose(){
   var q=0; function soon(){ if(q) return; q=setTimeout(function(){ q=0; mk(); },60); }
   if(document.readyState!=='loading') mk(); else document.addEventListener('DOMContentLoaded',mk);
   try{ new MutationObserver(soon).observe(document.documentElement,{childList:true,subtree:true}); }catch(e){} })();
+</script>
+
+
+<div id="sapop" role="dialog" aria-modal="true"><div class="tkin"><div class="tkhd"><button type="button" onclick="history.back()">Back</button><h2>Find services ahead</h2></div>
+<select id="sast" onchange="saPick(1)"></select><select id="sai" onchange="saPick(2)" hidden></select><select id="sad" onchange="saPick(3)" hidden></select><select id="sas" onchange="saPick(4)" hidden></select>
+<div class="sasub" id="sasub"></div><div id="sabody"></div></div></div>
+<script>
+/* v1.3.50: Find services ahead. State, then interstate, then direction, then service; each box shows after the one above is picked */
+var SA_ALL=[], SA_ME=null;
+function saSvcs(s){
+  var out={}, bc=brandClass(s.b), r=null;
+  try{ r = bc==='loves' ? lovesFind(s) : SVC[svcKey(bc==='petro'?'petro':'ta', s.c, s.st)]; }catch(e){}
+  if(!r) return [];
+  var add=function(k){ if(k) out[k]=1; };
+  if(r.parking) add('Truck parking'); if(r.showers) add('Showers'); if(r.laundry) add('Laundry'); if(r.cat) add('CAT scale');
+  if(r.wifi) add('Wi-Fi'); if(r.def) add('DEF at the pump'); if(r.chapel) add('Chapel'); if(r.wash) add('Truck wash');
+  if(r.rest) add('Sit-down restaurant'); if((r.qsr||[]).length||(r.food||[]).length) add('Fast food'); if(r.overnight) add('Overnight parking');
+  if((r.shop||[]).length||r.bays) add('Truck shop');
+  (r.shop||[]).concat(r.extra||[]).forEach(add);
+  return Object.keys(out);
+}
+function saOpen(){
+  SA_ALL=STATIONS.filter(function(r){ return +r[6]>0; }).map(function(r){ var st=String(r[2]||'').toUpperCase().trim();
+    var s={b:r[0],c:r[1],st:st,la:+r[3],lo:+r[4]}; return {r:r, st:st, i:tkRoadsOf(r,st), sv:saSvcs(s)}; });
+  var sts={}; SA_ALL.forEach(function(o){ if(o.st.length===2&&o.st!=='ON'&&o.i.length) sts[o.st]=1; });
+  document.getElementById('sast').innerHTML='<option value="">What state are you in?</option>'+Object.keys(sts).sort().map(function(k){ return '<option>'+k+'</option>'; }).join('');
+  saPick(0);
+  try{ navigator.geolocation.getCurrentPosition(function(p){ SA_ME={la:p.coords.latitude, lo:p.coords.longitude}; saShow(); },function(){},{timeout:10000,maximumAge:120000}); }catch(e){}
+  var p=document.getElementById('sapop'); p.scrollTop=0; if(!p.classList.contains('show')) enterScreen(); p.classList.add('show');
+}
+function saPick(n){
+  var S=document.getElementById('sast'), I=document.getElementById('sai'), D=document.getElementById('sad'), V=document.getElementById('sas');
+  if(n<1){ S.value=''; } if(n<2){ I.value=''; I.hidden=!S.value; } if(n<3){ D.value=''; D.hidden=!I.value; } if(n<4){ V.value=''; V.hidden=!D.value; }
+  if(n===1&&S.value){ var c={}; SA_ALL.forEach(function(o){ if(o.st===S.value) o.i.forEach(function(k){ c[k]=(c[k]||0)+1; }); });
+    I.innerHTML='<option value="">What interstate?</option>'+Object.keys(c).sort(function(a,b){return (+a.slice(2))-(+b.slice(2));}).map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join(''); }
+  if(n===2&&I.value){ var odd=(+I.value.slice(2))%2===1;
+    D.innerHTML='<option value="">Which way are you heading?</option>'+(odd?'<option value="N">North</option><option value="S">South</option>':'<option value="E">East</option><option value="W">West</option>'); }
+  if(n===3&&D.value){ var c2={}; saList(true).forEach(function(o){ o.sv.forEach(function(k){ c2[k]=(c2[k]||0)+1; }); });
+    V.innerHTML='<option value="">What service do you need?</option><option value="*">Show all stops ahead</option>'+Object.keys(c2).sort().map(function(k){ return '<option value="'+esc(k)+'">'+esc(k)+' ('+c2[k]+')</option>'; }).join(''); }
+  saShow();
+}
+function saList(ignoreSvc){
+  var st=document.getElementById('sast').value, iv=document.getElementById('sai').value, d=document.getElementById('sad').value, sv=ignoreSvc?'':document.getElementById('sas').value;
+  var L=SA_ALL.filter(function(o){ return o.st===st && o.i.indexOf(iv)>=0 && (!sv||sv==='*'||o.sv.indexOf(sv)>=0); });
+  if(SA_ME&&d){ var m=SA_ME; L=L.filter(function(o){ var a=+o.r[3], b=+o.r[4]; return d==='N'?a>m.la-0.01:d==='S'?a<m.la+0.01:d==='E'?b>m.lo-0.01:b<m.lo+0.01; });
+    L.forEach(function(o){ o.mi=hav(m.la,m.lo,+o.r[3],+o.r[4]); }); L.sort(function(a,b){ return a.mi-b.mi; }); }
+  else if(d){ L.forEach(function(o){ o.mi=null; }); L.sort(function(a,b){ var x=d==='N'?(+a.r[3])-(+b.r[3]):d==='S'?(+b.r[3])-(+a.r[3]):d==='E'?(+a.r[4])-(+b.r[4]):(+b.r[4])-(+a.r[4]); return x; }); }
+  return L;
+}
+function saShow(){
+  var V=document.getElementById('sas'), sub=document.getElementById('sasub'), body=document.getElementById('sabody');
+  if(!V.value){ body.innerHTML=''; sub.textContent=document.getElementById('sad').value?'Only services found at stops ahead of you on this interstate are listed.':''; return; }
+  var L=saList(false), iv=document.getElementById('sai').value, sv=V.value;
+  sub.textContent=L.length+' stop'+(L.length===1?'':'s')+' ahead on '+iv+(sv!=='*'?' with '+sv:'')+(SA_ME?', closest first':'. Turn on location to see only stops ahead of you');
+  body.innerHTML=L.length?L.map(function(o,i){ var r=o.r, inf=null; try{ inf=stopInfo({b:r[0],c:r[1],st:o.st,la:+r[3],lo:+r[4]}); }catch(e){}
+    return '<div class="tkr"><span>'+esc(r[0]||'')+'<br><small style="color:#9fb4ce">'+esc(r[1]||'')+', '+esc(o.st)+(inf&&inf.exit?' \u00B7 '+esc(inf.exit):'')+(o.mi!=null?' \u00B7 about '+Math.round(o.mi)+' mi':'')+'</small></span><span class="tkp">$'+(+r[6]).toFixed(3)+'</span>'
+      +'<a class="tkmap" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+(+r[3])+','+(+r[4])+'&travelmode=driving">Map</a></div>'; }).join('')
+    : '<div class="sasub">No stops ahead of you on '+esc(iv)+(sv!=='*'?' list '+esc(sv):'')+' in this state.</div>';
+}
 </script>
 </body>
 </html>
