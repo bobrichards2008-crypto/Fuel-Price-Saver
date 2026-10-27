@@ -983,7 +983,7 @@
   </div>
   <div id="planrow" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 12px"><button id="planbtn" onclick="openPlan()" style="grid-column:span 2;margin:0;width:auto"><span class="pbt">Plan your load stops</span><span class="pbs">(no fuel report produced)</span></button><button class="bluebtn" id="optbtn" onclick="optimizeStops()" style="min-height:72px;margin:0;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer">Optimize</button></div>
   <button id="predbtn" type="button" onclick="fcDayOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8M15 8h5v5" fill="none" stroke="#f26a21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tomorrow’s fuel price prediction</button>
-  <button id="sabtn" type="button" onclick="saOpen()"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#f26a21" stroke-width="2.4"/><path d="M15.5 15.5L21 21" stroke="#f26a21" stroke-width="2.6" stroke-linecap="round"/></svg>Find services ahead</button>
+  
   <button id="toolsbtn" onclick="openTools()"><svg viewBox="0 0 40 32" width="40" height="32" aria-hidden="true"><path d="M14 9V5.5A2.5 2.5 0 0 1 16.5 3h7A2.5 2.5 0 0 1 26 5.5V9" fill="none" stroke="#f26a21" stroke-width="2.6"/><rect x="3" y="9" width="34" height="20" rx="3" fill="#f26a21"/><rect x="3" y="16" width="34" height="2.4" fill="#10233f"/><rect x="16.5" y="14" width="7" height="6.5" rx="1.4" fill="#10233f"/><rect x="18.3" y="15.6" width="3.4" height="3.2" rx=".6" fill="#f26a21"/></svg><span>Tools</span></button>
   </div>
   <div id="opthint"></div>
@@ -2961,6 +2961,11 @@ function enterScreen(){ history.pushState({app:1}, ''); }
    To ship an update: add a new block at the TOP of CHANGELOG with the date and the lines.
    The tag shows up again by itself for anyone who hasn't seen the newest date. */
 const CHANGELOG = [
+  { date:'2026-10-27', items:[
+    'Version 1.0.27',
+    '**Find services ahead has been removed** to keep the app simple. You can still see the services at any stop by opening its details',
+    'Fuel prices change every day, so savings are an estimate, not a guarantee'
+  ]},
   { date:'2026-10-27', items:[
     'Version 1.0.26',
     '**Find services ahead now lists only the interstates within 10 miles of you.** It checks real map data instead of the truck stop list, so if you are sitting near I-70, I-70 shows up. The closest one is picked for you',
